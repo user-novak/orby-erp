@@ -43,28 +43,51 @@
         </div>
       </section>
 
-      <!-- Card 2 -->
       <section class="bg-white rounded-xl shadow p-6">
         <h2 class="text-lg font-semibold mb-4">Detalles de Venta</h2>
 
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div>
-            <label class="text-sm font-medium">Lugar</label>
-            <input type="text" class="w-full border rounded p-2" />
+            <mat-form-field class="w-full">
+              <mat-label>Lugar</mat-label>
+              <input matInput />
+            </mat-form-field>
           </div>
+
           <div>
-            <label class="text-sm font-medium">Tipo de Venta</label>
-            <select class="w-full border rounded p-2">
-              <option>Crédito</option>
-            </select>
+            <mat-form-field class="w-full">
+              <mat-label>Tipo de venta</mat-label>
+              <mat-select>
+                @for (sale of saleTypes; track sale) {
+                <mat-option [value]="sale">{{ sale }}</mat-option>
+                }
+              </mat-select>
+            </mat-form-field>
+          </div>
+
+          <div>
+            <mat-form-field class="w-full">
+              <mat-label>Entidad financiera</mat-label>
+              <mat-select>
+                @for (account of accountTypes; track account) {
+                <mat-option [value]="account">{{ account }}</mat-option>
+                }
+              </mat-select>
+            </mat-form-field>
+          </div>
+
+          <div>
+            <mat-form-field class="w-full">
+              <mat-label>Fecha de pago</mat-label>
+              <input matInput [matDatepicker]="paymentDay" />
+              <mat-datepicker-toggle matIconSuffix [for]="paymentDay"></mat-datepicker-toggle>
+              <mat-datepicker #paymentDay></mat-datepicker>
+            </mat-form-field>
           </div>
         </div>
       </section>
-
-      <!-- Más cards aquí -->
     </div>
 
-    <!-- Columna derecha (Resumen Sticky) -->
     <aside class="lg:col-span-1">
       <div class="sticky top-6 bg-white rounded-xl shadow p-6 space-y-4">
         <h3 class="text-xl font-semibold">Resumen del Pedido</h3>
@@ -75,7 +98,7 @@
         </div>
 
         <div class="flex justify-between text-gray-600">
-          <span>IGV (19%)</span>
+          <span>IGV (18%)</span>
           <span>$0.00</span>
         </div>
 

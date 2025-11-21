@@ -16,4 +16,6 @@ import {MatSelectModule} from '@angular/material/select';
 export class Biller {
   clients: string[] = ['Cliente 1', 'Cliente 2', 'Cliente 3'];
   clientTypes: string[] = ['Tipo 1', 'Tipo 2'];
+  saleTypes: string[] = ['Tipo 1', 'Tipo 2'];
+  accountTypes: string[] = ['Entidad 1', 'Entidad 2'];
 }
