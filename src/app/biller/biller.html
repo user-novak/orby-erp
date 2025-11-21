@@ -1,5 +1,4 @@
 <div class="min-h-screen bg-[#f8f8f8] p-6">
-
   <!-- Título -->
   <header class="mb-6">
     <h1 class="text-3xl font-bold">Facturador</h1>
@@ -8,10 +7,8 @@
 
   <!-- Layout principal -->
   <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-
     <!-- Columna izquierda (Cards que sí scrollean) -->
     <div class="lg:col-span-2 space-y-6">
-
       <!-- Card 1 -->
       <section class="bg-white rounded-xl shadow p-6">
         <h2 class="text-lg font-semibold mb-4">Información general</h2>
@@ -19,8 +16,12 @@
         <!-- Campos -->
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div>
-            <label class="text-sm font-medium">Fecha de registro</label>
-            <input type="date" class="w-full border rounded p-2" />
+            <mat-form-field class="w-full">
+              <mat-label>Fecha de registro</mat-label>
+              <input matInput [matDatepicker]="picker" />
+              <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+              <mat-datepicker #picker></mat-datepicker>
+            </mat-form-field>
           </div>
 
           <div>
@@ -65,9 +66,7 @@
 
     <!-- Columna derecha (Resumen Sticky) -->
     <aside class="lg:col-span-1">
-
       <div class="sticky top-6 bg-white rounded-xl shadow p-6 space-y-4">
-
         <h3 class="text-xl font-semibold">Resumen del Pedido</h3>
 
         <div class="flex justify-between text-gray-600">
@@ -89,10 +88,7 @@
           <p>Total items: 1</p>
           <p>Items con datos: 0</p>
         </div>
-
       </div>
     </aside>
-
   </div>
-
 </div>
