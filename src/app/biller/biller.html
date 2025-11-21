@@ -1,0 +1,98 @@
+<div class="min-h-screen bg-[#f8f8f8] p-6">
+
+  <!-- Título -->
+  <header class="mb-6">
+    <h1 class="text-3xl font-bold">Facturador</h1>
+    <p class="text-gray-600">Registra nuevas órdenes de venta</p>
+  </header>
+
+  <!-- Layout principal -->
+  <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+
+    <!-- Columna izquierda (Cards que sí scrollean) -->
+    <div class="lg:col-span-2 space-y-6">
+
+      <!-- Card 1 -->
+      <section class="bg-white rounded-xl shadow p-6">
+        <h2 class="text-lg font-semibold mb-4">Información general</h2>
+
+        <!-- Campos -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div>
+            <label class="text-sm font-medium">Fecha de registro</label>
+            <input type="date" class="w-full border rounded p-2" />
+          </div>
+
+          <div>
+            <label class="text-sm font-medium">ID de Pedido</label>
+            <input type="text" class="w-full border rounded p-2" />
+          </div>
+
+          <div>
+            <label class="text-sm font-medium">Cliente</label>
+            <input type="text" class="w-full border rounded p-2" />
+          </div>
+
+          <div>
+            <label class="text-sm font-medium">Tipo de Cliente</label>
+            <select class="w-full border rounded p-2">
+              <option>Mayorista</option>
+            </select>
+          </div>
+        </div>
+      </section>
+
+      <!-- Card 2 -->
+      <section class="bg-white rounded-xl shadow p-6">
+        <h2 class="text-lg font-semibold mb-4">Detalles de Venta</h2>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div>
+            <label class="text-sm font-medium">Lugar</label>
+            <input type="text" class="w-full border rounded p-2" />
+          </div>
+          <div>
+            <label class="text-sm font-medium">Tipo de Venta</label>
+            <select class="w-full border rounded p-2">
+              <option>Crédito</option>
+            </select>
+          </div>
+        </div>
+      </section>
+
+      <!-- Más cards aquí -->
+    </div>
+
+    <!-- Columna derecha (Resumen Sticky) -->
+    <aside class="lg:col-span-1">
+
+      <div class="sticky top-6 bg-white rounded-xl shadow p-6 space-y-4">
+
+        <h3 class="text-xl font-semibold">Resumen del Pedido</h3>
+
+        <div class="flex justify-between text-gray-600">
+          <span>Subtotal</span>
+          <span>$0.00</span>
+        </div>
+
+        <div class="flex justify-between text-gray-600">
+          <span>IGV (19%)</span>
+          <span>$0.00</span>
+        </div>
+
+        <div class="flex justify-between text-xl font-bold bg-blue-50 p-3 rounded">
+          <span>Total</span>
+          <span class="text-blue-700">$0.00</span>
+        </div>
+
+        <div class="text-sm">
+          <p>Total items: 1</p>
+          <p>Items con datos: 0</p>
+        </div>
+
+      </div>
+    </aside>
+
+  </div>
+
+</div>
