@@ -1,19 +1,14 @@
 <div class="min-h-screen bg-[#f8f8f8] p-6">
-  <!-- Título -->
   <header class="mb-6">
     <h1 class="text-3xl font-bold">Facturador</h1>
     <p class="text-gray-600">Registra nuevas órdenes de venta</p>
   </header>
 
-  <!-- Layout principal -->
   <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-    <!-- Columna izquierda (Cards que sí scrollean) -->
     <div class="lg:col-span-2 space-y-6">
-      <!-- Card 1 -->
       <section class="bg-white rounded-xl shadow p-6">
         <h2 class="text-lg font-semibold mb-4">Información general</h2>
 
-        <!-- Campos -->
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div>
             <mat-form-field class="w-full">
@@ -25,20 +20,25 @@
           </div>
 
           <div>
-            <label class="text-sm font-medium">ID de Pedido</label>
-            <input type="text" class="w-full border rounded p-2" />
+            <mat-form-field class="w-full">
+              <mat-label>Tipo de cliente</mat-label>
+              <mat-select>
+                @for (client of clientTypes; track client) {
+                <mat-option [value]="client">{{ client }}</mat-option>
+                }
+              </mat-select>
+            </mat-form-field>
           </div>
 
           <div>
-            <label class="text-sm font-medium">Cliente</label>
-            <input type="text" class="w-full border rounded p-2" />
-          </div>
-
-          <div>
-            <label class="text-sm font-medium">Tipo de Cliente</label>
-            <select class="w-full border rounded p-2">
-              <option>Mayorista</option>
-            </select>
+            <mat-form-field class="w-full">
+              <mat-label>Cliente</mat-label>
+              <mat-select>
+                @for (client of clients; track client) {
+                <mat-option [value]="client">{{ client }}</mat-option>
+                }
+              </mat-select>
+            </mat-form-field>
           </div>
         </div>
       </section>
