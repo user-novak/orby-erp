@@ -11,6 +11,7 @@ import { SALES_TYPES } from './constants/fields';
 import { Option } from '../core/models/global';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { BillerForm } from './models/biller';
+import { CurrencyPipe } from '@angular/common';
 
 @Component({
   selector: 'app-biller',
@@ -22,6 +23,7 @@ import { BillerForm } from './models/biller';
     MatDatepickerModule,
     MatSelectModule,
     MatIconModule,
+    CurrencyPipe,
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './biller.html',
@@ -80,7 +82,7 @@ export class Biller {
     });
   }
 
-  private disabledBillerFields(){
+  private disabledBillerFields() {
     this.billerForm.get('unitPrice')?.disable();
     this.billerForm.get('totalPrice')?.disable();
   }
