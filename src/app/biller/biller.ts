@@ -74,6 +74,10 @@ export class Biller {
     this.resetBillerForm();
   }
 
+  removeProduct(index: number) {
+    this.productsList.splice(index, 1);
+  }
+
   resetBillerForm() {
     this.billerForm.reset();
   }
