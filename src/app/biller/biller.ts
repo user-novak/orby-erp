@@ -11,7 +11,6 @@ import { SALES_TYPES } from './constants/fields';
 import { Option } from '../core/models/global';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { BillerForm } from './models/biller';
-import { CurrencyPipe } from '@angular/common';
 
 @Component({
   selector: 'app-biller',
@@ -23,7 +22,6 @@ import { CurrencyPipe } from '@angular/common';
     MatDatepickerModule,
     MatSelectModule,
     MatIconModule,
-    CurrencyPipe,
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './biller.html',
@@ -51,6 +49,7 @@ export class Biller {
     this.billerForm = this.setBillerForm();
     this.disabledBillerFields();
     this.handleSaleTypeChanges();
+    this.handleBillerFormChanges();
   }
 
   addProduct() {
@@ -58,7 +57,7 @@ export class Biller {
       this.billerForm.markAllAsTouched();
       return;
     }
-    this.productsList.push(this.billerForm.value);
+    this.productsList.push(this.billerForm.getRawValue());
     this.resetBillerForm();
   }
 
@@ -79,6 +78,35 @@ export class Biller {
       }
 
       paymentDateControl.updateValueAndValidity({ emitEvent: false });
+    });
+  }
+
+  private handleBillerFormChanges() {
+    const productCtrl = this.billerForm.get('productDescription')!;
+    const qtyCtrl = this.billerForm.get('quantity')!;
+    const unitPriceCtrl = this.billerForm.get('unitPrice')!;
+    const totalPriceCtrl = this.billerForm.get('totalPrice')!;
+
+    productCtrl.valueChanges.pipe(takeUntilDestroyed()).subscribe((product) => {
+      if (product == null) {
+        unitPriceCtrl.setValue(null, { emitEvent: false });
+        totalPriceCtrl.setValue(null, { emitEvent: false });
+        return;
+      }
+
+      const randomPrice = this.getRandomIntInclusive(1, 100);
+      unitPriceCtrl.setValue(randomPrice, { emitEvent: false });
+
+      const qty = Number(qtyCtrl.value) || 0;
+      const total = randomPrice * qty;
+      totalPriceCtrl.setValue(total, { emitEvent: false });
+    });
+
+    qtyCtrl.valueChanges.pipe(takeUntilDestroyed()).subscribe((qtyRaw) => {
+      const qty = Number(qtyRaw) || 0;
+      const unit = Number(unitPriceCtrl.value) || 0;
+      const total = unit * qty;
+      totalPriceCtrl.setValue(total, { emitEvent: false });
     });
   }
 
@@ -107,5 +135,11 @@ export class Biller {
       unitPrice: [null, [Validators.required, Validators.min(1)]],
       totalPrice: [null, [Validators.required, Validators.min(1)]],
     });
+  }
+
+  private getRandomIntInclusive(min: number, max: number) {
+    min = Math.ceil(min);
+    max = Math.floor(max);
+    return Math.floor(Math.random() * (max - min + 1)) + min;
   }
 }

@@ -185,43 +185,46 @@
       </section>
 
       <section class="bg-white rounded-xl shadow p-6">
-  <h2 class="text-lg font-semibold mb-4">Productos agregados</h2>
+        <h2 class="text-lg font-semibold mb-4">Productos agregados</h2>
 
-  @if (productsList.length === 0) {
-    <p class="text-gray-500 text-sm">No hay productos agregados.</p>
-  } @else {
+        @if (productsList.length === 0) {
+        <p class="text-gray-500 text-sm">No hay productos agregados.</p>
+        } @else {
 
-    <div class="overflow-x-auto">
-      <table class="min-w-full border border-gray-200 rounded-lg overflow-hidden">
-        <thead class="bg-gray-50">
-          <tr>
-            <th class="px-4 py-2 text-left text-sm font-semibold text-gray-700">Cantidad</th>
-            <th class="px-4 py-2 text-left text-sm font-semibold text-gray-700">Unidad</th>
-            <th class="px-4 py-2 text-left text-sm font-semibold text-gray-700">Descripción</th>
-            <th class="px-4 py-2 text-left text-sm font-semibold text-gray-700">Precio Unit.</th>
-            <th class="px-4 py-2 text-left text-sm font-semibold text-gray-700">Total</th>
-          </tr>
-        </thead>
+        <div class="overflow-x-auto">
+          <table class="min-w-full border border-gray-200 rounded-lg overflow-hidden">
+            <thead class="bg-gray-50">
+              <tr>
+                <th class="px-4 py-2 text-left text-sm font-semibold text-gray-700">Cantidad</th>
+                <th class="px-4 py-2 text-left text-sm font-semibold text-gray-700">Unidad</th>
+                <th class="px-4 py-2 text-left text-sm font-semibold text-gray-700">Descripción</th>
+                <th class="px-4 py-2 text-left text-sm font-semibold text-gray-700">
+                  Precio Unit.
+                </th>
+                <th class="px-4 py-2 text-left text-sm font-semibold text-gray-700">Total</th>
+              </tr>
+            </thead>
 
-        <tbody class="divide-y divide-gray-200">
-          @for (item of productsList; track item) {
-            <tr class="hover:bg-gray-50">
-              <td class="px-4 py-2 text-sm">{{ item.quantity }}</td>
-              <td class="px-4 py-2 text-sm">{{ item.measureUnity }}</td>
-              <td class="px-4 py-2 text-sm">{{ item.productDescription }}</td>
-              <td class="px-4 py-2 text-sm">{{ item.unitPrice | currency:'USD':'symbol' }}</td>
-              <td class="px-4 py-2 text-sm font-semibold text-gray-700">
-                {{ item.totalPrice | currency:'USD':'symbol' }}
-              </td>
-            </tr>
-          }
-        </tbody>
-      </table>
-    </div>
+            <tbody class="divide-y divide-gray-200">
+              @for (item of productsList; track item) {
+              <tr class="hover:bg-gray-50">
+                <td class="px-4 py-2 text-sm">{{ item.quantity }}</td>
+                <td class="px-4 py-2 text-sm">{{ item.measureUnity }}</td>
+                <td class="px-4 py-2 text-sm">{{ item.productDescription }}</td>
+                <td class="px-4 py-2 text-sm">
+                  {{ item.unitPrice  }} S/.
+                </td>
+                <td class="px-4 py-2 text-sm font-semibold text-gray-700">
+                  {{ item.totalPrice }}S/.
+                </td>
+              </tr>
+              }
+            </tbody>
+          </table>
+        </div>
 
-  }
-</section>
-
+        }
+      </section>
     </div>
 
     <aside class="lg:col-span-1">
@@ -244,7 +247,7 @@
         </div>
 
         <div class="text-sm">
-          <p>Total items: 1</p>
+          <p>Total items: {{ productsList.length }}</p>
         </div>
       </div>
     </aside>
