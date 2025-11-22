@@ -9,7 +9,7 @@
       <section class="bg-white rounded-xl shadow p-6">
         <h2 class="text-lg font-semibold mb-4">Información general</h2>
 
-        <form [formGroup]="generalInfo" class="grid grid-cols-1 md:grid-cols-4 gap-4">
+        <form [formGroup]="generalInfoForm" class="grid grid-cols-1 md:grid-cols-4 gap-4">
           <div>
             <mat-form-field class="w-full">
               <mat-label>Fecha de registro</mat-label>
@@ -22,7 +22,7 @@
               <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
               <mat-datepicker #picker></mat-datepicker>
 
-              @if (generalInfo.controls['registerDate'].hasError('required')) {
+              @if (generalInfoForm.controls['registerDate'].hasError('required')) {
               <mat-error>Campo fecha de registro es obligatorio</mat-error>
               }
             </mat-form-field>
@@ -31,29 +31,35 @@
           <div>
             <mat-form-field class="w-full">
               <mat-label>Tipo de cliente</mat-label>
-              <mat-select>
+              <mat-select formControlName="clientType">
                 @for (client of clientTypes; track client) {
                 <mat-option [value]="client">{{ client }}</mat-option>
                 }
               </mat-select>
+              @if (generalInfoForm.controls['clientType'].hasError('required')) {
+              <mat-error>Campo tipo de cliente es obligatorio</mat-error>
+              }
             </mat-form-field>
           </div>
 
           <div>
             <mat-form-field class="w-full">
               <mat-label>Cliente</mat-label>
-              <mat-select>
+              <mat-select formControlName="client">
                 @for (client of clients; track client) {
                 <mat-option [value]="client">{{ client }}</mat-option>
                 }
               </mat-select>
+              @if (generalInfoForm.controls['client'].hasError('required')) {
+              <mat-error>Campo cliente es obligatorio</mat-error>
+              }
             </mat-form-field>
           </div>
 
           <div>
             <mat-form-field class="w-full">
               <mat-label>Lugar</mat-label>
-              <input matInput />
+              <input matInput formControlName="place" />
             </mat-form-field>
           </div>
 
@@ -65,27 +71,36 @@
                 <mat-option [value]="sale.value">{{ sale.label }}</mat-option>
                 }
               </mat-select>
+              @if (generalInfoForm.controls['saleType'].hasError('required')) {
+              <mat-error>Campo tipo de venta es obligatorio</mat-error>
+              }
             </mat-form-field>
           </div>
 
           <div>
             <mat-form-field class="w-full">
               <mat-label>Entidad financiera</mat-label>
-              <mat-select>
+              <mat-select formControlName="account">
                 @for (account of accounts; track account) {
                 <mat-option [value]="account">{{ account }}</mat-option>
                 }
               </mat-select>
+              @if (generalInfoForm.controls['account'].hasError('required')) {
+              <mat-error>Campo entidad financiera es obligatorio</mat-error>
+              }
             </mat-form-field>
           </div>
 
-          @if(generalInfo.controls['saleType'].value === 'ACR') {
+          @if(generalInfoForm.controls['saleType'].value === 'ACR') {
           <div>
             <mat-form-field class="w-full">
               <mat-label>Fecha de pago</mat-label>
-              <input matInput [matDatepicker]="paymentDay" />
+              <input matInput formControlName="paymentDate" [matDatepicker]="paymentDay" />
               <mat-datepicker-toggle matIconSuffix [for]="paymentDay"></mat-datepicker-toggle>
               <mat-datepicker #paymentDay></mat-datepicker>
+              @if (generalInfoForm.controls['paymentDate'].hasError('required')) {
+              <mat-error>Campo fecha de pago es obligatorio</mat-error>
+              }
             </mat-form-field>
           </div>
           }
