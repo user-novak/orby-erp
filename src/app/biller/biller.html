@@ -9,13 +9,22 @@
       <section class="bg-white rounded-xl shadow p-6">
         <h2 class="text-lg font-semibold mb-4">Información general</h2>
 
-        <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+        <form [formGroup]="generalInfo" class="grid grid-cols-1 md:grid-cols-4 gap-4">
           <div>
             <mat-form-field class="w-full">
               <mat-label>Fecha de registro</mat-label>
-              <input matInput [matDatepicker]="picker" />
+              <input
+                matInput
+                [matDatepicker]="picker"
+                formControlName="registerDate"
+                [errorStateMatcher]="matcher"
+              />
               <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
               <mat-datepicker #picker></mat-datepicker>
+
+              @if (generalInfo.controls['registerDate'].hasError('required')) {
+              <mat-error>Campo fecha de registro es obligatorio</mat-error>
+              }
             </mat-form-field>
           </div>
 
@@ -63,7 +72,7 @@
             <mat-form-field class="w-full">
               <mat-label>Entidad financiera</mat-label>
               <mat-select>
-                @for (account of accountTypes; track account) {
+                @for (account of accounts; track account) {
                 <mat-option [value]="account">{{ account }}</mat-option>
                 }
               </mat-select>
@@ -78,7 +87,7 @@
               <mat-datepicker #paymentDay></mat-datepicker>
             </mat-form-field>
           </div>
-        </div>
+        </form>
       </section>
 
       <section class="bg-white rounded-xl shadow p-6">
@@ -157,7 +166,6 @@
 
         <div class="text-sm">
           <p>Total items: 1</p>
-          <p>Items con datos: 0</p>
         </div>
       </div>
     </aside>
