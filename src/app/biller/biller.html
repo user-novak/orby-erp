@@ -212,9 +212,9 @@
                 <td class="px-4 py-2 text-sm">{{ item.quantity }}</td>
                 <td class="px-4 py-2 text-sm">{{ item.measureUnity }}</td>
                 <td class="px-4 py-2 text-sm">{{ item.productDescription }}</td>
-                <td class="px-4 py-2 text-sm">{{ item.unitPrice }} S/.</td>
+                <td class="px-4 py-2 text-sm">S/. {{ item.unitPrice }}</td>
                 <td class="px-4 py-2 text-sm font-semibold text-gray-700">
-                  {{ item.totalPrice }}S/.
+                  S/.{{ item.totalPrice }}
                 </td>
                 <td class="px-4 py-2 text-sm">
                   <button
@@ -259,6 +259,12 @@
         <div class="text-sm">
           <p>Total items: {{ productsList.length }}</p>
         </div>
+
+        <button
+          class="w-full cursor-pointer bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-4 rounded-lg transition-colors"
+        >
+          Registrar pedido
+        </button>
       </div>
     </aside>
   </div>
