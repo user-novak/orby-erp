@@ -211,9 +211,7 @@
                 <td class="px-4 py-2 text-sm">{{ item.quantity }}</td>
                 <td class="px-4 py-2 text-sm">{{ item.measureUnity }}</td>
                 <td class="px-4 py-2 text-sm">{{ item.productDescription }}</td>
-                <td class="px-4 py-2 text-sm">
-                  {{ item.unitPrice  }} S/.
-                </td>
+                <td class="px-4 py-2 text-sm">{{ item.unitPrice }} S/.</td>
                 <td class="px-4 py-2 text-sm font-semibold text-gray-700">
                   {{ item.totalPrice }}S/.
                 </td>
@@ -233,17 +231,17 @@
 
         <div class="flex justify-between text-gray-600">
           <span>Subtotal</span>
-          <span>$0.00</span>
+          <span>S/{{ productListAmount }}</span>
         </div>
 
         <div class="flex justify-between text-gray-600">
           <span>IGV (18%)</span>
-          <span>$0.00</span>
+          <span>S/{{ taxAmount }}</span>
         </div>
 
         <div class="flex justify-between text-xl font-bold bg-blue-50 p-3 rounded">
           <span>Total</span>
-          <span class="text-blue-700">$0.00</span>
+          <span class="text-blue-700">S/{{ totalAmount }}</span>
         </div>
 
         <div class="text-sm">

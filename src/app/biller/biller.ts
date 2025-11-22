@@ -52,6 +52,19 @@ export class Biller {
     this.handleBillerFormChanges();
   }
 
+  get productListAmount(): number {
+    const total = this.productsList.reduce((acc, item) => acc + item.totalPrice, 0);
+    return Number(total.toFixed(2));
+  }
+
+  get taxAmount(): number {
+    return Number((this.productListAmount * 0.18).toFixed(2));
+  }
+
+  get totalAmount(): number {
+    return Number((this.productListAmount + this.taxAmount).toFixed(2));
+  }
+
   addProduct() {
     if (this.billerForm.invalid) {
       this.billerForm.markAllAsTouched();
