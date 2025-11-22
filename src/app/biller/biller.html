@@ -9,7 +9,7 @@
       <section class="bg-white rounded-xl shadow p-6">
         <h2 class="text-lg font-semibold mb-4">Información general</h2>
 
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
           <div>
             <mat-form-field class="w-full">
               <mat-label>Fecha de registro</mat-label>
@@ -40,13 +40,7 @@
               </mat-select>
             </mat-form-field>
           </div>
-        </div>
-      </section>
 
-      <section class="bg-white rounded-xl shadow p-6">
-        <h2 class="text-lg font-semibold mb-4">Detalles de Venta</h2>
-
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div>
             <mat-form-field class="w-full">
               <mat-label>Lugar</mat-label>
@@ -83,6 +77,60 @@
               <mat-datepicker-toggle matIconSuffix [for]="paymentDay"></mat-datepicker-toggle>
               <mat-datepicker #paymentDay></mat-datepicker>
             </mat-form-field>
+          </div>
+        </div>
+      </section>
+
+      <section class="bg-white rounded-xl shadow p-6">
+        <h2 class="text-lg font-semibold mb-4">Registro de pedidos</h2>
+        <div class="flex flex-row items-baseline gap-2">
+          <mat-form-field>
+            <mat-label>Cantidad</mat-label>
+            <input matInput />
+          </mat-form-field>
+
+          <mat-form-field>
+            <mat-label>Unidad de medida</mat-label>
+            <mat-select>
+              @for (unity of mesaureUnities; track unity) {
+              <mat-option [value]="unity">{{ unity }}</mat-option>
+              }
+            </mat-select>
+          </mat-form-field>
+
+          <mat-form-field>
+            <mat-label>Descripción</mat-label>
+            <input matInput />
+          </mat-form-field>
+
+          <mat-form-field>
+            <mat-label>Precio unitario</mat-label>
+            <input matInput />
+          </mat-form-field>
+
+          <mat-form-field>
+            <mat-label>Total</mat-label>
+            <input matInput />
+          </mat-form-field>
+
+          <div class="flex items-center justify-center">
+            <button
+              matFab
+              aria-label="Clean button"
+              class="w-11 h-11 rounded-full bg-gray-200 hover:bg-gray-300 transition-colors"
+            >
+              <mat-icon>add</mat-icon>
+            </button>
+          </div>
+
+          <div class="flex items-center justify-center">
+            <button
+              matFab
+              aria-label="Clean button"
+              class="w-11 h-11 rounded-full bg-gray-200 hover:bg-gray-300 transition-colors"
+            >
+              <mat-icon>cached</mat-icon>
+            </button>
           </div>
         </div>
       </section>

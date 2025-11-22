@@ -1,14 +1,21 @@
-import { ChangeDetectionStrategy, Component, LOCALE_ID } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { MatIconModule } from '@angular/material/icon';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { provideNativeDateAdapter } from '@angular/material/core';
-import {MatSelectModule} from '@angular/material/select';
+import { MatSelectModule } from '@angular/material/select';
 
 @Component({
   selector: 'app-biller',
   providers: [...provideNativeDateAdapter()],
-  imports: [MatFormFieldModule, MatInputModule, MatDatepickerModule,MatSelectModule],
+  imports: [
+    MatFormFieldModule,
+    MatInputModule,
+    MatDatepickerModule,
+    MatSelectModule,
+    MatIconModule,
+  ],
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './biller.html',
   styleUrl: './biller.css',
@@ -18,4 +25,5 @@ export class Biller {
   clientTypes: string[] = ['Tipo 1', 'Tipo 2'];
   saleTypes: string[] = ['Tipo 1', 'Tipo 2'];
   accountTypes: string[] = ['Entidad 1', 'Entidad 2'];
+  mesaureUnities: string[] = ['kg', 'mg'];
 }
