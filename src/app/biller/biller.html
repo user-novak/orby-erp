@@ -109,56 +109,79 @@
 
       <section class="bg-white rounded-xl shadow p-6">
         <h2 class="text-lg font-semibold mb-4">Registro de pedidos</h2>
-        <div class="flex flex-row items-baseline gap-2">
+        <form
+          [formGroup]="billerForm"
+          (ngSubmit)="addProduct()"
+          class="grid grid-cols-1 md:grid-cols-6 gap-2"
+        >
           <mat-form-field>
             <mat-label>Cantidad</mat-label>
-            <input matInput />
+            <input matInput formControlName="quantity" type="number" />
+            @if (billerForm.controls['quantity'].hasError('required')) {
+            <mat-error>Campo cantidad es obligatorio</mat-error>
+            } @if (billerForm.controls['quantity'].hasError('min')) {
+            <mat-error>Campo cantidad debe ser mínimo 1</mat-error>
+            }
           </mat-form-field>
 
           <mat-form-field>
             <mat-label>Unidad de medida</mat-label>
-            <mat-select>
+            <mat-select formControlName="measureUnity">
               @for (unity of mesaureUnities; track unity) {
               <mat-option [value]="unity">{{ unity }}</mat-option>
               }
             </mat-select>
+            @if (billerForm.controls['measureUnity'].hasError('required')) {
+            <mat-error>Campo unidad de medida es obligatorio</mat-error>
+            }
           </mat-form-field>
 
           <mat-form-field>
             <mat-label>Descripción</mat-label>
-            <input matInput />
+            <mat-select formControlName="productDescription">
+              @for (product of products; track product) {
+              <mat-option [value]="product">{{ product }}</mat-option>
+              }
+            </mat-select>
+            @if (billerForm.controls['productDescription'].hasError('required')) {
+            <mat-error>Campo descripción es obligatorio</mat-error>
+            }
           </mat-form-field>
 
           <mat-form-field>
             <mat-label>Precio unitario</mat-label>
-            <input matInput />
+            <input matInput formControlName="unitPrice" type="number" />
           </mat-form-field>
 
           <mat-form-field>
             <mat-label>Total</mat-label>
-            <input matInput />
+            <input matInput formControlName="totalPrice" type="number" />
           </mat-form-field>
 
-          <div class="flex items-center justify-center">
-            <button
-              matFab
-              aria-label="Clean button"
-              class="w-11 h-11 rounded-full bg-gray-200 hover:bg-gray-300 transition-colors"
-            >
-              <mat-icon>add</mat-icon>
-            </button>
-          </div>
+          <div class="flex items-start justify-center gap-2">
+            <div class="flex items-center justify-center">
+              <button
+                matFab
+                aria-label="Clean button"
+                class="w-11 h-11 rounded-full bg-gray-200 hover:bg-gray-300 transition-colors"
+              >
+                <mat-icon>add</mat-icon>
+              </button>
+            </div>
 
-          <div class="flex items-center justify-center">
-            <button
-              matFab
-              aria-label="Clean button"
-              class="w-11 h-11 rounded-full bg-gray-200 hover:bg-gray-300 transition-colors"
-            >
-              <mat-icon>cached</mat-icon>
-            </button>
+            <div class="flex items-center justify-center">
+              <button
+                (click)="resetBillerForm()"
+                type="button"
+                matFab
+                aria-label="Clean button"
+                class="w-11 h-11 rounded-full bg-gray-200 hover:bg-gray-300 transition-colors"
+              >
+                <mat-icon>cached</mat-icon>
+              </button>
+            </div>
           </div>
-        </div>
+        </form>
       </section>
     </div>
 
