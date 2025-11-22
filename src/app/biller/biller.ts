@@ -6,7 +6,9 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { provideNativeDateAdapter } from '@angular/material/core';
 import { MatSelectModule } from '@angular/material/select';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { MyErrorStateMatcher } from '../utils/ErrorStateMatcher.class';
+import { MyErrorStateMatcher } from '../core/classess/ErrorStateMatcher';
+import { SALES_TYPES } from './constants/fields';
+import {Option} from '../core/models/global';
 
 @Component({
   selector: 'app-biller',
@@ -26,7 +28,7 @@ import { MyErrorStateMatcher } from '../utils/ErrorStateMatcher.class';
 export class Biller {
   clients: string[] = ['Cliente 1', 'Cliente 2', 'Cliente 3'];
   clientTypes: string[] = ['Tipo 1', 'Tipo 2'];
-  saleTypes: string[] = ['Tipo 1', 'Tipo 2'];
+  saleTypes:  Option[] = SALES_TYPES;
   accounts: string[] = ['Entidad 1', 'Entidad 2'];
   mesaureUnities: string[] = ['kg', 'mg'];
 
