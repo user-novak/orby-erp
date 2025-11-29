@@ -13,161 +13,60 @@
 
   <main class="max-w-7xl mx-auto px-4 py-8">
     <div class="mb-6">
-      <button
-        class="px-6 py-3 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 transition flex items-center gap-2"
-      >
-        + Crear Nuevo Producto
+      <button matButton="filled">
+        <mat-icon>add</mat-icon>
+        Crear nuevo producto
       </button>
     </div>
 
-    <!-- Tabla de Productos -->
-    <div class="bg-white rounded-lg shadow overflow-hidden">
-      <div class="overflow-x-auto">
-        <table class="w-full">
-          <!-- Encabezados -->
-          <thead class="bg-orange-500 text-white">
-            <tr>
-              <th class="px-6 py-4 text-left text-sm font-semibold">Código</th>
-              <th class="px-6 py-4 text-left text-sm font-semibold">Descripción</th>
-              <th class="px-6 py-4 text-left text-sm font-semibold">Marca</th>
-              <th class="px-6 py-4 text-left text-sm font-semibold">U.M</th>
-              <th class="px-6 py-4 text-right text-sm font-semibold">Costo Uni.</th>
-              <th class="px-6 py-4 text-right text-sm font-semibold">Precio General</th>
-              <th class="px-6 py-4 text-right text-sm font-semibold">Stock</th>
-              <th class="px-6 py-4 text-center text-sm font-semibold">Acciones</th>
-            </tr>
-          </thead>
-
-          <!-- Cuerpo de la tabla con datos de ejemplo -->
-          <tbody class="divide-y divide-gray-200">
-            <!-- Producto 1 -->
-            <tr class="hover:bg-gray-50 transition">
-              <td class="px-6 py-4 text-sm text-gray-900 font-medium">P001</td>
-              <td class="px-6 py-4 text-sm text-gray-900">Miel de abeja fco x 1 kilo</td>
-              <td class="px-6 py-4 text-sm text-gray-600">Montibel</td>
-              <td class="px-6 py-4 text-sm text-gray-600">kg</td>
-              <td class="px-6 py-4 text-sm text-right text-gray-900">$24.40</td>
-              <td class="px-6 py-4 text-sm text-right font-semibold text-blue-600">$35.00</td>
-              <td class="px-6 py-4 text-sm text-right">
-                <span class="px-3 py-1 bg-yellow-200 text-yellow-900 rounded-full font-medium"
-                  >717</span
-                >
-              </td>
-              <td class="px-6 py-4 text-sm text-center">
-                <button class="text-blue-600 hover:text-blue-800 font-medium">Ver</button>
-              </td>
-            </tr>
-
-            <!-- Producto 2 -->
-            <tr class="hover:bg-gray-50 transition">
-              <td class="px-6 py-4 text-sm text-gray-900 font-medium">P002</td>
-              <td class="px-6 py-4 text-sm text-gray-900">Miel de abeja fco x 800 gr</td>
-              <td class="px-6 py-4 text-sm text-gray-600">Montibel</td>
-              <td class="px-6 py-4 text-sm text-gray-600">kg</td>
-              <td class="px-6 py-4 text-sm text-right text-gray-900">$22.50</td>
-              <td class="px-6 py-4 text-sm text-right font-semibold text-blue-600">$35.00</td>
-              <td class="px-6 py-4 text-sm text-right">
-                <span class="px-3 py-1 bg-yellow-200 text-yellow-900 rounded-full font-medium"
-                  >284</span
-                >
-              </td>
-              <td class="px-6 py-4 text-sm text-center">
-                <button class="text-blue-600 hover:text-blue-800 font-medium">Ver</button>
-              </td>
-            </tr>
-
-            <!-- Producto 3 -->
-            <tr class="hover:bg-gray-50 transition">
-              <td class="px-6 py-4 text-sm text-gray-900 font-medium">P003</td>
-              <td class="px-6 py-4 text-sm text-gray-900">Miel de abeja fco x 1/2 kilo</td>
-              <td class="px-6 py-4 text-sm text-gray-600">Montibel</td>
-              <td class="px-6 py-4 text-sm text-gray-600">kg</td>
-              <td class="px-6 py-4 text-sm text-right text-gray-900">$13.10</td>
-              <td class="px-6 py-4 text-sm text-right font-semibold text-blue-600">$25.00</td>
-              <td class="px-6 py-4 text-sm text-right">
-                <span class="px-3 py-1 bg-red-200 text-red-900 rounded-full font-medium">65</span>
-              </td>
-              <td class="px-6 py-4 text-sm text-center">
-                <button class="text-blue-600 hover:text-blue-800 font-medium">Ver</button>
-              </td>
-            </tr>
-
-            <!-- Producto 4 -->
-            <tr class="hover:bg-gray-50 transition">
-              <td class="px-6 py-4 text-sm text-gray-900 font-medium">P004</td>
-              <td class="px-6 py-4 text-sm text-gray-900">Paleta de fresa con leche</td>
-              <td class="px-6 py-4 text-sm text-gray-600">Montibel</td>
-              <td class="px-6 py-4 text-sm text-gray-600">uni</td>
-              <td class="px-6 py-4 text-sm text-right text-gray-900">$0.80</td>
-              <td class="px-6 py-4 text-sm text-right font-semibold text-blue-600">$3.00</td>
-              <td class="px-6 py-4 text-sm text-right">
-                <span class="px-3 py-1 bg-yellow-200 text-yellow-900 rounded-full font-medium"
-                  >230</span
-                >
-              </td>
-              <td class="px-6 py-4 text-sm text-center">
-                <button class="text-blue-600 hover:text-blue-800 font-medium">Ver</button>
-              </td>
-            </tr>
-
-            <!-- Producto 5 -->
-            <tr class="hover:bg-gray-50 transition">
-              <td class="px-6 py-4 text-sm text-gray-900 font-medium">P005</td>
-              <td class="px-6 py-4 text-sm text-gray-900">Paleta de coco con leche</td>
-              <td class="px-6 py-4 text-sm text-gray-600">Montibel</td>
-              <td class="px-6 py-4 text-sm text-gray-600">uni</td>
-              <td class="px-6 py-4 text-sm text-right text-gray-900">$0.80</td>
-              <td class="px-6 py-4 text-sm text-right font-semibold text-blue-600">$3.00</td>
-              <td class="px-6 py-4 text-sm text-right">
-                <span class="px-3 py-1 bg-yellow-200 text-yellow-900 rounded-full font-medium"
-                  >207</span
-                >
-              </td>
-              <td class="px-6 py-4 text-sm text-center">
-                <button class="text-blue-600 hover:text-blue-800 font-medium">Ver</button>
-              </td>
-            </tr>
-
-            <!-- Producto 6 -->
-            <tr class="hover:bg-gray-50 transition">
-              <td class="px-6 py-4 text-sm text-gray-900 font-medium">P006</td>
-              <td class="px-6 py-4 text-sm text-gray-900">Marciano de Coco con Leche</td>
-              <td class="px-6 py-4 text-sm text-gray-600">Montibel</td>
-              <td class="px-6 py-4 text-sm text-gray-600">uni</td>
-              <td class="px-6 py-4 text-sm text-right text-gray-900">$0.65</td>
-              <td class="px-6 py-4 text-sm text-right font-semibold text-blue-600">$2.00</td>
-              <td class="px-6 py-4 text-sm text-right">
-                <span class="px-3 py-1 bg-yellow-200 text-yellow-900 rounded-full font-medium"
-                  >445</span
-                >
-              </td>
-              <td class="px-6 py-4 text-sm text-center">
-                <button class="text-blue-600 hover:text-blue-800 font-medium">Ver</button>
-              </td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-    </div>
-
-    <!-- Paginación -->
-    <div class="mt-6 flex items-center justify-between">
-      <p class="text-sm text-gray-600">Mostrando 1 a 6 de 50 productos</p>
-      <div class="flex gap-2">
-        <button class="px-4 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50">
-          Anterior
-        </button>
-        <button class="px-4 py-2 bg-orange-500 text-white rounded-lg">1</button>
-        <button class="px-4 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50">
-          2
-        </button>
-        <button class="px-4 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50">
-          3
-        </button>
-        <button class="px-4 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50">
-          Siguiente
-        </button>
-      </div>
+    <div class="mat-elevation-z8">
+      <table mat-table [dataSource]="dataSource">
+        <ng-container matColumnDef="code">
+          <th mat-header-cell *matHeaderCellDef>Código</th>
+          <td mat-cell *matCellDef="let element">{{ element.code }}</td>
+        </ng-container>
+        <ng-container matColumnDef="description">
+          <th mat-header-cell *matHeaderCellDef>Código</th>
+          <td mat-cell *matCellDef="let element">{{ element.description }}</td>
+        </ng-container>
+        <ng-container matColumnDef="brand">
+          <th mat-header-cell *matHeaderCellDef>Marca</th>
+          <td mat-cell *matCellDef="let element">{{ element.brand }}</td>
+        </ng-container>
+        <ng-container matColumnDef="measure">
+          <th mat-header-cell *matHeaderCellDef>U.M</th>
+          <td mat-cell *matCellDef="let element">{{ element.measure }}</td>
+        </ng-container>
+        <ng-container matColumnDef="unit_price">
+          <th mat-header-cell *matHeaderCellDef>Costo Uni.</th>
+          <td mat-cell *matCellDef="let element">{{ element.unit_price }}</td>
+        </ng-container>
+        <ng-container matColumnDef="general_price">
+          <th mat-header-cell *matHeaderCellDef>Precio General.</th>
+          <td mat-cell *matCellDef="let element">{{ element.general_price }}</td>
+        </ng-container>
+        <ng-container matColumnDef="stock">
+          <th mat-header-cell *matHeaderCellDef>Stock</th>
+          <td mat-cell *matCellDef="let element">{{ element.stock }}</td>
+        </ng-container>
+        <ng-container matColumnDef="actions">
+          <th mat-header-cell *matHeaderCellDef>Ver detalle</th>
+          <td mat-cell *matCellDef="let element">
+            <button mat-icon-button>
+              <mat-icon>visibility</mat-icon>
+            </button>
+          </td>
+        </ng-container>
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+      </table>
+      <mat-paginator
+        [pageSize]="5"
+        [pageSizeOptions]="[5, 10, 20]"
+        showFirstLastButtons
+        aria-label="Select page of periodic elements"
+      >
+      </mat-paginator>
     </div>
   </main>
 </div>
