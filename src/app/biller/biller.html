@@ -1,271 +1,283 @@
-<div class="min-h-screen bg-[#f8f8f8] p-6">
-  <header class="mb-6">
-    <h1 class="text-3xl font-bold">Facturador</h1>
-    <p class="text-gray-600">Registra nuevas órdenes de venta</p>
-  </header>
-
-  <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-    <div class="lg:col-span-2 space-y-6">
-      <section class="bg-white rounded-xl shadow p-6">
-        <h2 class="text-lg font-semibold mb-4">Información general</h2>
-
-        <form [formGroup]="generalInfoForm" class="grid grid-cols-1 md:grid-cols-4 gap-4">
-          <div>
-            <mat-form-field class="w-full">
-              <mat-label>Fecha de registro</mat-label>
-              <input
-                matInput
-                [matDatepicker]="picker"
-                formControlName="registerDate"
-                [errorStateMatcher]="matcher"
-              />
-              <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
-              <mat-datepicker #picker></mat-datepicker>
-
-              @if (generalInfoForm.controls['registerDate'].hasError('required')) {
-              <mat-error>Campo fecha de registro es obligatorio</mat-error>
-              }
-            </mat-form-field>
-          </div>
-
-          <div>
-            <mat-form-field class="w-full">
-              <mat-label>Tipo de cliente</mat-label>
-              <mat-select formControlName="clientType">
-                @for (client of clientTypes; track client) {
-                <mat-option [value]="client">{{ client }}</mat-option>
-                }
-              </mat-select>
-              @if (generalInfoForm.controls['clientType'].hasError('required')) {
-              <mat-error>Campo tipo de cliente es obligatorio</mat-error>
-              }
-            </mat-form-field>
-          </div>
-
-          <div>
-            <mat-form-field class="w-full">
-              <mat-label>Cliente</mat-label>
-              <mat-select formControlName="client">
-                @for (client of clients; track client) {
-                <mat-option [value]="client">{{ client }}</mat-option>
-                }
-              </mat-select>
-              @if (generalInfoForm.controls['client'].hasError('required')) {
-              <mat-error>Campo cliente es obligatorio</mat-error>
-              }
-            </mat-form-field>
-          </div>
-
-          <div>
-            <mat-form-field class="w-full">
-              <mat-label>Lugar</mat-label>
-              <input matInput formControlName="place" />
-            </mat-form-field>
-          </div>
-
-          <div>
-            <mat-form-field class="w-full">
-              <mat-label>Tipo de venta</mat-label>
-              <mat-select formControlName="saleType">
-                @for (sale of saleTypes; track sale) {
-                <mat-option [value]="sale.value">{{ sale.label }}</mat-option>
-                }
-              </mat-select>
-              @if (generalInfoForm.controls['saleType'].hasError('required')) {
-              <mat-error>Campo tipo de venta es obligatorio</mat-error>
-              }
-            </mat-form-field>
-          </div>
-
-          <div>
-            <mat-form-field class="w-full">
-              <mat-label>Entidad financiera</mat-label>
-              <mat-select formControlName="account">
-                @for (account of accounts; track account) {
-                <mat-option [value]="account">{{ account }}</mat-option>
-                }
-              </mat-select>
-              @if (generalInfoForm.controls['account'].hasError('required')) {
-              <mat-error>Campo entidad financiera es obligatorio</mat-error>
-              }
-            </mat-form-field>
-          </div>
-
-          @if(generalInfoForm.controls['saleType'].value === 'ACR') {
-          <div>
-            <mat-form-field class="w-full">
-              <mat-label>Fecha de pago</mat-label>
-              <input matInput formControlName="paymentDate" [matDatepicker]="paymentDay" />
-              <mat-datepicker-toggle matIconSuffix [for]="paymentDay"></mat-datepicker-toggle>
-              <mat-datepicker #paymentDay></mat-datepicker>
-              @if (generalInfoForm.controls['paymentDate'].hasError('required')) {
-              <mat-error>Campo fecha de pago es obligatorio</mat-error>
-              }
-            </mat-form-field>
-          </div>
-          }
-        </form>
-      </section>
-
-      <section class="bg-white rounded-xl shadow p-6">
-        <h2 class="text-lg font-semibold mb-4">Registro de pedidos</h2>
-        <form
-          [formGroup]="billerForm"
-          (ngSubmit)="addProduct()"
-          class="grid grid-cols-1 md:grid-cols-6 gap-2"
-        >
-          <mat-form-field>
-            <mat-label>Cantidad</mat-label>
-            <input matInput formControlName="quantity" type="number" />
-            @if (billerForm.controls['quantity'].hasError('required')) {
-            <mat-error>Campo cantidad es obligatorio</mat-error>
-            } @if (billerForm.controls['quantity'].hasError('min')) {
-            <mat-error>Campo cantidad debe ser mínimo 1</mat-error>
-            }
-          </mat-form-field>
-
-          <mat-form-field>
-            <mat-label>Unidad de medida</mat-label>
-            <mat-select formControlName="measureUnity">
-              @for (unity of mesaureUnities; track unity) {
-              <mat-option [value]="unity">{{ unity }}</mat-option>
-              }
-            </mat-select>
-            @if (billerForm.controls['measureUnity'].hasError('required')) {
-            <mat-error>Campo unidad de medida es obligatorio</mat-error>
-            }
-          </mat-form-field>
-
-          <mat-form-field>
-            <mat-label>Descripción</mat-label>
-            <mat-select formControlName="productDescription">
-              @for (product of products; track product) {
-              <mat-option [value]="product">{{ product }}</mat-option>
-              }
-            </mat-select>
-            @if (billerForm.controls['productDescription'].hasError('required')) {
-            <mat-error>Campo descripción es obligatorio</mat-error>
-            }
-          </mat-form-field>
-
-          <mat-form-field>
-            <mat-label>Precio unitario</mat-label>
-            <input matInput formControlName="unitPrice" type="number" />
-          </mat-form-field>
-
-          <mat-form-field>
-            <mat-label>Total</mat-label>
-            <input matInput formControlName="totalPrice" type="number" />
-          </mat-form-field>
-
-          <div class="flex items-start justify-center gap-2">
-            <div class="flex items-center justify-center">
-              <button
-                matFab
-                aria-label="Clean button"
-                class="w-11 h-11 rounded-full bg-gray-200 hover:bg-gray-300 transition-colors cursor-pointer"
-              >
-                <mat-icon>add</mat-icon>
-              </button>
-            </div>
-
-            <div class="flex items-center justify-center">
-              <button
-                (click)="resetBillerForm()"
-                type="button"
-                matFab
-                aria-label="Clean button"
-                class="w-11 h-11 rounded-full bg-gray-200 hover:bg-gray-300 transition-colors cursor-pointer"
-              >
-                <mat-icon>cached</mat-icon>
-              </button>
-            </div>
-          </div>
-        </form>
-      </section>
-
-      <section class="bg-white rounded-xl shadow p-6">
-        <h2 class="text-lg font-semibold mb-4">Productos agregados</h2>
-
-        @if (productsList.length === 0) {
-        <p class="text-gray-500 text-sm">No hay productos agregados.</p>
-        } @else {
-
-        <div class="overflow-x-auto">
-          <table class="min-w-full border border-gray-200 rounded-lg overflow-hidden">
-            <thead class="bg-gray-50">
-              <tr>
-                <th class="px-4 py-2 text-left text-sm font-semibold text-gray-700">Cantidad</th>
-                <th class="px-4 py-2 text-left text-sm font-semibold text-gray-700">Unidad</th>
-                <th class="px-4 py-2 text-left text-sm font-semibold text-gray-700">Descripción</th>
-                <th class="px-4 py-2 text-left text-sm font-semibold text-gray-700">
-                  Precio Unit.
-                </th>
-                <th class="px-4 py-2 text-left text-sm font-semibold text-gray-700">Total</th>
-                <th class="px-4 py-2 text-left text-sm font-semibold text-gray-700">Acciones</th>
-              </tr>
-            </thead>
-
-            <tbody class="divide-y divide-gray-200">
-              @for (item of productsList; track item; ; let idx = $index) {
-              <tr class="hover:bg-gray-50">
-                <td class="px-4 py-2 text-sm">{{ item.quantity }}</td>
-                <td class="px-4 py-2 text-sm">{{ item.measureUnity }}</td>
-                <td class="px-4 py-2 text-sm">{{ item.productDescription }}</td>
-                <td class="px-4 py-2 text-sm">S/. {{ item.unitPrice }}</td>
-                <td class="px-4 py-2 text-sm font-semibold text-gray-700">
-                  S/.{{ item.totalPrice }}
-                </td>
-                <td class="px-4 py-2 text-sm">
-                  <button
-                    (click)="removeProduct(idx)"
-                    type="button"
-                    matFab
-                    aria-label="Delete button"
-                    class="cursor-pointer"
-                  >
-                    <mat-icon>delete</mat-icon>
-                  </button>
-                </td>
-              </tr>
-              }
-            </tbody>
-          </table>
+<div class="bg-gray-50">
+  <header class="bg-white shadow mb-6">
+    <div class="px-8 py-6">
+      <div class="flex items-center justify-between">
+        <div>
+          <h1 class="text-3xl font-bold text-gray-900">Facturador</h1>
+          <p class="text-gray-600">Registra nuevas órdenes de venta</p>
         </div>
-
-        }
-      </section>
-    </div>
-
-    <aside class="lg:col-span-1">
-      <div class="sticky top-6 bg-white rounded-xl shadow p-6 space-y-4">
-        <h3 class="text-xl font-semibold">Resumen del Pedido</h3>
-
-        <div class="flex justify-between text-gray-600">
-          <span>Subtotal</span>
-          <span>S/{{ productListAmount }}</span>
-        </div>
-
-        <div class="flex justify-between text-gray-600">
-          <span>IGV (18%)</span>
-          <span>S/{{ taxAmount }}</span>
-        </div>
-
-        <div class="flex justify-between text-xl font-bold bg-blue-50 p-3 rounded">
-          <span>Total</span>
-          <span class="text-blue-700">S/{{ totalAmount }}</span>
-        </div>
-
-        <div class="text-sm">
-          <p>Total items: {{ productsList.length }}</p>
-        </div>
-
-        <button
-          class="w-full cursor-pointer bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-4 rounded-lg transition-colors"
-        >
-          Registrar pedido
+        <button (click)="goHome()" matButton="filled">
+          <mat-icon>home</mat-icon>
+          Regresar
         </button>
       </div>
-    </aside>
-  </div>
+    </div>
+  </header>
+
+  <main class="px-8">
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+      <div class="lg:col-span-2 space-y-6">
+        <section class="bg-white rounded-xl shadow p-6">
+          <h2 class="text-lg font-semibold mb-4">Información general</h2>
+
+          <form [formGroup]="generalInfoForm" class="grid grid-cols-1 md:grid-cols-4 gap-4">
+            <div>
+              <mat-form-field class="w-full">
+                <mat-label>Fecha de registro</mat-label>
+                <input
+                  matInput
+                  [matDatepicker]="picker"
+                  formControlName="registerDate"
+                  [errorStateMatcher]="matcher"
+                />
+                <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+                <mat-datepicker #picker></mat-datepicker>
+
+                @if (generalInfoForm.controls['registerDate'].hasError('required')) {
+                <mat-error>Campo fecha de registro es obligatorio</mat-error>
+                }
+              </mat-form-field>
+            </div>
+
+            <div>
+              <mat-form-field class="w-full">
+                <mat-label>Tipo de cliente</mat-label>
+                <mat-select formControlName="clientType">
+                  @for (client of clientTypes; track client) {
+                  <mat-option [value]="client">{{ client }}</mat-option>
+                  }
+                </mat-select>
+                @if (generalInfoForm.controls['clientType'].hasError('required')) {
+                <mat-error>Campo tipo de cliente es obligatorio</mat-error>
+                }
+              </mat-form-field>
+            </div>
+
+            <div>
+              <mat-form-field class="w-full">
+                <mat-label>Cliente</mat-label>
+                <mat-select formControlName="client">
+                  @for (client of clients; track client) {
+                  <mat-option [value]="client">{{ client }}</mat-option>
+                  }
+                </mat-select>
+                @if (generalInfoForm.controls['client'].hasError('required')) {
+                <mat-error>Campo cliente es obligatorio</mat-error>
+                }
+              </mat-form-field>
+            </div>
+
+            <div>
+              <mat-form-field class="w-full">
+                <mat-label>Lugar</mat-label>
+                <input matInput formControlName="place" />
+              </mat-form-field>
+            </div>
+
+            <div>
+              <mat-form-field class="w-full">
+                <mat-label>Tipo de venta</mat-label>
+                <mat-select formControlName="saleType">
+                  @for (sale of saleTypes; track sale) {
+                  <mat-option [value]="sale.value">{{ sale.label }}</mat-option>
+                  }
+                </mat-select>
+                @if (generalInfoForm.controls['saleType'].hasError('required')) {
+                <mat-error>Campo tipo de venta es obligatorio</mat-error>
+                }
+              </mat-form-field>
+            </div>
+
+            <div>
+              <mat-form-field class="w-full">
+                <mat-label>Entidad financiera</mat-label>
+                <mat-select formControlName="account">
+                  @for (account of accounts; track account) {
+                  <mat-option [value]="account">{{ account }}</mat-option>
+                  }
+                </mat-select>
+                @if (generalInfoForm.controls['account'].hasError('required')) {
+                <mat-error>Campo entidad financiera es obligatorio</mat-error>
+                }
+              </mat-form-field>
+            </div>
+
+            @if(generalInfoForm.controls['saleType'].value === 'ACR') {
+            <div>
+              <mat-form-field class="w-full">
+                <mat-label>Fecha de pago</mat-label>
+                <input matInput formControlName="paymentDate" [matDatepicker]="paymentDay" />
+                <mat-datepicker-toggle matIconSuffix [for]="paymentDay"></mat-datepicker-toggle>
+                <mat-datepicker #paymentDay></mat-datepicker>
+                @if (generalInfoForm.controls['paymentDate'].hasError('required')) {
+                <mat-error>Campo fecha de pago es obligatorio</mat-error>
+                }
+              </mat-form-field>
+            </div>
+            }
+          </form>
+        </section>
+
+        <section class="bg-white rounded-xl shadow p-6">
+          <h2 class="text-lg font-semibold mb-4">Registro de pedidos</h2>
+          <form
+            [formGroup]="billerForm"
+            (ngSubmit)="addProduct()"
+            class="grid grid-cols-1 md:grid-cols-6 gap-2"
+          >
+            <mat-form-field>
+              <mat-label>Cantidad</mat-label>
+              <input matInput formControlName="quantity" type="number" />
+              @if (billerForm.controls['quantity'].hasError('required')) {
+              <mat-error>Campo cantidad es obligatorio</mat-error>
+              } @if (billerForm.controls['quantity'].hasError('min')) {
+              <mat-error>Campo cantidad debe ser mínimo 1</mat-error>
+              }
+            </mat-form-field>
+
+            <mat-form-field>
+              <mat-label>Unidad de medida</mat-label>
+              <mat-select formControlName="measureUnity">
+                @for (unity of mesaureUnities; track unity) {
+                <mat-option [value]="unity">{{ unity }}</mat-option>
+                }
+              </mat-select>
+              @if (billerForm.controls['measureUnity'].hasError('required')) {
+              <mat-error>Campo unidad de medida es obligatorio</mat-error>
+              }
+            </mat-form-field>
+
+            <mat-form-field>
+              <mat-label>Descripción</mat-label>
+              <mat-select formControlName="productDescription">
+                @for (product of products; track product) {
+                <mat-option [value]="product">{{ product }}</mat-option>
+                }
+              </mat-select>
+              @if (billerForm.controls['productDescription'].hasError('required')) {
+              <mat-error>Campo descripción es obligatorio</mat-error>
+              }
+            </mat-form-field>
+
+            <mat-form-field>
+              <mat-label>Precio unitario</mat-label>
+              <input matInput formControlName="unitPrice" type="number" />
+            </mat-form-field>
+
+            <mat-form-field>
+              <mat-label>Total</mat-label>
+              <input matInput formControlName="totalPrice" type="number" />
+            </mat-form-field>
+
+            <div class="flex items-start justify-center gap-2">
+              <div class="flex items-center justify-center">
+                <button
+                  matFab
+                  aria-label="Clean button"
+                  class="w-11 h-11 rounded-full bg-gray-200 hover:bg-gray-300 transition-colors cursor-pointer"
+                >
+                  <mat-icon>add</mat-icon>
+                </button>
+              </div>
+
+              <div class="flex items-center justify-center">
+                <button
+                  (click)="resetBillerForm()"
+                  type="button"
+                  matFab
+                  aria-label="Clean button"
+                  class="w-11 h-11 rounded-full bg-gray-200 hover:bg-gray-300 transition-colors cursor-pointer"
+                >
+                  <mat-icon>cached</mat-icon>
+                </button>
+              </div>
+            </div>
+          </form>
+        </section>
+
+        <section class="bg-white rounded-xl shadow p-6">
+          <h2 class="text-lg font-semibold mb-4">Productos agregados</h2>
+
+          @if (productsList.length === 0) {
+          <p class="text-gray-500 text-sm">No hay productos agregados.</p>
+          } @else {
+
+          <div class="overflow-x-auto">
+            <table class="min-w-full border border-gray-200 rounded-lg overflow-hidden">
+              <thead class="bg-gray-50">
+                <tr>
+                  <th class="px-4 py-2 text-left text-sm font-semibold text-gray-700">Cantidad</th>
+                  <th class="px-4 py-2 text-left text-sm font-semibold text-gray-700">Unidad</th>
+                  <th class="px-4 py-2 text-left text-sm font-semibold text-gray-700">
+                    Descripción
+                  </th>
+                  <th class="px-4 py-2 text-left text-sm font-semibold text-gray-700">
+                    Precio Unit.
+                  </th>
+                  <th class="px-4 py-2 text-left text-sm font-semibold text-gray-700">Total</th>
+                  <th class="px-4 py-2 text-left text-sm font-semibold text-gray-700">Acciones</th>
+                </tr>
+              </thead>
+
+              <tbody class="divide-y divide-gray-200">
+                @for (item of productsList; track item; ; let idx = $index) {
+                <tr class="hover:bg-gray-50">
+                  <td class="px-4 py-2 text-sm">{{ item.quantity }}</td>
+                  <td class="px-4 py-2 text-sm">{{ item.measureUnity }}</td>
+                  <td class="px-4 py-2 text-sm">{{ item.productDescription }}</td>
+                  <td class="px-4 py-2 text-sm">S/. {{ item.unitPrice }}</td>
+                  <td class="px-4 py-2 text-sm font-semibold text-gray-700">
+                    S/.{{ item.totalPrice }}
+                  </td>
+                  <td class="px-4 py-2 text-sm">
+                    <button
+                      (click)="removeProduct(idx)"
+                      type="button"
+                      matFab
+                      aria-label="Delete button"
+                      class="cursor-pointer"
+                    >
+                      <mat-icon>delete</mat-icon>
+                    </button>
+                  </td>
+                </tr>
+                }
+              </tbody>
+            </table>
+          </div>
+
+          }
+        </section>
+      </div>
+
+      <aside class="lg:col-span-1">
+        <div class="sticky top-6 bg-white rounded-xl shadow p-6 space-y-4">
+          <h3 class="text-xl font-semibold">Resumen del Pedido</h3>
+
+          <div class="flex justify-between text-gray-600">
+            <span>Subtotal</span>
+            <span>S/{{ productListAmount }}</span>
+          </div>
+
+          <div class="flex justify-between text-gray-600">
+            <span>IGV (18%)</span>
+            <span>S/{{ taxAmount }}</span>
+          </div>
+
+          <div class="flex justify-between text-xl font-bold bg-blue-50 p-3 rounded">
+            <span>Total</span>
+            <span class="text-blue-700">S/{{ totalAmount }}</span>
+          </div>
+
+          <div class="text-sm">
+            <p>Total items: {{ productsList.length }}</p>
+          </div>
+
+          <button class="w-full"  matButton="filled">
+            Registrar pedido
+          </button>
+        </div>
+      </aside>
+    </div>
+  </main>
 </div>

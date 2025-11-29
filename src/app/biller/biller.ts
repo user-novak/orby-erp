@@ -11,6 +11,8 @@ import { SALES_TYPES } from './constants/fields';
 import { Option } from '../core/models/global';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { BillerForm } from './models/biller';
+import { Router } from '@angular/router';
+import { MatButtonModule } from '@angular/material/button';
 
 @Component({
   selector: 'app-biller',
@@ -21,6 +23,7 @@ import { BillerForm } from './models/biller';
     MatInputModule,
     MatDatepickerModule,
     MatSelectModule,
+    MatButtonModule,
     MatIconModule,
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -43,6 +46,7 @@ export class Biller {
   matcher = new MyErrorStateMatcher();
 
   private readonly _fb = inject(FormBuilder);
+  private readonly router = inject(Router);
 
   constructor() {
     this.generalInfoForm = this.setGeneralInfoForm();
@@ -63,6 +67,10 @@ export class Biller {
 
   get totalAmount(): number {
     return Number((this.productListAmount + this.taxAmount).toFixed(2));
+  }
+
+  goHome() {
+    this.router.navigate(['/']);
   }
 
   addProduct() {

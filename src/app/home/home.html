@@ -27,12 +27,20 @@
       <div class="bg-white rounded-lg shadow hover:shadow-lg transition-shadow p-6">
         <div class="flex items-center justify-between mb-4">
           <h2 class="text-xl font-semibold text-gray-800">Almacén</h2>
-          <div class="bg-green-100 p-3 rounded-lg cursor-pointer">
+          <button
+            (click)="navigateTo('storage')"
+            class="bg-green-100 p-3 rounded-lg cursor-pointer"
+          >
             <mat-icon>checklist</mat-icon>
-          </div>
+          </button>
         </div>
         <p class="text-gray-600 text-sm">Crea y administra tus proyectos</p>
-        <button class="mt-4 text-green-600 font-medium hover:text-green-800 cursor-pointer">Ver más →</button>
+        <button
+          (click)="navigateTo('storage')"
+          class="mt-4 text-green-600 font-medium hover:text-green-800 cursor-pointer"
+        >
+          Ver más →
+        </button>
       </div>
 
       <!-- Módulo 3: Reportes -->
