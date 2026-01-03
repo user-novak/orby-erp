@@ -14,6 +14,7 @@ export const routes: Routes = [
   },
   {
     path: 'storage',
-    component: Storage,
+    loadChildren: () =>
+      import('./storage/storage.routes').then(m => m.STORAGE_ROUTES),
   },
 ];
