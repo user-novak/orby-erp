@@ -1,13 +1,5 @@
 <div class="bg-gray-50">
-  <header class="module-header">
-    <div class="flex items-center justify-between h-full max-w-7xl mx-auto px-4 py-6">
-      <h1 class="text-3xl font-bold text-gray-900">Facturador</h1>
-      <button (click)="goHome()" matButton="filled">
-        <mat-icon>home</mat-icon>
-        Regresar
-      </button>
-    </div>
-  </header>
+  <app-module-header [moduleTitle]="'Facturador'"></app-module-header>
 
   <main class="module-main">
     <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">

@@ -1,10 +1,10 @@
 import { Component, inject } from '@angular/core';
 import { Router, RouterOutlet } from '@angular/router';
-import { MatIconModule } from '@angular/material/icon';
+import { ModuleHeader } from '../core/components/module-header/module-header';
 
 @Component({
   selector: 'app-storage',
-  imports: [MatIconModule, RouterOutlet],
+  imports: [RouterOutlet, ModuleHeader],
   templateUrl: './storage.html',
   styleUrl: './storage.css',
 })
