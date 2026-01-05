@@ -1,1 +1,114 @@
-<p>storage-form works!</p>
+<form class="mt-4 mx-8 grid grid-cols-1 lg:grid-cols-4 gap-x-4">
+  <div>
+    <mat-form-field class="w-full">
+      <mat-label>Descripción del producto</mat-label>
+      <input matInput />
+    </mat-form-field>
+  </div>
+
+  <div>
+    <mat-form-field class="w-full">
+      <mat-label>Marca</mat-label>
+      <mat-select>
+        @for (value of tempValues; track value) {
+        <mat-option [value]="value">{{ value }}</mat-option>
+        }
+      </mat-select>
+    </mat-form-field>
+  </div>
+
+  <div>
+    <mat-form-field class="w-full">
+      <mat-label>Unidad de medida</mat-label>
+      <mat-select formControlName="measureUnity">
+        @for (unity of mesaureUnities; track unity) {
+        <mat-option [value]="unity">{{ unity }}</mat-option>
+        }
+      </mat-select>
+    </mat-form-field>
+  </div>
+
+  <div>
+    <mat-form-field class="w-full" floatLabel="always">
+      <mat-label>Costo unitario</mat-label>
+      <input matInput type="number" placeholder="0" />
+      <span matTextPrefix>S/.&nbsp;</span>
+    </mat-form-field>
+  </div>
+
+  <div>
+    <mat-form-field class="w-full" floatLabel="always">
+      <mat-label>Porcentaje distribuidor</mat-label>
+      <input matInput type="number" placeholder="0" />
+      <span matTextSuffix>%</span>
+    </mat-form-field>
+  </div>
+
+  <div>
+    <mat-form-field class="w-full" floatLabel="always">
+      <mat-label>Precio distribuidor</mat-label>
+      <input matInput type="number" placeholder="0" />
+      <span matTextPrefix>S/.&nbsp;</span>
+    </mat-form-field>
+  </div>
+
+  <div>
+    <mat-form-field class="w-full" floatLabel="always">
+      <mat-label>Porcentaje mayorista</mat-label>
+      <input matInput type="number" placeholder="0" />
+      <span matTextSuffix>%</span>
+    </mat-form-field>
+  </div>
+
+  <div>
+    <mat-form-field class="w-full" floatLabel="always">
+      <mat-label>Precio mayorista</mat-label>
+      <input matInput type="number" placeholder="0" />
+      <span matTextPrefix>S/.&nbsp;</span>
+    </mat-form-field>
+  </div>
+
+  <div>
+    <mat-form-field class="w-full" floatLabel="always">
+      <mat-label>Porcentaje general</mat-label>
+      <input matInput type="number" placeholder="0" />
+      <span matTextSuffix>%</span>
+    </mat-form-field>
+  </div>
+
+  <div>
+    <mat-form-field class="w-full" floatLabel="always">
+      <mat-label>Precio general</mat-label>
+      <input matInput type="number" placeholder="0" />
+      <span matTextPrefix>S/.&nbsp;</span>
+    </mat-form-field>
+  </div>
+
+  <div>
+    <mat-form-field class="w-full">
+      <mat-label>Entradas</mat-label>
+      <input type="number" matInput />
+    </mat-form-field>
+  </div>
+
+  <div>
+    <mat-form-field class="w-full">
+      <mat-label>Salidas</mat-label>
+      <input type="number" matInput />
+    </mat-form-field>
+  </div>
+
+  <div>
+    <mat-form-field class="w-full">
+      <mat-label>Stock</mat-label>
+      <input type="number" matInput />
+    </mat-form-field>
+  </div>
+
+  <div class="col-span-1 lg:col-span-4 flex justify-center">
+    <button class="w-full" matButton="filled">
+      Crear item
+      <mat-icon>add</mat-icon>
+    </button>
+  </div>
+</form>

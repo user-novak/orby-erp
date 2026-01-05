@@ -13,6 +13,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { BillerForm } from './models/biller';
 import { MatButtonModule } from '@angular/material/button';
 import { ModuleHeader } from '../core/components/module-header/module-header';
+import { MESAURE_UNITS } from '../core/constants/global';
 
 @Component({
   selector: 'app-biller',
@@ -37,7 +38,7 @@ export class Biller {
   clientTypes: string[] = ['Tipo 1', 'Tipo 2'];
   products: string[] = ['Producto 1', 'Producto 2', 'Producto 3'];
   accounts: string[] = ['Entidad 1', 'Entidad 2'];
-  mesaureUnities: string[] = ['kg', 'mg'];
+  mesaureUnities: string[] = MESAURE_UNITS;
 
   generalInfoForm: FormGroup;
   billerForm: FormGroup;

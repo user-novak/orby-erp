@@ -1,0 +1,1 @@
+ export const MESAURE_UNITS: string[] = ['kg', 'mg'];
