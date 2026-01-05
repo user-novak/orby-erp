@@ -105,8 +105,13 @@
     </mat-form-field>
   </div>
 
-  <div class="col-span-1 lg:col-span-4 flex justify-center">
-    <button class="w-full" matButton="filled">
+  <div class="col-span-1 lg:col-span-4 flex flex-col lg:flex-row lg:justify-end gap-x-2 gap-y-4">
+    <button matButton="tonal" class="order-2 lg:order-1">
+      Limpiar
+      <mat-icon>autorenew</mat-icon>
+    </button>
+
+    <button matButton="filled" class="order-1 lg:order-2">
       Crear item
       <mat-icon>add</mat-icon>
     </button>

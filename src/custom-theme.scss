@@ -33,3 +33,11 @@ body {
   // Reset the user agent margin.
   margin: 0;
 }
+
+:root {
+  --mat-sys-secondary: #6b7280;
+  --mat-sys-on-secondary: #ffffff;
+
+  --mat-sys-secondary-container: #e5e7eb;
+  --mat-sys-on-secondary-container: #111827;
+}
