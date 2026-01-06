@@ -36,73 +36,91 @@
     </mat-form-field>
   </div>
 
-  <div>
-    <mat-form-field class="w-full" floatLabel="always">
-      <mat-label>Porcentaje distribuidor</mat-label>
-      <input matInput type="number" placeholder="0" />
-      <span matTextSuffix>%</span>
-    </mat-form-field>
+  <div class="col-span-4">
+    <hr class="h-0.5 mx-auto my-4 bg-blue-500 border-0 rounded-sm" />
   </div>
 
-  <div>
-    <mat-form-field class="w-full" floatLabel="always">
-      <mat-label>Precio distribuidor</mat-label>
-      <input matInput type="number" placeholder="0" />
-      <span matTextPrefix>S/.&nbsp;</span>
-    </mat-form-field>
+  <div class="mt-2 col-span-4 flex flex-row justify-start gap-2">
+    <div class="flex flex-col">
+      <div>
+        <mat-form-field class="w-full" floatLabel="always">
+          <mat-label>Porcentaje distribuidor</mat-label>
+          <input matInput type="number" placeholder="0" />
+          <span matTextSuffix>%</span>
+        </mat-form-field>
+      </div>
+
+      <div>
+        <mat-form-field class="w-full" floatLabel="always">
+          <mat-label>Precio distribuidor</mat-label>
+          <input matInput type="number" placeholder="0" />
+          <span matTextSuffix>S/.&nbsp;</span>
+        </mat-form-field>
+      </div>
+    </div>
+
+    <div class="flex flex-col">
+      <div>
+        <mat-form-field class="w-full" floatLabel="always">
+          <mat-label>Porcentaje mayorista</mat-label>
+          <input matInput type="number" placeholder="0" />
+          <span matTextSuffix>%</span>
+        </mat-form-field>
+      </div>
+
+      <div>
+        <mat-form-field class="w-full" floatLabel="always">
+          <mat-label>Precio mayorista</mat-label>
+          <input matInput type="number" placeholder="0" />
+          <span matTextSuffix>S/.&nbsp;</span>
+        </mat-form-field>
+      </div>
+    </div>
+
+    <div class="flex flex-col">
+      <div>
+        <mat-form-field class="w-full" floatLabel="always">
+          <mat-label>Porcentaje general</mat-label>
+          <input matInput type="number" placeholder="0" />
+          <span matTextSuffix>%</span>
+        </mat-form-field>
+      </div>
+
+      <div>
+        <mat-form-field class="w-full" floatLabel="always">
+          <mat-label>Precio general</mat-label>
+          <input matInput type="number" placeholder="0" />
+          <span matTextSuffix>S/.&nbsp;</span>
+        </mat-form-field>
+      </div>
+    </div>
   </div>
 
-  <div>
-    <mat-form-field class="w-full" floatLabel="always">
-      <mat-label>Porcentaje mayorista</mat-label>
-      <input matInput type="number" placeholder="0" />
-      <span matTextSuffix>%</span>
-    </mat-form-field>
+  <div class="col-span-4">
+    <hr class="h-0.5 mx-auto my-4 bg-blue-500 border-0 rounded-sm" />
   </div>
 
-  <div>
-    <mat-form-field class="w-full" floatLabel="always">
-      <mat-label>Precio mayorista</mat-label>
-      <input matInput type="number" placeholder="0" />
-      <span matTextPrefix>S/.&nbsp;</span>
-    </mat-form-field>
-  </div>
+  <div class="mt-2 col-span-4 flex flex-row justify-start gap-2">
+    <div>
+      <mat-form-field class="w-full">
+        <mat-label>Entradas</mat-label>
+        <input type="number" matInput />
+      </mat-form-field>
+    </div>
 
-  <div>
-    <mat-form-field class="w-full" floatLabel="always">
-      <mat-label>Porcentaje general</mat-label>
-      <input matInput type="number" placeholder="0" />
-      <span matTextSuffix>%</span>
-    </mat-form-field>
-  </div>
+    <div>
+      <mat-form-field class="w-full">
+        <mat-label>Salidas</mat-label>
+        <input type="number" matInput />
+      </mat-form-field>
+    </div>
 
-  <div>
-    <mat-form-field class="w-full" floatLabel="always">
-      <mat-label>Precio general</mat-label>
-      <input matInput type="number" placeholder="0" />
-      <span matTextPrefix>S/.&nbsp;</span>
-    </mat-form-field>
-  </div>
-
-  <div>
-    <mat-form-field class="w-full">
-      <mat-label>Entradas</mat-label>
-      <input type="number" matInput />
-    </mat-form-field>
-  </div>
-
-  <div>
-    <mat-form-field class="w-full">
-      <mat-label>Salidas</mat-label>
-      <input type="number" matInput />
-    </mat-form-field>
-  </div>
-
-  <div>
-    <mat-form-field class="w-full">
-      <mat-label>Stock</mat-label>
-      <input type="number" matInput />
-    </mat-form-field>
+    <div>
+      <mat-form-field class="w-full">
+        <mat-label>Stock</mat-label>
+        <input type="number" matInput />
+      </mat-form-field>
+    </div>
   </div>
 
   <div class="col-span-1 lg:col-span-4 flex flex-col lg:flex-row lg:justify-end gap-x-2 gap-y-4">
