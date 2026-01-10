@@ -14,6 +14,7 @@ import { BillerForm } from './models/biller';
 import { MatButtonModule } from '@angular/material/button';
 import { ModuleHeader } from '../core/components/module-header/module-header';
 import { MESAURE_UNITS } from '../core/constants/global';
+import { TYPE_CLIENT, TYPES_CLIENT } from '../core/enums/global';
 
 @Component({
   selector: 'app-biller',
@@ -35,7 +36,7 @@ import { MESAURE_UNITS } from '../core/constants/global';
 export class Biller {
   saleTypes: Option[] = SALES_TYPES;
   clients: string[] = ['Cliente 1', 'Cliente 2', 'Cliente 3'];
-  clientTypes: string[] = ['Tipo 1', 'Tipo 2'];
+  clientTypes: TYPES_CLIENT = ['Distribuidor', 'Mayorista', 'U. final'];
   products: string[] = ['Producto 1', 'Producto 2', 'Producto 3'];
   accounts: string[] = ['Entidad 1', 'Entidad 2'];
   mesaureUnities: string[] = MESAURE_UNITS;
@@ -140,7 +141,6 @@ export class Biller {
   private setGeneralInfoForm() {
     return this._fb.group({
       registerDate: [null, [Validators.required]],
-      clientType: [null, [Validators.required]],
       client: [null, [Validators.required]],
       saleType: [null, [Validators.required]],
       account: [null, [Validators.required]],
@@ -154,6 +154,7 @@ export class Biller {
       quantity: [null, [Validators.required, Validators.min(1)]],
       measureUnity: [null, [Validators.required]],
       productDescription: [null, [Validators.required]],
+      clientType: ['U. final', [Validators.required]],
       unitPrice: [null, [Validators.required, Validators.min(1)]],
       totalPrice: [null, [Validators.required, Validators.min(1)]],
     });

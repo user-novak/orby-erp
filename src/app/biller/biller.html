@@ -7,7 +7,7 @@
         <section class="bg-white rounded-xl shadow p-6">
           <h2 class="text-lg font-semibold mb-4">Información general</h2>
 
-          <form [formGroup]="generalInfoForm" class="grid grid-cols-1 md:grid-cols-4 gap-4">
+          <form [formGroup]="generalInfoForm" class="grid grid-cols-1 md:grid-cols-5 gap-4">
             <div>
               <mat-form-field class="w-full">
                 <mat-label>Fecha de registro</mat-label>
@@ -22,20 +22,6 @@
 
                 @if (generalInfoForm.controls['registerDate'].hasError('required')) {
                 <mat-error>Campo fecha de registro es obligatorio</mat-error>
-                }
-              </mat-form-field>
-            </div>
-
-            <div>
-              <mat-form-field class="w-full">
-                <mat-label>Tipo de cliente</mat-label>
-                <mat-select formControlName="clientType">
-                  @for (client of clientTypes; track client) {
-                  <mat-option [value]="client">{{ client }}</mat-option>
-                  }
-                </mat-select>
-                @if (generalInfoForm.controls['clientType'].hasError('required')) {
-                <mat-error>Campo tipo de cliente es obligatorio</mat-error>
                 }
               </mat-form-field>
             </div>
@@ -110,7 +96,7 @@
           <form
             [formGroup]="billerForm"
             (ngSubmit)="addProduct()"
-            class="grid grid-cols-1 md:grid-cols-6 gap-2"
+            class="grid grid-cols-1 md:grid-cols-7 gap-2"
           >
             <mat-form-field>
               <mat-label>Cantidad</mat-label>
@@ -143,6 +129,18 @@
               </mat-select>
               @if (billerForm.controls['productDescription'].hasError('required')) {
               <mat-error>Campo descripción es obligatorio</mat-error>
+              }
+            </mat-form-field>
+
+            <mat-form-field>
+              <mat-label>T. precio</mat-label>
+              <mat-select formControlName="clientType">
+                @for (client of clientTypes; track client) {
+                <mat-option [value]="client">{{ client }}</mat-option>
+                }
+              </mat-select>
+              @if (billerForm.controls['clientType'].hasError('required')) {
+              <mat-error>Campo tipo de precio es obligatorio</mat-error>
               }
             </mat-form-field>
 
