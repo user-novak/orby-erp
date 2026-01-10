@@ -13,8 +13,11 @@ export const routes: Routes = [
     component: Biller,
   },
   {
+    path: 'clients',
+    loadChildren: () => import('./clients/clients.routes').then((m) => m.CLIENTS_ROUTES),
+  },
+  {
     path: 'storage',
-    loadChildren: () =>
-      import('./storage/storage.routes').then(m => m.STORAGE_ROUTES),
+    loadChildren: () => import('./storage/storage.routes').then((m) => m.STORAGE_ROUTES),
   },
 ];

@@ -33,12 +33,12 @@
       <div class="bg-white rounded-lg shadow hover:shadow-lg transition-shadow p-6">
         <div class="flex items-center justify-between mb-4">
           <h2 class="text-xl font-semibold text-gray-800">Clientes</h2>
-          <button class="btn-card">
+          <button (click)="navigateTo('clients')" class="btn-card">
             <mat-icon>people</mat-icon>
           </button>
         </div>
         <p class="text-gray-600 text-sm">Gestiona tus clientes</p>
-        <button class="btn-text-detail">Ver más →</button>
+        <button (click)="navigateTo('clients')" class="btn-text-detail">Ver más →</button>
       </div>
 
       <div class="bg-white rounded-lg shadow hover:shadow-lg transition-shadow p-6">
