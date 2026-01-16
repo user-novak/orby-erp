@@ -1,5 +1,5 @@
   <main class="module-main">
-    <div class="mb-6">
+    <div class="module_buttons">
       <button (click)="goToCreate()" matButton="filled">
         <mat-icon>add</mat-icon>
         Crear nuevo producto
@@ -44,8 +44,8 @@
             </button>
           </td>
         </ng-container>
-        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-        <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+        <tr mat-header-row *matHeaderRowDef="storageColumHeader"></tr>
+        <tr mat-row *matRowDef="let row; columns: storageColumHeader"></tr>
       </table>
       <mat-paginator
         [pageSize]="5"

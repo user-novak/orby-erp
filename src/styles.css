@@ -1,11 +1,21 @@
-@import "tailwindcss";
-html, body { height: 100%; }
-body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
-
-.module-header{
-    @apply bg-white shadow h-20;
+@import 'tailwindcss';
+html,
+body {
+  height: 100%;
+}
+body {
+  margin: 0;
+  font-family: Roboto, 'Helvetica Neue', sans-serif;
 }
 
-.module-main{
-    @apply max-w-full mx-auto px-8 py-6;
+.module-header {
+  @apply bg-white shadow h-20;
+}
+
+.module-main {
+  @apply max-w-full mx-auto px-8 py-6;
+
+  & .module_buttons {
+    @apply mb-6 flex flex-col md:flex-row justify-end gap-x-4 gap-y-2;
+  }
 }
