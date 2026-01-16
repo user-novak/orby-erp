@@ -1,10 +1,12 @@
-import { Component, ViewChild } from '@angular/core';
-import { Client } from '../models/client';
+import { Component, DestroyRef, inject, ViewChild } from '@angular/core';
+import { Client, ClientExcel } from '../models/client';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { clientColumHeader } from '../constants/client';
+import { ExcelImportService } from '../../core/services/excel/excel-import';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 @Component({
   selector: 'app-client-index',
@@ -13,6 +15,9 @@ import { clientColumHeader } from '../constants/client';
   styleUrl: './client-index.css',
 })
 export class ClientIndex {
+  private readonly excelService: ExcelImportService = inject(ExcelImportService);
+  private readonly destroyRef = inject(DestroyRef);
+
   clientColumHeader = clientColumHeader;
 
   ELEMENT_DATA: Client[] = [];
@@ -25,7 +30,25 @@ export class ClientIndex {
     this.dataSource.paginator = this.paginator;
   }
 
-  onFileSelected(event: Event): void {
-    console.log(event);
+  async onFileSelected(event: Event) {
+    const input = event.target as HTMLInputElement;
+
+    if (!input.files || input.files.length === 0) {
+      return;
+    }
+
+    const file = input.files[0];
+
+    this.excelService
+      .importExcel<ClientExcel>(file)
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe({
+        next: (rows) => {
+          console.log(rows);
+        },
+        error: (err) => {
+          console.error('Error al importar Excel', err);
+        },
+      });
   }
 }

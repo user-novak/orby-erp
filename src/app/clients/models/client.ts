@@ -5,3 +5,11 @@ export interface Client {
   phone?: string;
   address?: string;
 }
+
+export interface ClientExcel extends Record<string, unknown> {
+  dni: string;
+  nombre: string;
+  ruc?: string;
+  celular?: string;
+  direccion?: string;
+}

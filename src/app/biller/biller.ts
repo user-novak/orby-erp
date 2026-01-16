@@ -14,7 +14,7 @@ import { BillerForm } from './models/biller';
 import { MatButtonModule } from '@angular/material/button';
 import { ModuleHeader } from '../core/components/module-header/module-header';
 import { MESAURE_UNITS } from '../core/constants/global';
-import { TYPE_CLIENT, TYPES_CLIENT } from '../core/enums/global';
+import { TYPES_CLIENT } from '../core/enums/global';
 
 @Component({
   selector: 'app-biller',

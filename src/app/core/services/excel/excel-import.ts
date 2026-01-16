@@ -1,22 +1,25 @@
 import { Injectable } from '@angular/core';
+import { Observable, from, map } from 'rxjs';
 import { read, utils, WorkSheet } from 'xlsx';
 
 @Injectable({
   providedIn: 'root',
 })
 export class ExcelImportService {
-  async importExcel<T extends Record<string, unknown>>(file: File, sheetIndex = 0): Promise<T[]> {
-    const buffer = await this.readFile(file);
-    const workbook = read(buffer);
+  importExcel<T extends Record<string, unknown>>(file: File, sheetIndex = 0): Observable<T[]> {
+    return from(this.readFile(file)).pipe(
+      map((buffer) => {
+        const workbook = read(buffer);
 
-    const sheetName = workbook.SheetNames[sheetIndex];
-    if (!sheetName) {
-      throw new Error('La hoja indicada no existe');
-    }
+        const sheetName = workbook.SheetNames[sheetIndex];
+        if (!sheetName) {
+          throw new Error('La hoja indicada no existe');
+        }
 
-    const worksheet = workbook.Sheets[sheetName];
-
-    return this.transformSheet<T>(worksheet);
+        const worksheet = workbook.Sheets[sheetName];
+        return this.transformSheet<T>(worksheet);
+      })
+    );
   }
 
   private readFile(file: File): Promise<ArrayBuffer> {
