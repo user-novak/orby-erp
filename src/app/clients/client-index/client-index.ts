@@ -24,4 +24,8 @@ export class ClientIndex {
   ngAfterViewInit() {
     this.dataSource.paginator = this.paginator;
   }
+
+  onFileSelected(event: Event): void {
+    console.log(event);
+  }
 }

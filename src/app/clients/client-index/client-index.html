@@ -1,9 +1,11 @@
 <main class="module-main">
   <div class="module_buttons">
-    <button matButton="filled">
+    <button matButton="filled" type="button" (click)="fileInput.click()">
       <mat-icon>print</mat-icon>
       Importar clientes
     </button>
+
+    <input #fileInput type="file" accept=".xlsx,.xls" hidden (change)="onFileSelected($event)" />
 
     <button matButton="filled">
       <mat-icon>add</mat-icon>
