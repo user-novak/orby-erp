@@ -50,7 +50,12 @@ export class ClientIndex {
             return ClientExcelMapper.toClient(excelRow);
           });
 
-          console.log(clients);
+          this.ELEMENT_DATA = clients;
+          this.dataSource.data = clients;
+
+          if (this.paginator) {
+            this.dataSource.paginator = this.paginator;
+          }
         },
         error: (err) => {
           console.error('Error al importar Excel', err);
