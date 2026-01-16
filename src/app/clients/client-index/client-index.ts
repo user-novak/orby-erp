@@ -7,6 +7,7 @@ import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { clientColumHeader } from '../constants/client';
 import { ExcelImportService } from '../../core/services/excel/excel-import';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { ClientExcelMapper } from '../mappers/client-excel';
 
 @Component({
   selector: 'app-client-index',
@@ -44,7 +45,12 @@ export class ClientIndex {
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
         next: (rows) => {
-          console.log(rows);
+          const clients: Client[] = rows.map((rawRow) => {
+            const excelRow = ClientExcelMapper.normalizeExcelRow(rawRow);
+            return ClientExcelMapper.toClient(excelRow);
+          });
+
+          console.log(clients);
         },
         error: (err) => {
           console.error('Error al importar Excel', err);
