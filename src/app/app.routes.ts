@@ -1,7 +1,6 @@
 import { Routes } from '@angular/router';
 import { Biller } from './biller/biller';
 import { Home } from './home/home';
-import { Storage } from './storage/storage';
 
 export const routes: Routes = [
   {
@@ -19,5 +18,9 @@ export const routes: Routes = [
   {
     path: 'storage',
     loadChildren: () => import('./storage/storage.routes').then((m) => m.STORAGE_ROUTES),
+  },
+  {
+    path: 'accounts',
+    loadChildren: () => import('./accounts/accounts.routes').then((m) => m.ACCOUNTS_ROUTES),
   },
 ];
