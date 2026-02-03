@@ -1,0 +1,1 @@
+export const accountColumHeader: string[] = ['accountNumber', 'accountName', 'accountType', 'amount', 'actions'];
