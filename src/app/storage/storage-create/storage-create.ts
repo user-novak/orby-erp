@@ -13,7 +13,7 @@ import { Router } from '@angular/router';
 export class StorageCreate {
   private readonly router = inject(Router);
 
-  goHome() {
+  goStorage() {
     this.router.navigate(['/storage']);
   }
 }

@@ -7,7 +7,7 @@
 
     <input #fileInput type="file" accept=".xlsx,.xls" hidden (change)="onFileSelected($event)" />
 
-    <button matButton="filled">
+    <button (click)="goToCreate()" matButton="filled">
       <mat-icon>add</mat-icon>
       Registrar nuevo cliente
     </button>

@@ -10,6 +10,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ClientExcelMapper } from '../mappers/client-excel';
 import { ClientService } from '../services/client';
 import { ApiResponse } from '../../core/models/global';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-client-index',
@@ -26,6 +27,7 @@ export class ClientIndex implements OnInit {
   dataSource = new MatTableDataSource<Client>([]);
 
   private readonly clientService: ClientService = inject(ClientService);
+  private readonly router = inject(Router);
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
 
@@ -34,34 +36,11 @@ export class ClientIndex implements OnInit {
   }
 
   ngOnInit() {
-    this.setClients();
+    this.listClients();
   }
 
-  private setClients() {
-    this.clientService
-      .getClients()
-      .pipe(takeUntilDestroyed(this.destroyRef))
-      .subscribe((response: ApiResponse<Client[]>) => {
-        this.dataSource.data = response.data;
-
-        if (this.paginator) {
-          this.dataSource.paginator = this.paginator;
-        }
-      });
-  }
-
-  private saveClientsBulk(clients: Client[]): void {
-    this.clientService
-      .createBulk(clients)
-      .pipe(takeUntilDestroyed(this.destroyRef))
-      .subscribe({
-        next: () => {
-          this.setClients();
-        },
-        error: (err) => {
-          console.error('Error al guardar clientes', err);
-        },
-      });
+  goToCreate() {
+    this.router.navigateByUrl('/clients/create');
   }
 
   async onFileSelected(event: Event) {
@@ -87,6 +66,33 @@ export class ClientIndex implements OnInit {
         },
         error: (err) => {
           console.error('Error al importar Excel', err);
+        },
+      });
+  }
+
+  private listClients() {
+    this.clientService
+      .getClients()
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe((response: ApiResponse<Client[]>) => {
+        this.dataSource.data = response.data;
+
+        if (this.paginator) {
+          this.dataSource.paginator = this.paginator;
+        }
+      });
+  }
+
+  private saveClientsBulk(clients: Client[]): void {
+    this.clientService
+      .createBulk(clients)
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe({
+        next: () => {
+          this.listClients();
+        },
+        error: (err) => {
+          console.error('Error al guardar clientes', err);
         },
       });
   }
