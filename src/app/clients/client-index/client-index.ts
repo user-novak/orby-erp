@@ -1,4 +1,4 @@
-import { Component, DestroyRef, inject, ViewChild } from '@angular/core';
+import { Component, DestroyRef, inject, OnInit, ViewChild } from '@angular/core';
 import { Client, ClientExcel } from '../models/client';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
@@ -8,6 +8,7 @@ import { clientColumHeader } from '../constants/client';
 import { ExcelImportService } from '../../core/services/excel/excel-import';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ClientExcelMapper } from '../mappers/client-excel';
+import { ClientService } from '../services/client';
 
 @Component({
   selector: 'app-client-index',
@@ -15,20 +16,26 @@ import { ClientExcelMapper } from '../mappers/client-excel';
   templateUrl: './client-index.html',
   styleUrl: './client-index.css',
 })
-export class ClientIndex {
+export class ClientIndex implements OnInit {
   private readonly excelService: ExcelImportService = inject(ExcelImportService);
   private readonly destroyRef = inject(DestroyRef);
 
   clientColumHeader = clientColumHeader;
 
-  ELEMENT_DATA: Client[] = [];
+  dataSource = new MatTableDataSource<Client>([]);
 
-  dataSource = new MatTableDataSource<Client>(this.ELEMENT_DATA);
+  private readonly clientService: ClientService = inject(ClientService);
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
 
   ngAfterViewInit() {
     this.dataSource.paginator = this.paginator;
+  }
+
+  ngOnInit() {
+    this.clientService.getClients().subscribe((data) => {
+      this.dataSource.data = data;
+    });
   }
 
   async onFileSelected(event: Event) {
@@ -50,7 +57,6 @@ export class ClientIndex {
             return ClientExcelMapper.toClient(excelRow);
           });
 
-          this.ELEMENT_DATA = clients;
           this.dataSource.data = clients;
 
           if (this.paginator) {
