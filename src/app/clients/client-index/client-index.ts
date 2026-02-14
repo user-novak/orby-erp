@@ -33,9 +33,34 @@ export class ClientIndex implements OnInit {
   }
 
   ngOnInit() {
-    this.clientService.getClients().subscribe((data) => {
-      this.dataSource.data = data;
-    });
+    this.setClients();
+  }
+
+  private setClients() {
+    this.clientService
+      .getClients()
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe((data) => {
+        this.dataSource.data = data;
+
+        if (this.paginator) {
+          this.dataSource.paginator = this.paginator;
+        }
+      });
+  }
+
+  private saveClientsBulk(clients: Client[]): void {
+    this.clientService
+      .createBulk(clients)
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe({
+        next: () => {
+          this.setClients();
+        },
+        error: (err) => {
+          console.error('Error al guardar clientes', err);
+        },
+      });
   }
 
   async onFileSelected(event: Event) {
@@ -57,11 +82,7 @@ export class ClientIndex implements OnInit {
             return ClientExcelMapper.toClient(excelRow);
           });
 
-          this.dataSource.data = clients;
-
-          if (this.paginator) {
-            this.dataSource.paginator = this.paginator;
-          }
+          this.saveClientsBulk(clients);
         },
         error: (err) => {
           console.error('Error al importar Excel', err);
