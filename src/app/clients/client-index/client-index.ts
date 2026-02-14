@@ -9,6 +9,7 @@ import { ExcelImportService } from '../../core/services/excel/excel-import';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ClientExcelMapper } from '../mappers/client-excel';
 import { ClientService } from '../services/client';
+import { ApiResponse } from '../../core/models/global';
 
 @Component({
   selector: 'app-client-index',
@@ -40,8 +41,8 @@ export class ClientIndex implements OnInit {
     this.clientService
       .getClients()
       .pipe(takeUntilDestroyed(this.destroyRef))
-      .subscribe((data) => {
-        this.dataSource.data = data;
+      .subscribe((response: ApiResponse<Client[]>) => {
+        this.dataSource.data = response.data;
 
         if (this.paginator) {
           this.dataSource.paginator = this.paginator;
