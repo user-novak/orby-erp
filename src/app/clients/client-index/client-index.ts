@@ -74,12 +74,17 @@ export class ClientIndex implements OnInit {
     this.clientService
       .getClients()
       .pipe(takeUntilDestroyed(this.destroyRef))
-      .subscribe((response: ApiResponse<Client[]>) => {
-        this.dataSource.data = response.data;
+      .subscribe({
+        next: (response: ApiResponse<Client[]>) => {
+          this.dataSource.data = response.data;
 
-        if (this.paginator) {
-          this.dataSource.paginator = this.paginator;
-        }
+          if (this.paginator) {
+            this.dataSource.paginator = this.paginator;
+          }
+        },
+        error: (err) => {
+          console.error('Error al listar clientes', err);
+        },
       });
   }
 
