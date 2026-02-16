@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Client } from '../models/client';
+import { Client, ClientFormValues } from '../models/client';
 import { Observable } from 'rxjs';
 import { ApiResponse } from '../../core/models/global';
 
@@ -20,7 +20,7 @@ export class ClientService {
     return this.http.get<ApiResponse<Client>>(`${this.apiUrl}/${id}`);
   }
 
-  createClient(client: Client): Observable<ApiResponse<Client>> {
+  createClient(client: ClientFormValues): Observable<ApiResponse<Client>> {
     return this.http.post<ApiResponse<Client>>(this.apiUrl, client);
   }
 

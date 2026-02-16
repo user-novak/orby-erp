@@ -16,6 +16,7 @@ export interface ClientExcel extends Record<string, unknown> {
 
 export interface ClientFormValues {
   name: string;
+  id?: number;
   dni?: string;
   ruc?: string;
   phone?: string;
