@@ -39,7 +39,7 @@ export class StorageForm {
     this.storageForm.reset();
   }
 
-  onSave(): void {
+  onSubmitForm(): void {
     if (this.storageForm.invalid) {
       console.error('Formulario inválido');
       return;

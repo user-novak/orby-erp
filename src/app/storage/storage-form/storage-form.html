@@ -1,6 +1,6 @@
 <form
   [formGroup]="storageForm"
-  (ngSubmit)="onSave()"
+  (ngSubmit)="onSubmitForm()"
   class="mt-6 mx-auto max-w-6xl px-4 lg:px-8 grid grid-cols-1 lg:grid-cols-4 gap-x-6 gap-y-6"
 >
   <div class="lg:col-span-2">
@@ -15,7 +15,7 @@
       <mat-label>Marca</mat-label>
       <mat-select formControlName="brand">
         @for (value of tempValues; track value) {
-        <mat-option [value]="value">{{ value }}</mat-option>
+          <mat-option [value]="value">{{ value }}</mat-option>
         }
       </mat-select>
     </mat-form-field>
@@ -26,7 +26,7 @@
       <mat-label>Unidad de medida</mat-label>
       <mat-select formControlName="measureUnity">
         @for (unity of mesaureUnities; track unity) {
-        <mat-option [value]="unity">{{ unity }}</mat-option>
+          <mat-option [value]="unity">{{ unity }}</mat-option>
         }
       </mat-select>
     </mat-form-field>
