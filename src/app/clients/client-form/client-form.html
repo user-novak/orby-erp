@@ -1,1 +1,50 @@
-<p>client-form works!</p>
+<form
+  [formGroup]="clientForm"
+  (ngSubmit)="onSubmitForm()"
+  class="mt-6 mx-auto max-w-6xl px-4 lg:px-8 grid grid-cols-1 lg:grid-cols-2 gap-x-6 gap-y-6"
+>
+  <div class="lg:col-span-2">
+    <mat-form-field class="w-full">
+      <mat-label>Nombre del cliente</mat-label>
+      <input matInput formControlName="name" />
+    </mat-form-field>
+  </div>
+
+  <div>
+    <mat-form-field class="w-full" floatLabel="always">
+      <mat-label>DNI</mat-label>
+      <input matInput type="text" formControlName="dni" />
+    </mat-form-field>
+  </div>
+
+  <div>
+    <mat-form-field class="w-full" floatLabel="always">
+      <mat-label>RUC</mat-label>
+      <input matInput type="text" formControlName="ruc" />
+    </mat-form-field>
+  </div>
+
+  <div>
+    <mat-form-field class="w-full" floatLabel="always">
+      <mat-label>Teléfono</mat-label>
+      <input matInput type="number" formControlName="phone" />
+    </mat-form-field>
+  </div>
+
+  <div>
+    <mat-form-field class="w-full" floatLabel="always">
+      <mat-label>Dirección</mat-label>
+      <input matInput type="text" formControlName="address" />
+    </mat-form-field>
+  </div>
+
+  <button type="button" matButton="tonal" (click)="onClearForm()">
+    Limpiar
+    <mat-icon>autorenew</mat-icon>
+  </button>
+
+  <button matButton="filled">
+    Crear item
+    <mat-icon>add</mat-icon>
+  </button>
+</form>

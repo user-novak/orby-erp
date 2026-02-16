@@ -13,3 +13,11 @@ export interface ClientExcel extends Record<string, unknown> {
   celular?: string;
   direccion?: string;
 }
+
+export interface ClientFormValues {
+  name: string;
+  dni?: string;
+  ruc?: string;
+  phone?: string;
+  address?: string;
+}
