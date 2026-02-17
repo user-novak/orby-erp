@@ -1,0 +1,28 @@
+:host {
+  display: block;
+}
+
+.notification-container {
+  display: grid;
+  gap: 12px;
+  color: white;
+  border-radius: 8px;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.25);
+}
+
+.content {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.icon {
+  line-height: 1;
+  display: flex;
+  align-items: center;
+}
+
+.message {
+  font-size: 14px;
+  line-height: 1.4;
+}

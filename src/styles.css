@@ -1,4 +1,11 @@
 @import 'tailwindcss';
+
+.notification-panel {
+  margin-top: 16px;
+  margin-right: 16px;
+  z-index: 2000 !important;
+}
+
 html,
 body {
   height: 100%;

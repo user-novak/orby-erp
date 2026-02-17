@@ -9,9 +9,10 @@ import { ExcelImportService } from '../../core/services/excel/excel-import';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ClientExcelMapper } from '../mappers/client-excel';
 import { ClientService } from '../services/client';
-import { ApiResponse } from '../../core/models/global';
+import { ApiResponse, NotificationData } from '../../core/models/global';
 import { Router } from '@angular/router';
 import { ConfirmDialogService } from '../../core/services/confirm-dialog/confirm-dialog';
+import { NotificationService } from '../../core/services/notification/notification';
 
 @Component({
   selector: 'app-client-index',
@@ -29,6 +30,7 @@ export class ClientIndex implements OnInit {
 
   private readonly clientService: ClientService = inject(ClientService);
   private readonly confirmDialogService = inject(ConfirmDialogService);
+  private readonly notification = inject(NotificationService);
   private readonly router = inject(Router);
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
@@ -81,8 +83,11 @@ export class ClientIndex implements OnInit {
 
           this.saveClientsBulk(clients);
         },
-        error: (err) => {
-          console.error('Error al importar Excel', err);
+        error: () => {
+          this.showNotification(
+            this.generateNotification('Error al importar archivo Excel', 'error', '#f44336'),
+            3000,
+          );
         },
       });
   }
@@ -98,9 +103,17 @@ export class ClientIndex implements OnInit {
           if (this.paginator) {
             this.dataSource.paginator = this.paginator;
           }
+
+          this.showNotification(
+            this.generateNotification('Clientes cargados exitosamente', 'check_circle', '#4caf50'),
+            3000,
+          );
         },
-        error: (err) => {
-          console.error('Error al listar clientes', err);
+        error: () => {
+          this.showNotification(
+            this.generateNotification('Error al cargar clientes', 'error', '#f44336'),
+            3000,
+          );
         },
       });
   }
@@ -113,8 +126,11 @@ export class ClientIndex implements OnInit {
         next: () => {
           this.listClients();
         },
-        error: (err) => {
-          console.error('Error al eliminar cliente', err);
+        error: () => {
+          this.showNotification(
+            this.generateNotification('Error al eliminar cliente', 'error', '#f44336'),
+            3000,
+          );
         },
       });
   }
@@ -127,9 +143,28 @@ export class ClientIndex implements OnInit {
         next: () => {
           this.listClients();
         },
-        error: (err) => {
-          console.error('Error al guardar clientes', err);
+        error: () => {
+          this.showNotification(
+            this.generateNotification('Error al guardar clientes', 'error', '#f44336'),
+            3000,
+          );
         },
       });
+  }
+
+  private generateNotification(
+    message: string,
+    icon: string,
+    backgroundColor: string,
+  ): NotificationData {
+    return {
+      message,
+      icon,
+      backgroundColor,
+    };
+  }
+
+  private showNotification(notification: NotificationData, duration?: number) {
+    this.notification.show(notification, duration);
   }
 }

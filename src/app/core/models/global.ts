@@ -16,4 +16,11 @@ export interface ConfirmDialogData {
   cancelText?: string;
 }
 
+export interface NotificationData {
+  message: string;
+  icon?: string;
+  backgroundColor?: string;
+  actionText?: string;
+}
+
 export type ConfirmDialogResult = 'accept' | 'cancel';

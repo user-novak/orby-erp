@@ -1,0 +1,19 @@
+<div class="notification-container" [style.background]="data.backgroundColor ?? '#323232'">
+  <span matSnackBarLabel class="content">
+    <mat-icon class="icon">
+      {{ data.icon ?? 'info' }}
+    </mat-icon>
+
+    <span class="message">
+      {{ data.message }}
+    </span>
+  </span>
+
+  @if (data.actionText) {
+    <span matSnackBarActions>
+      <button matButton matSnackBarAction (click)="dismiss()">
+        {{ data.actionText }}
+      </button>
+    </span>
+  }
+</div>
