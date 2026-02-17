@@ -11,6 +11,7 @@ import { ClientExcelMapper } from '../mappers/client-excel';
 import { ClientService } from '../services/client';
 import { ApiResponse } from '../../core/models/global';
 import { Router } from '@angular/router';
+import { ConfirmDialogService } from '../../core/services/confirm-dialog/confirm-dialog';
 
 @Component({
   selector: 'app-client-index',
@@ -27,6 +28,7 @@ export class ClientIndex implements OnInit {
   dataSource = new MatTableDataSource<Client>([]);
 
   private readonly clientService: ClientService = inject(ClientService);
+  private readonly confirmDialogService = inject(ConfirmDialogService);
   private readonly router = inject(Router);
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
@@ -41,6 +43,21 @@ export class ClientIndex implements OnInit {
 
   goToCreate() {
     this.router.navigateByUrl('/clients/create');
+  }
+
+  confirmDelete(clientID: number) {
+    this.confirmDialogService
+      .open({
+        message: '¿Deseas eliminar este cliente?',
+        acceptText: 'Eliminar',
+        cancelText: 'Cancelar',
+      })
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe((result) => {
+        if (result === 'accept') {
+          this.deleteClient(clientID);
+        }
+      });
   }
 
   async onFileSelected(event: Event) {
@@ -84,6 +101,20 @@ export class ClientIndex implements OnInit {
         },
         error: (err) => {
           console.error('Error al listar clientes', err);
+        },
+      });
+  }
+
+  private deleteClient(clientID: number) {
+    this.clientService
+      .deleteClient(clientID)
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe({
+        next: () => {
+          this.listClients();
+        },
+        error: (err) => {
+          console.error('Error al eliminar cliente', err);
         },
       });
   }
