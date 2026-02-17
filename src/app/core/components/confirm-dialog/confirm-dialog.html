@@ -1,0 +1,13 @@
+<h2 mat-dialog-title>
+  {{ data.message }}
+</h2>
+
+<mat-dialog-actions align="end">
+  <button matButton (click)="onCancel()">
+    {{ data.cancelText ?? 'Cancelar' }}
+  </button>
+
+  <button matButton="elevated" color="primary" (click)="onAccept()" cdkFocusInitial>
+    {{ data.acceptText ?? 'Aceptar' }}
+  </button>
+</mat-dialog-actions>
