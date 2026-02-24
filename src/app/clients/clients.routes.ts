@@ -18,7 +18,7 @@ export const CLIENTS_ROUTES: Routes = [
         component: ClientCreate,
       },
       {
-        path: 'edit',
+        path: 'edit/:id',
         component: ClientEdit,
       },
     ],

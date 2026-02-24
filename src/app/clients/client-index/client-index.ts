@@ -47,6 +47,10 @@ export class ClientIndex implements OnInit {
     this.router.navigateByUrl('/clients/create');
   }
 
+  goToEdit(clientID: number) {
+    this.router.navigate(['/clients/edit', clientID]);
+  }
+
   confirmDelete(clientID: number) {
     this.confirmDialogService
       .open({
