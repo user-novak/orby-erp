@@ -1,4 +1,5 @@
 export interface Storage {
+  id?: number;
   code: string;
   description: string;
   brand: string;

@@ -1,4 +1,5 @@
 export interface Client {
+  id?: number;
   dni: string;
   name: string;
   ruc?: string;

@@ -1,4 +1,5 @@
 export interface Account {
+  id?: number;
   account_number: string;
   name: string;
   description: string;

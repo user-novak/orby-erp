@@ -21,7 +21,7 @@
                 <mat-datepicker #picker></mat-datepicker>
 
                 @if (generalInfoForm.controls['registerDate'].hasError('required')) {
-                <mat-error>Campo fecha de registro es obligatorio</mat-error>
+                  <mat-error>Campo fecha de registro es obligatorio</mat-error>
                 }
               </mat-form-field>
             </div>
@@ -31,11 +31,11 @@
                 <mat-label>Cliente</mat-label>
                 <mat-select formControlName="client">
                   @for (client of clients; track client) {
-                  <mat-option [value]="client">{{ client }}</mat-option>
+                    <mat-option [value]="client.id!">{{ client.name }}</mat-option>
                   }
                 </mat-select>
                 @if (generalInfoForm.controls['client'].hasError('required')) {
-                <mat-error>Campo cliente es obligatorio</mat-error>
+                  <mat-error>Campo cliente es obligatorio</mat-error>
                 }
               </mat-form-field>
             </div>
@@ -52,11 +52,11 @@
                 <mat-label>Tipo de venta</mat-label>
                 <mat-select formControlName="saleType">
                   @for (sale of saleTypes; track sale) {
-                  <mat-option [value]="sale.value">{{ sale.label }}</mat-option>
+                    <mat-option [value]="sale.value">{{ sale.label }}</mat-option>
                   }
                 </mat-select>
                 @if (generalInfoForm.controls['saleType'].hasError('required')) {
-                <mat-error>Campo tipo de venta es obligatorio</mat-error>
+                  <mat-error>Campo tipo de venta es obligatorio</mat-error>
                 }
               </mat-form-field>
             </div>
@@ -66,27 +66,27 @@
                 <mat-label>Entidad financiera</mat-label>
                 <mat-select formControlName="account">
                   @for (account of accounts; track account) {
-                  <mat-option [value]="account">{{ account }}</mat-option>
+                    <mat-option [value]="account.id!">{{ account.name }}</mat-option>
                   }
                 </mat-select>
                 @if (generalInfoForm.controls['account'].hasError('required')) {
-                <mat-error>Campo entidad financiera es obligatorio</mat-error>
+                  <mat-error>Campo entidad financiera es obligatorio</mat-error>
                 }
               </mat-form-field>
             </div>
 
-            @if(generalInfoForm.controls['saleType'].value === 'ACR') {
-            <div>
-              <mat-form-field class="w-full">
-                <mat-label>Fecha de pago</mat-label>
-                <input matInput formControlName="paymentDate" [matDatepicker]="paymentDay" />
-                <mat-datepicker-toggle matIconSuffix [for]="paymentDay"></mat-datepicker-toggle>
-                <mat-datepicker #paymentDay></mat-datepicker>
-                @if (generalInfoForm.controls['paymentDate'].hasError('required')) {
-                <mat-error>Campo fecha de pago es obligatorio</mat-error>
-                }
-              </mat-form-field>
-            </div>
+            @if (generalInfoForm.controls['saleType'].value === 'ACR') {
+              <div>
+                <mat-form-field class="w-full">
+                  <mat-label>Fecha de pago</mat-label>
+                  <input matInput formControlName="paymentDate" [matDatepicker]="paymentDay" />
+                  <mat-datepicker-toggle matIconSuffix [for]="paymentDay"></mat-datepicker-toggle>
+                  <mat-datepicker #paymentDay></mat-datepicker>
+                  @if (generalInfoForm.controls['paymentDate'].hasError('required')) {
+                    <mat-error>Campo fecha de pago es obligatorio</mat-error>
+                  }
+                </mat-form-field>
+              </div>
             }
           </form>
         </section>
@@ -102,9 +102,10 @@
               <mat-label>Cantidad</mat-label>
               <input matInput formControlName="quantity" type="number" />
               @if (billerForm.controls['quantity'].hasError('required')) {
-              <mat-error>Campo cantidad es obligatorio</mat-error>
-              } @if (billerForm.controls['quantity'].hasError('min')) {
-              <mat-error>Campo cantidad debe ser mínimo 1</mat-error>
+                <mat-error>Campo cantidad es obligatorio</mat-error>
+              }
+              @if (billerForm.controls['quantity'].hasError('min')) {
+                <mat-error>Campo cantidad debe ser mínimo 1</mat-error>
               }
             </mat-form-field>
 
@@ -112,11 +113,11 @@
               <mat-label>Unidad de medida</mat-label>
               <mat-select formControlName="measureUnity">
                 @for (unity of mesaureUnities; track unity) {
-                <mat-option [value]="unity">{{ unity }}</mat-option>
+                  <mat-option [value]="unity">{{ unity }}</mat-option>
                 }
               </mat-select>
               @if (billerForm.controls['measureUnity'].hasError('required')) {
-              <mat-error>Campo unidad de medida es obligatorio</mat-error>
+                <mat-error>Campo unidad de medida es obligatorio</mat-error>
               }
             </mat-form-field>
 
@@ -124,11 +125,11 @@
               <mat-label>Descripción</mat-label>
               <mat-select formControlName="productDescription">
                 @for (product of products; track product) {
-                <mat-option [value]="product">{{ product }}</mat-option>
+                  <mat-option [value]="product.id!">{{ product.description }}</mat-option>
                 }
               </mat-select>
               @if (billerForm.controls['productDescription'].hasError('required')) {
-              <mat-error>Campo descripción es obligatorio</mat-error>
+                <mat-error>Campo descripción es obligatorio</mat-error>
               }
             </mat-form-field>
 
@@ -136,11 +137,11 @@
               <mat-label>T. precio</mat-label>
               <mat-select formControlName="clientType">
                 @for (client of clientTypes; track client) {
-                <mat-option [value]="client">{{ client }}</mat-option>
+                  <mat-option [value]="client">{{ client }}</mat-option>
                 }
               </mat-select>
               @if (billerForm.controls['clientType'].hasError('required')) {
-              <mat-error>Campo tipo de precio es obligatorio</mat-error>
+                <mat-error>Campo tipo de precio es obligatorio</mat-error>
               }
             </mat-form-field>
 
@@ -184,53 +185,55 @@
           <h2 class="text-lg font-semibold mb-4">Productos agregados</h2>
 
           @if (productsList.length === 0) {
-          <p class="text-gray-500 text-sm">No hay productos agregados.</p>
+            <p class="text-gray-500 text-sm">No hay productos agregados.</p>
           } @else {
+            <div class="overflow-x-auto">
+              <table class="min-w-full border border-gray-200 rounded-lg overflow-hidden">
+                <thead class="bg-gray-50">
+                  <tr>
+                    <th class="px-4 py-2 text-left text-sm font-semibold text-gray-700">
+                      Cantidad
+                    </th>
+                    <th class="px-4 py-2 text-left text-sm font-semibold text-gray-700">Unidad</th>
+                    <th class="px-4 py-2 text-left text-sm font-semibold text-gray-700">
+                      Descripción
+                    </th>
+                    <th class="px-4 py-2 text-left text-sm font-semibold text-gray-700">
+                      Precio Unit.
+                    </th>
+                    <th class="px-4 py-2 text-left text-sm font-semibold text-gray-700">Total</th>
+                    <th class="px-4 py-2 text-left text-sm font-semibold text-gray-700">
+                      Acciones
+                    </th>
+                  </tr>
+                </thead>
 
-          <div class="overflow-x-auto">
-            <table class="min-w-full border border-gray-200 rounded-lg overflow-hidden">
-              <thead class="bg-gray-50">
-                <tr>
-                  <th class="px-4 py-2 text-left text-sm font-semibold text-gray-700">Cantidad</th>
-                  <th class="px-4 py-2 text-left text-sm font-semibold text-gray-700">Unidad</th>
-                  <th class="px-4 py-2 text-left text-sm font-semibold text-gray-700">
-                    Descripción
-                  </th>
-                  <th class="px-4 py-2 text-left text-sm font-semibold text-gray-700">
-                    Precio Unit.
-                  </th>
-                  <th class="px-4 py-2 text-left text-sm font-semibold text-gray-700">Total</th>
-                  <th class="px-4 py-2 text-left text-sm font-semibold text-gray-700">Acciones</th>
-                </tr>
-              </thead>
-
-              <tbody class="divide-y divide-gray-200">
-                @for (item of productsList; track item; ; let idx = $index) {
-                <tr class="hover:bg-gray-50">
-                  <td class="px-4 py-2 text-sm">{{ item.quantity }}</td>
-                  <td class="px-4 py-2 text-sm">{{ item.measureUnity }}</td>
-                  <td class="px-4 py-2 text-sm">{{ item.productDescription }}</td>
-                  <td class="px-4 py-2 text-sm">S/. {{ item.unitPrice }}</td>
-                  <td class="px-4 py-2 text-sm font-semibold text-gray-700">
-                    S/.{{ item.totalPrice }}
-                  </td>
-                  <td class="px-4 py-2 text-sm">
-                    <button
-                      (click)="removeProduct(idx)"
-                      type="button"
-                      matFab
-                      aria-label="Delete button"
-                      class="cursor-pointer"
-                    >
-                      <mat-icon>delete</mat-icon>
-                    </button>
-                  </td>
-                </tr>
-                }
-              </tbody>
-            </table>
-          </div>
-
+                <tbody class="divide-y divide-gray-200">
+                  @for (item of productsList; track item; let idx = $index) {
+                    <tr class="hover:bg-gray-50">
+                      <td class="px-4 py-2 text-sm">{{ item.quantity }}</td>
+                      <td class="px-4 py-2 text-sm">{{ item.measureUnity }}</td>
+                      <td class="px-4 py-2 text-sm">{{ item.productDescription }}</td>
+                      <td class="px-4 py-2 text-sm">S/. {{ item.unitPrice }}</td>
+                      <td class="px-4 py-2 text-sm font-semibold text-gray-700">
+                        S/.{{ item.totalPrice }}
+                      </td>
+                      <td class="px-4 py-2 text-sm">
+                        <button
+                          (click)="removeProduct(idx)"
+                          type="button"
+                          matFab
+                          aria-label="Delete button"
+                          class="cursor-pointer"
+                        >
+                          <mat-icon>delete</mat-icon>
+                        </button>
+                      </td>
+                    </tr>
+                  }
+                </tbody>
+              </table>
+            </div>
           }
         </section>
       </div>

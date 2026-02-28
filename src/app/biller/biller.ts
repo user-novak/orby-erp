@@ -8,13 +8,18 @@ import { MatSelectModule } from '@angular/material/select';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MyErrorStateMatcher } from '../core/classess/ErrorStateMatcher';
 import { SALES_TYPES } from './constants/fields';
-import { Option } from '../core/models/global';
+import { NotificationData, Option } from '../core/models/global';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { BillerForm } from './models/biller';
 import { MatButtonModule } from '@angular/material/button';
 import { ModuleHeader } from '../core/components/module-header/module-header';
 import { MESAURE_UNITS } from '../core/constants/global';
 import { TYPES_CLIENT } from '../core/enums/global';
+import { BillerService } from './services/biller';
+import { Client } from '../clients/models/client';
+import { Account } from '../accounts/models/account';
+import { Storage } from '../storage/models/storage';
+import { NotificationService } from '../core/services/notification/notification';
 
 @Component({
   selector: 'app-biller',
@@ -35,10 +40,10 @@ import { TYPES_CLIENT } from '../core/enums/global';
 })
 export class Biller {
   saleTypes: Option[] = SALES_TYPES;
-  clients: string[] = ['Cliente 1', 'Cliente 2', 'Cliente 3'];
+  clients: Client[] = [];
   clientTypes: TYPES_CLIENT = ['Distribuidor', 'Mayorista', 'U. final'];
-  products: string[] = ['Producto 1', 'Producto 2', 'Producto 3'];
-  accounts: string[] = ['Entidad 1', 'Entidad 2'];
+  products: Storage[] = [];
+  accounts: Account[] = [];
   mesaureUnities: string[] = MESAURE_UNITS;
 
   generalInfoForm: FormGroup;
@@ -49,6 +54,8 @@ export class Biller {
   matcher = new MyErrorStateMatcher();
 
   private readonly _fb = inject(FormBuilder);
+  private readonly billerService = inject(BillerService);
+  private readonly notification = inject(NotificationService);
 
   constructor() {
     this.generalInfoForm = this.setGeneralInfoForm();
@@ -56,6 +63,7 @@ export class Biller {
     this.disabledBillerFields();
     this.handleSaleTypeChanges();
     this.handleBillerFormChanges();
+    this.loadBillerData();
   }
 
   get productListAmount(): number {
@@ -102,6 +110,31 @@ export class Biller {
 
       paymentDateControl.updateValueAndValidity({ emitEvent: false });
     });
+  }
+
+  private loadBillerData() {
+    this.billerService
+      .getBillerData()
+      .pipe(takeUntilDestroyed())
+      .subscribe({
+        next: (response) => {
+          const data = response.data;
+          this.clients = data.clients;
+          this.products = data.storages;
+          this.accounts = data.accounts;
+
+          this.showNotification(
+            this.generateNotification('Datos cargados exitosamente', 'check_circle', '#4caf50'),
+            3000,
+          );
+        },
+        error: () => {
+          this.showNotification(
+            this.generateNotification('Error al cargar los datos', 'error', '#f44336'),
+            3000,
+          );
+        },
+      });
   }
 
   private handleBillerFormChanges() {
@@ -164,5 +197,21 @@ export class Biller {
     min = Math.ceil(min);
     max = Math.floor(max);
     return Math.floor(Math.random() * (max - min + 1)) + min;
+  }
+
+  private generateNotification(
+    message: string,
+    icon: string,
+    backgroundColor: string,
+  ): NotificationData {
+    return {
+      message,
+      icon,
+      backgroundColor,
+    };
+  }
+
+  private showNotification(notification: NotificationData, duration?: number) {
+    this.notification.show(notification, duration);
   }
 }
