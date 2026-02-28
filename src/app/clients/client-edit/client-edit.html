@@ -10,6 +10,10 @@
   </div>
 
   @if (client(); as clientData) {
-    <app-client-form [formMode]="formMode" [client]="clientData"></app-client-form>
+    <app-client-form
+      [formMode]="formMode"
+      [client]="clientData"
+      (formSubmit)="editClient($event)"
+    ></app-client-form>
   }
 </main>
