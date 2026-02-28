@@ -1,19 +1,22 @@
-import { Component, DestroyRef, inject, OnInit } from '@angular/core';
+import { Component, DestroyRef, inject, OnInit, signal } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
+import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
 import { NotificationService } from '../../core/services/notification/notification';
 import { ClientService } from '../services/client';
 import { Client } from '../models/client';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ApiResponse, NotificationData } from '../../core/models/global';
+import { ClientForm } from '../client-form/client-form';
 
 @Component({
   selector: 'app-client-edit',
-  imports: [],
+  imports: [MatButtonModule, MatIconModule, ClientForm],
   templateUrl: './client-edit.html',
   styleUrl: './client-edit.css',
 })
 export class ClientEdit implements OnInit {
-  client?: Client;
+  readonly client = signal<Client | null>(null);
   clientId!: number;
 
   private readonly route = inject(ActivatedRoute);
@@ -24,8 +27,10 @@ export class ClientEdit implements OnInit {
 
   ngOnInit(): void {
     this.validateClientID();
+  }
 
-    this.loadClient();
+  goClients() {
+    this.router.navigate(['/clients']);
   }
 
   private loadClient() {
@@ -34,7 +39,7 @@ export class ClientEdit implements OnInit {
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
         next: (response: ApiResponse<Client>) => {
-          this.client = response.data;
+          this.client.set(response.data);
         },
         error: () => {
           this.showNotification(
@@ -65,5 +70,7 @@ export class ClientEdit implements OnInit {
       this.router.navigate(['/clients']);
       return;
     }
+
+    this.loadClient();
   }
 }

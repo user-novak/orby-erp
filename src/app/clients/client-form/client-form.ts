@@ -1,10 +1,10 @@
-import { Component, EventEmitter, inject, Output } from '@angular/core';
+import { Component, effect, EventEmitter, inject, input, Output } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
-import { ClientFormValues } from '../models/client';
+import { Client, ClientFormValues } from '../models/client';
 
 @Component({
   selector: 'app-client-form',
@@ -19,6 +19,8 @@ import { ClientFormValues } from '../models/client';
   styleUrl: './client-form.css',
 })
 export class ClientForm {
+  readonly client = input<Client | null>(null);
+
   @Output() formSubmit = new EventEmitter<ClientFormValues>();
 
   clientForm: FormGroup;
@@ -27,6 +29,13 @@ export class ClientForm {
 
   constructor() {
     this.clientForm = this.setClientForm();
+
+    effect(() => {
+      const clientValue = this.client();
+      if (clientValue) {
+        this.patchFormValues(clientValue);
+      }
+    });
   }
 
   onSubmitForm(): void {
@@ -39,6 +48,10 @@ export class ClientForm {
 
   onClearForm(): void {
     this.resetForm();
+  }
+
+  private patchFormValues(client: Client): void {
+    this.clientForm.patchValue(client);
   }
 
   private getClientFormValues(): ClientFormValues {

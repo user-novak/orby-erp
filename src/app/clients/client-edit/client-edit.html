@@ -1,1 +1,15 @@
-<p>{{ client?.name ?? 'hey' }}</p>
+<main class="module-main">
+  <div class="w-full grid grid-cols-3 items-center">
+    <div class="justify-self-start mx-8">
+      <button (click)="goClients()" mat-fab aria-label="Back button" class="cursor-pointer">
+        <mat-icon>keyboard_backspace</mat-icon>
+      </button>
+    </div>
+
+    <h2 class="text-lg sm:text-2xl font-black text-center">Editar cliente</h2>
+  </div>
+
+ @if (client(); as clientData) {
+  <app-client-form [client]="clientData"></app-client-form>
+}
+</main>
