@@ -3,7 +3,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
-import { StorageExcel, StorageItem } from '../models/storage';
+import { StorageExcel, Storage } from '../models/storage';
 import { Router } from '@angular/router';
 import { storageColumHeader } from '../constants/storage';
 import { ExcelImportService } from '../../core/services/excel/excel-import';
@@ -23,9 +23,9 @@ export class StorageIndex implements AfterViewInit {
 
   storageColumHeader: string[] = storageColumHeader;
 
-  ELEMENT_DATA: StorageItem[] = [];
+  ELEMENT_DATA: Storage[] = [];
 
-  dataSource = new MatTableDataSource<StorageItem>(this.ELEMENT_DATA);
+  dataSource = new MatTableDataSource<Storage>(this.ELEMENT_DATA);
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
 
@@ -47,7 +47,7 @@ export class StorageIndex implements AfterViewInit {
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
         next: (rows) => {
-          const storageItems: StorageItem[] = rows.map((rawRow) => {
+          const storageItems: Storage[] = rows.map((rawRow) => {
             const excelRow = StorageExcelMapper.normalizeExcelRow(rawRow);
             return StorageExcelMapper.toStorageItem(excelRow);
           });

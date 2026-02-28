@@ -1,4 +1,4 @@
-export interface StorageItem {
+export interface Storage {
   code: string;
   description: string;
   brand: string;

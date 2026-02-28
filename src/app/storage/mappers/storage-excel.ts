@@ -1,4 +1,4 @@
-import { StorageExcel, StorageItem } from '../models/storage';
+import { StorageExcel, Storage } from '../models/storage';
 
 export class StorageExcelMapper {
   static normalizeExcelRow(raw: Record<string, unknown>): StorageExcel {
@@ -15,7 +15,7 @@ export class StorageExcelMapper {
     return normalized;
   }
 
-  static toStorageItem(row: StorageExcel): StorageItem {
+  static toStorageItem(row: StorageExcel): Storage {
     return {
       code: row.codigo,
       description: row.descripcion,
