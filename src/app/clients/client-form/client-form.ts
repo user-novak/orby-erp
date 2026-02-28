@@ -5,6 +5,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { Client, ClientFormValues } from '../models/client';
+import { FORM_MODE } from '../../core/enums/global';
 
 @Component({
   selector: 'app-client-form',
@@ -20,6 +21,7 @@ import { Client, ClientFormValues } from '../models/client';
 })
 export class ClientForm {
   readonly client = input<Client | null>(null);
+  readonly formMode = input<FORM_MODE>('create');
 
   @Output() formSubmit = new EventEmitter<ClientFormValues>();
 

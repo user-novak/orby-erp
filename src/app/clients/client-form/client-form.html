@@ -44,7 +44,9 @@
   </button>
 
   <button matButton="filled">
-    Crear item
-    <mat-icon>add</mat-icon>
+    {{ formMode() === 'edit' ? 'Editar item' : 'Crear item' }}
+    <mat-icon>
+      {{ formMode() === 'edit' ? 'edit' : 'add' }}
+    </mat-icon>
   </button>
 </form>

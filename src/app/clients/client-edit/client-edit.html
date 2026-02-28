@@ -9,7 +9,7 @@
     <h2 class="text-lg sm:text-2xl font-black text-center">Editar cliente</h2>
   </div>
 
- @if (client(); as clientData) {
-  <app-client-form [client]="clientData"></app-client-form>
-}
+  @if (client(); as clientData) {
+    <app-client-form [formMode]="formMode" [client]="clientData"></app-client-form>
+  }
 </main>

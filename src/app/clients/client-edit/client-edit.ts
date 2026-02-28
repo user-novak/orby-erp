@@ -8,6 +8,7 @@ import { Client } from '../models/client';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ApiResponse, NotificationData } from '../../core/models/global';
 import { ClientForm } from '../client-form/client-form';
+import { FORM_MODE } from '../../core/enums/global';
 
 @Component({
   selector: 'app-client-edit',
@@ -16,6 +17,7 @@ import { ClientForm } from '../client-form/client-form';
   styleUrl: './client-edit.css',
 })
 export class ClientEdit implements OnInit {
+  readonly formMode: FORM_MODE = 'edit';
   readonly client = signal<Client | null>(null);
   clientId!: number;
 
