@@ -5,7 +5,7 @@ export class AccountExcelMapper {
     const normalized = {
       numeroCuenta: toString(raw['numeroCuenta']) ?? '',
       nombreCuenta: toString(raw['nombreCuenta']) ?? '',
-      tipoCuenta: toString(raw['tipoCuenta']) ?? '',
+      descripcion: toString(raw['descripcion']) ?? '',
       monto: toNumber(raw['monto']) ?? 0,
     } satisfies AccountExcel;
 
@@ -14,9 +14,9 @@ export class AccountExcelMapper {
 
   static toAccount(row: AccountExcel): Account {
     return {
-      accountNumber: row.numeroCuenta,
-      accountName: row.nombreCuenta,
-      accountType: row.tipoCuenta,
+      account_number: row.numeroCuenta,
+      name: row.nombreCuenta,
+      description: row.descripcion,
       amount: row.monto,
     };
   }
