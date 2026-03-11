@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, EventEmitter, inject, Output } from '@angular/core';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
@@ -7,6 +7,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { StorageFormValues } from '../models/storage';
 
 @Component({
   selector: 'app-storage-form',
@@ -22,8 +23,9 @@ import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angula
   styleUrl: './storage-form.css',
 })
 export class StorageForm {
+  @Output() formSubmit = new EventEmitter<StorageFormValues>();
+
   mesaureUnities: string[] = MESAURE_UNITS;
-  tempValues: string[] = ['Valor 1', 'Valor 2'];
 
   storageForm: FormGroup;
 
@@ -44,11 +46,16 @@ export class StorageForm {
       console.error('Formulario inválido');
       return;
     }
-    console.log('Formulario válido', this.storageForm.getRawValue());
+
+    this.formSubmit.emit(this.getStorageFormValues());
+  }
+
+  private getStorageFormValues(): StorageFormValues {
+    return this.storageForm.getRawValue();
   }
 
   private handlePriceCalculations(): void {
-    const unitPriceCtrl = this.storageForm.get('unitPrice')!;
+    const unitPriceCtrl = this.storageForm.get('unit_price')!;
 
     const map = [
       {
@@ -78,7 +85,7 @@ export class StorageForm {
   }
 
   private recalculatePrices(map: { percentage: string; price: string }[]): void {
-    const unitPrice = Number(this.storageForm.get('unitPrice')?.value);
+    const unitPrice = Number(this.storageForm.get('unit_price')?.value);
 
     if (!unitPrice) {
       map.forEach(({ price }) => {
@@ -111,8 +118,8 @@ export class StorageForm {
     return this._fb.group({
       description: ['', [Validators.required]],
       brand: ['', [Validators.required]],
-      measureUnity: [null, [Validators.required]],
-      unitPrice: [null, [Validators.required]],
+      measure_unity: [null, [Validators.required]],
+      unit_price: [null, [Validators.required]],
       percentage_distributor: [null, [Validators.required]],
       price_distributor: [null, [Validators.required]],
       percentage_major: [null, [Validators.required]],

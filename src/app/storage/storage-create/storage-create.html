@@ -9,5 +9,5 @@
     <h2 class="text-lg sm:text-2xl font-black text-center">Crear nuevo elemento</h2>
   </div>
 
-  <app-storage-form></app-storage-form>
+  <app-storage-form (formSubmit)="createNewStorage($event)"></app-storage-form>
 </main>

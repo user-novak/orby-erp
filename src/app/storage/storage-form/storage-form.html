@@ -13,18 +13,14 @@
   <div>
     <mat-form-field class="w-full">
       <mat-label>Marca</mat-label>
-      <mat-select formControlName="brand">
-        @for (value of tempValues; track value) {
-          <mat-option [value]="value">{{ value }}</mat-option>
-        }
-      </mat-select>
+      <input matInput formControlName="brand" />
     </mat-form-field>
   </div>
 
   <div>
     <mat-form-field class="w-full">
       <mat-label>Unidad de medida</mat-label>
-      <mat-select formControlName="measureUnity">
+      <mat-select formControlName="measure_unity">
         @for (unity of mesaureUnities; track unity) {
           <mat-option [value]="unity">{{ unity }}</mat-option>
         }
@@ -35,7 +31,7 @@
   <div class="lg:col-span-2">
     <mat-form-field class="w-full" floatLabel="always">
       <mat-label>Costo unitario</mat-label>
-      <input matInput type="number" placeholder="0" formControlName="unitPrice" />
+      <input matInput type="number" placeholder="0" formControlName="unit_price" />
       <span matTextPrefix>S/.&nbsp;</span>
     </mat-form-field>
   </div>

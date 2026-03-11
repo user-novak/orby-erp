@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { ApiResponse } from '../../core/models/global';
-import { Storage } from '../models/storage';
+import { Storage, StorageFormValues } from '../models/storage';
 
 @Injectable({
   providedIn: 'root',
@@ -20,7 +20,7 @@ export class StorageService {
     return this.http.get<ApiResponse<Storage>>(`${this.apiUrl}/${id}`);
   }
 
-  createStorage(storage: Storage): Observable<ApiResponse<Storage>> {
+  createStorage(storage: StorageFormValues): Observable<ApiResponse<Storage>> {
     return this.http.post<ApiResponse<Storage>>(this.apiUrl, storage);
   }
 

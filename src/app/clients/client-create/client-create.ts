@@ -27,7 +27,7 @@ export class ClientCreate {
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
         next: () => {
-          this.router.navigate(['/clients']);
+          this.goClients();
         },
         error: () => {
           this.showNotification(
