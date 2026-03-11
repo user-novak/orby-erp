@@ -12,6 +12,7 @@ import { StorageExcelMapper } from '../mappers/storage-excel';
 import { StorageService } from '../services/storage';
 import { NotificationService } from '../../core/services/notification/notification';
 import { ApiResponse, NotificationData } from '../../core/models/global';
+import { ConfirmDialogService } from '../../core/services/confirm-dialog/confirm-dialog';
 
 @Component({
   selector: 'app-storage-index',
@@ -22,6 +23,7 @@ import { ApiResponse, NotificationData } from '../../core/models/global';
 export class StorageIndex implements AfterViewInit, OnInit {
   private readonly storageService = inject(StorageService);
   private readonly notification = inject(NotificationService);
+  private readonly confirmDialogService = inject(ConfirmDialogService);
   private readonly router = inject(Router);
   private readonly excelService: ExcelImportService = inject(ExcelImportService);
   private readonly destroyRef = inject(DestroyRef);
@@ -40,6 +42,25 @@ export class StorageIndex implements AfterViewInit, OnInit {
 
   ngOnInit() {
     this.listStorages();
+  }
+
+  goToEdit(storageID: number) {
+    this.router.navigate(['/storage/edit', storageID]);
+  }
+
+  confirmDelete(storageID: number) {
+    this.confirmDialogService
+      .open({
+        message: '¿Deseas eliminar este producto?',
+        acceptText: 'Eliminar',
+        cancelText: 'Cancelar',
+      })
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe((result) => {
+        if (result === 'accept') {
+          this.deleteStorage(storageID);
+        }
+      });
   }
 
   async onFileSelected(event: Event) {
@@ -76,6 +97,20 @@ export class StorageIndex implements AfterViewInit, OnInit {
 
   goToCreate() {
     this.router.navigateByUrl('/storage/create');
+  }
+
+  private deleteStorage(storageID: number) {
+    this.storageService.deleteStorage(storageID).subscribe({
+      next: () => {
+        this.listStorages();
+      },
+      error: () => {
+        this.showNotification(
+          this.generateNotification('Error al eliminar producto', 'error', '#f44336'),
+          3000,
+        );
+      },
+    });
   }
 
   private listStorages() {
