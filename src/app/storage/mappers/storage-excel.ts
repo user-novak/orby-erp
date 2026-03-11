@@ -3,7 +3,6 @@ import { StorageExcel, Storage } from '../models/storage';
 export class StorageExcelMapper {
   static normalizeExcelRow(raw: Record<string, unknown>): StorageExcel {
     const normalized = {
-      codigo: toString(raw['codigo']) ?? '',
       descripcion: toString(raw['descripcion']) ?? '',
       marca: toString(raw['marca']) ?? '',
       medida: toString(raw['medida']) ?? '',
@@ -17,12 +16,11 @@ export class StorageExcelMapper {
 
   static toStorageItem(row: StorageExcel): Storage {
     return {
-      code: row.codigo,
       description: row.descripcion,
       brand: row.marca,
-      measure: row.medida,
+      measure_unity: row.medida,
       unit_price: row.precio_unitario,
-      general_price: row.precio_general,
+      price_general: row.precio_general,
       stock: row.stock,
     };
   }

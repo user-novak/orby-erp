@@ -1,10 +1,9 @@
 export const storageColumHeader: string[] = [
-  'code',
   'description',
   'brand',
-  'measure',
+  'measure_unity',
   'unit_price',
-  'general_price',
+  'price_general',
   'stock',
   'actions',
 ];

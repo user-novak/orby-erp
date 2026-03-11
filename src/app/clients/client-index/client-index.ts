@@ -1,4 +1,4 @@
-import { Component, DestroyRef, inject, OnInit, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, DestroyRef, inject, OnInit, ViewChild } from '@angular/core';
 import { Client, ClientExcel } from '../models/client';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
@@ -20,7 +20,7 @@ import { NotificationService } from '../../core/services/notification/notificati
   templateUrl: './client-index.html',
   styleUrl: './client-index.css',
 })
-export class ClientIndex implements OnInit {
+export class ClientIndex implements AfterViewInit, OnInit {
   private readonly excelService: ExcelImportService = inject(ExcelImportService);
   private readonly destroyRef = inject(DestroyRef);
 

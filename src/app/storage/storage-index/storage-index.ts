@@ -1,4 +1,4 @@
-import { Component, AfterViewInit, ViewChild, inject, DestroyRef } from '@angular/core';
+import { Component, AfterViewInit, ViewChild, inject, DestroyRef, OnInit } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
@@ -9,6 +9,9 @@ import { storageColumHeader } from '../constants/storage';
 import { ExcelImportService } from '../../core/services/excel/excel-import';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { StorageExcelMapper } from '../mappers/storage-excel';
+import { StorageService } from '../services/storage';
+import { NotificationService } from '../../core/services/notification/notification';
+import { ApiResponse, NotificationData } from '../../core/models/global';
 
 @Component({
   selector: 'app-storage-index',
@@ -16,7 +19,9 @@ import { StorageExcelMapper } from '../mappers/storage-excel';
   templateUrl: './storage-index.html',
   styleUrl: './storage-index.css',
 })
-export class StorageIndex implements AfterViewInit {
+export class StorageIndex implements AfterViewInit, OnInit {
+  private readonly storageService = inject(StorageService);
+  private readonly notification = inject(NotificationService);
   private readonly router = inject(Router);
   private readonly excelService: ExcelImportService = inject(ExcelImportService);
   private readonly destroyRef = inject(DestroyRef);
@@ -31,6 +36,10 @@ export class StorageIndex implements AfterViewInit {
 
   ngAfterViewInit() {
     this.dataSource.paginator = this.paginator;
+  }
+
+  ngOnInit() {
+    this.listStorages();
   }
 
   async onFileSelected(event: Event) {
@@ -67,5 +76,47 @@ export class StorageIndex implements AfterViewInit {
 
   goToCreate() {
     this.router.navigateByUrl('/storage/create');
+  }
+
+  private listStorages() {
+    this.storageService
+      .getStorages()
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe({
+        next: (response: ApiResponse<Storage[]>) => {
+          this.dataSource.data = response.data;
+
+          if (this.paginator) {
+            this.dataSource.paginator = this.paginator;
+          }
+
+          this.showNotification(
+            this.generateNotification('Productos cargados exitosamente', 'check_circle', '#4caf50'),
+            3000,
+          );
+        },
+        error: () => {
+          this.showNotification(
+            this.generateNotification('Error al cargar productos', 'error', '#f44336'),
+            3000,
+          );
+        },
+      });
+  }
+
+  private generateNotification(
+    message: string,
+    icon: string,
+    backgroundColor: string,
+  ): NotificationData {
+    return {
+      message,
+      icon,
+      backgroundColor,
+    };
+  }
+
+  private showNotification(notification: NotificationData, duration?: number) {
+    this.notification.show(notification, duration);
   }
 }
