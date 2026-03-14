@@ -41,7 +41,7 @@ export class ClientEdit implements OnInit {
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
         next: () => {
-          this.router.navigate(['/clients']);
+          this.goClients();
         },
         error: () => {
           this.showNotification(
@@ -65,7 +65,7 @@ export class ClientEdit implements OnInit {
             this.generateNotification('Error al cargar cliente', 'error', '#f44336'),
             3000,
           );
-          this.router.navigate(['/clients']);
+          this.goClients();
         },
       });
   }
@@ -86,7 +86,7 @@ export class ClientEdit implements OnInit {
     this.clientId = Number(this.route.snapshot.paramMap.get('id'));
 
     if (!this.clientId) {
-      this.router.navigate(['/clients']);
+      this.goClients();
       return;
     }
 

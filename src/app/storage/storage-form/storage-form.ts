@@ -1,4 +1,4 @@
-import { Component, EventEmitter, inject, Output } from '@angular/core';
+import { Component, effect, EventEmitter, inject, input, Output } from '@angular/core';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
@@ -7,7 +7,8 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { StorageFormValues } from '../models/storage';
+import { Storage, StorageFormValues } from '../models/storage';
+import { FORM_MODE } from '../../core/enums/global';
 
 @Component({
   selector: 'app-storage-form',
@@ -23,6 +24,9 @@ import { StorageFormValues } from '../models/storage';
   styleUrl: './storage-form.css',
 })
 export class StorageForm {
+  readonly storage = input<Storage | null>(null);
+  readonly formMode = input<FORM_MODE>('create');
+
   @Output() formSubmit = new EventEmitter<StorageFormValues>();
 
   mesaureUnities: string[] = MESAURE_UNITS;
@@ -35,6 +39,14 @@ export class StorageForm {
     this.storageForm = this.setStorageForm();
     this.disablePriceFields();
     this.handlePriceCalculations();
+
+    effect(() => {
+      const storageValue = this.storage();
+      if (storageValue) {
+        this.patchFormValues(storageValue);
+        this.disabledStockFields();
+      }
+    });
   }
 
   onClearForm(): void {
@@ -48,6 +60,16 @@ export class StorageForm {
     }
 
     this.formSubmit.emit(this.getStorageFormValues());
+  }
+
+  private patchFormValues(storage: Storage): void {
+    this.storageForm.patchValue(storage);
+  }
+
+  private disabledStockFields(): void {
+    this.storageForm.get('input')?.disable();
+    this.storageForm.get('output')?.disable();
+    this.storageForm.get('stock')?.disable();
   }
 
   private getStorageFormValues(): StorageFormValues {

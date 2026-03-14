@@ -18,7 +18,7 @@ export const STORAGE_ROUTES: Routes = [
         component: StorageCreate,
       },
       {
-        path: 'edit',
+        path: 'edit/:id',
         component: StorageEdit,
       },
     ],

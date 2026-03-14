@@ -112,8 +112,10 @@
     </button>
 
     <button matButton="filled">
-      Crear item
-      <mat-icon>add</mat-icon>
+      {{ formMode() === 'edit' ? 'Editar producto' : 'Crear producto' }}
+      <mat-icon>
+        {{ formMode() === 'edit' ? 'edit' : 'add' }}
+      </mat-icon>
     </button>
   </div>
 </form>
