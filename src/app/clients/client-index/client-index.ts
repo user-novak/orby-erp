@@ -21,9 +21,6 @@ import { NotificationService } from '../../core/services/notification/notificati
   styleUrl: './client-index.css',
 })
 export class ClientIndex implements AfterViewInit, OnInit {
-  private readonly excelService: ExcelImportService = inject(ExcelImportService);
-  private readonly destroyRef = inject(DestroyRef);
-
   clientColumHeader = clientColumHeader;
 
   dataSource = new MatTableDataSource<Client>([]);
@@ -32,6 +29,8 @@ export class ClientIndex implements AfterViewInit, OnInit {
   private readonly confirmDialogService = inject(ConfirmDialogService);
   private readonly notification = inject(NotificationService);
   private readonly router = inject(Router);
+  private readonly excelService: ExcelImportService = inject(ExcelImportService);
+  private readonly destroyRef = inject(DestroyRef);
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
 

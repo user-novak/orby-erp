@@ -1,4 +1,4 @@
-import { Component, DestroyRef, inject, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, DestroyRef, inject, OnInit, ViewChild } from '@angular/core';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
@@ -8,6 +8,10 @@ import { accountColumHeader } from '../constants/account';
 import { Account, AccountExcel } from '../models/account';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { AccountExcelMapper } from '../mapper/account-excel';
+import { Router } from '@angular/router';
+import { NotificationService } from '../../core/services/notification/notification';
+import { ApiResponse, NotificationData } from '../../core/models/global';
+import { AccountService } from '../services/account';
 
 @Component({
   selector: 'app-account-index',
@@ -15,20 +19,27 @@ import { AccountExcelMapper } from '../mapper/account-excel';
   templateUrl: './account-index.html',
   styleUrl: './account-index.css',
 })
-export class AccountIndex {
-  private readonly excelService: ExcelImportService = inject(ExcelImportService);
-  private readonly destroyRef = inject(DestroyRef);
-
+export class AccountIndex implements AfterViewInit, OnInit {
   accountColumHeader = accountColumHeader;
 
   ELEMENT_DATA: Account[] = [];
 
   dataSource = new MatTableDataSource<Account>(this.ELEMENT_DATA);
 
+  private readonly accountService: AccountService = inject(AccountService);
+  private readonly excelService: ExcelImportService = inject(ExcelImportService);
+  private readonly destroyRef = inject(DestroyRef);
+  private readonly notification = inject(NotificationService);
+  private readonly router = inject(Router);
+
   @ViewChild(MatPaginator) paginator!: MatPaginator;
 
   ngAfterViewInit() {
     this.dataSource.paginator = this.paginator;
+  }
+
+  ngOnInit(): void {
+    this.listAccounts();
   }
 
   async onFileSelected(event: Event) {
@@ -61,5 +72,47 @@ export class AccountIndex {
           console.error('Error al importar Excel', err);
         },
       });
+  }
+
+  private listAccounts() {
+    this.accountService
+      .getAccounts()
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe({
+        next: (response: ApiResponse<Account[]>) => {
+          this.dataSource.data = response.data;
+
+          if (this.paginator) {
+            this.dataSource.paginator = this.paginator;
+          }
+
+          this.showNotification(
+            this.generateNotification('Cuentas cargadas exitosamente', 'check_circle', '#4caf50'),
+            3000,
+          );
+        },
+        error: () => {
+          this.showNotification(
+            this.generateNotification('Error al cargar cuentas', 'error', '#f44336'),
+            3000,
+          );
+        },
+      });
+  }
+
+  private generateNotification(
+    message: string,
+    icon: string,
+    backgroundColor: string,
+  ): NotificationData {
+    return {
+      message,
+      icon,
+      backgroundColor,
+    };
+  }
+
+  private showNotification(notification: NotificationData, duration?: number) {
+    this.notification.show(notification, duration);
   }
 }
