@@ -12,6 +12,7 @@ import { Router } from '@angular/router';
 import { NotificationService } from '../../core/services/notification/notification';
 import { ApiResponse, NotificationData } from '../../core/models/global';
 import { AccountService } from '../services/account';
+import { ConfirmDialogService } from '../../core/services/confirm-dialog/confirm-dialog';
 
 @Component({
   selector: 'app-account-index',
@@ -30,6 +31,7 @@ export class AccountIndex implements AfterViewInit, OnInit {
   private readonly excelService: ExcelImportService = inject(ExcelImportService);
   private readonly destroyRef = inject(DestroyRef);
   private readonly notification = inject(NotificationService);
+  private readonly confirmDialogService = inject(ConfirmDialogService);
   private readonly router = inject(Router);
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
@@ -40,6 +42,29 @@ export class AccountIndex implements AfterViewInit, OnInit {
 
   ngOnInit(): void {
     this.listAccounts();
+  }
+
+  goToCreate() {
+    this.router.navigateByUrl('/accounts/create');
+  }
+
+  goToEdit(accountID: number) {
+    this.router.navigate(['/accounts/edit', accountID]);
+  }
+
+  confirmDelete(accountID: number) {
+    this.confirmDialogService
+      .open({
+        message: '¿Deseas eliminar esta cuenta bancaria?',
+        acceptText: 'Eliminar',
+        cancelText: 'Cancelar',
+      })
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe((result) => {
+        if (result === 'accept') {
+          this.deleteAccount(accountID);
+        }
+      });
   }
 
   async onFileSelected(event: Event) {
@@ -70,6 +95,23 @@ export class AccountIndex implements AfterViewInit, OnInit {
         },
         error: (err) => {
           console.error('Error al importar Excel', err);
+        },
+      });
+  }
+
+  private deleteAccount(accountID: number) {
+    this.accountService
+      .deleteAccount(accountID)
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe({
+        next: () => {
+          this.listAccounts();
+        },
+        error: () => {
+          this.showNotification(
+            this.generateNotification('Error al eliminar cuenta', 'error', '#f44336'),
+            3000,
+          );
         },
       });
   }
