@@ -36,6 +36,7 @@ export class AccountForm {
       const accountValue = this.account();
       if (accountValue) {
         this.patchFormValues(accountValue);
+        this.disableAmountField();
       }
     });
   }
@@ -58,6 +59,10 @@ export class AccountForm {
 
   private getAccountFormValues(): AccountFormValues {
     return this.accountForm.getRawValue();
+  }
+
+  private disableAmountField(): void {
+    this.accountForm.get('amount')?.disable();
   }
 
   private setAccountForm(): FormGroup {

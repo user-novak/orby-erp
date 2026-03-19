@@ -1,1 +1,19 @@
-<p>account-edit works!</p>
+<main class="module-main">
+  <div class="w-full grid grid-cols-3 items-center">
+    <div class="justify-self-start mx-8">
+      <button (click)="goAccounts()" mat-fab aria-label="Back button" class="cursor-pointer">
+        <mat-icon>keyboard_backspace</mat-icon>
+      </button>
+    </div>
+
+    <h2 class="text-lg sm:text-2xl font-black text-center">Editar cuenta</h2>
+  </div>
+
+  @if (account(); as accountData) {
+    <app-account-form
+      [formMode]="formMode"
+      [account]="accountData"
+      (formSubmit)="editAccount($event)"
+    ></app-account-form>
+  }
+</main>
