@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Account } from '../models/account';
+import { Account, AccountFormValues } from '../models/account';
 import { ApiResponse } from '../../core/models/global';
 import { Observable } from 'rxjs';
 
@@ -20,7 +20,7 @@ export class AccountService {
     return this.http.get<ApiResponse<Account>>(`${this.apiUrl}/${id}`);
   }
 
-  createAccount(account: Account): Observable<ApiResponse<Account>> {
+  createAccount(account: AccountFormValues): Observable<ApiResponse<Account>> {
     return this.http.post<ApiResponse<Account>>(this.apiUrl, account);
   }
 

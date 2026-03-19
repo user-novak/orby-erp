@@ -12,3 +12,11 @@ export interface AccountExcel extends Record<string, unknown> {
   descripcion: string;
   monto: number;
 }
+
+export interface AccountFormValues {
+  name: string;
+  amount: number;
+  id?: number;
+  description?: string;
+  account_number?: string;
+}
