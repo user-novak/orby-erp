@@ -37,6 +37,7 @@ export interface BillerRequest {
   account_id: number;
   items: BillerItem[];
   place?: string;
+  payment_date?: string;
 }
 
 export interface BillerItem {

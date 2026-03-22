@@ -1,16 +1,23 @@
-import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, DestroyRef, inject } from '@angular/core';
 import { MatIconModule } from '@angular/material/icon';
 import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { provideNativeDateAdapter } from '@angular/material/core';
 import { MatSelectModule } from '@angular/material/select';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import {
+  FormBuilder,
+  FormGroup,
+  ReactiveFormsModule,
+  Validators,
+  FormControl,
+} from '@angular/forms';
 import { MyErrorStateMatcher } from '../core/classess/ErrorStateMatcher';
 import { SALES_OPTIONS_TYPES } from './constants/fields';
-import { NotificationData, Option } from '../core/models/global';
+import { ApiResponse, NotificationData, Option } from '../core/models/global';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { BillerForm, BillerItem, BillerRequest } from './models/biller';
+import { BillerForm, BillerItem, BillerRequest, BillerResponse } from './models/biller';
 import { MatButtonModule } from '@angular/material/button';
 import { ModuleHeader } from '../core/components/module-header/module-header';
 import { MESAURE_UNITS } from '../core/constants/global';
@@ -34,6 +41,7 @@ import { combineLatest, startWith } from 'rxjs';
     MatButtonModule,
     MatIconModule,
     ModuleHeader,
+    MatCheckboxModule,
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './biller.html',
@@ -57,6 +65,7 @@ export class Biller {
   private readonly _fb = inject(FormBuilder);
   private readonly billerService = inject(BillerService);
   private readonly notification = inject(NotificationService);
+  private readonly destroyRef = inject(DestroyRef);
 
   constructor() {
     this.generalInfoForm = this.setGeneralInfoForm();
@@ -67,12 +76,22 @@ export class Biller {
     this.loadBillerData();
   }
 
+  get includeIgvControl(): FormControl {
+    return this.generalInfoForm.get('include_igv') as FormControl;
+  }
+
   get productListAmount(): number {
     const total = this.productsList.reduce((acc, item) => acc + item.total_price, 0);
     return Number(total.toFixed(2));
   }
 
   get getIgv(): number {
+    const includeIgv = this.generalInfoForm.get('include_igv')?.value;
+
+    if (!includeIgv) {
+      return 0;
+    }
+
     return Number((this.productListAmount * 0.18).toFixed(2));
   }
 
@@ -92,7 +111,10 @@ export class Biller {
       subtotal: this.productListAmount,
       igv: this.getIgv,
       total: this.totalAmount,
-      sale_date: datageneralInfoForm.sale_date,
+      sale_date: datageneralInfoForm.sale_date.toISOString().split('T')[0],
+      payment_date: datageneralInfoForm.payment_date
+        ? datageneralInfoForm.payment_date.toISOString().split('T')[0]
+        : null,
       sale_type: datageneralInfoForm.sale_type,
       client_id: datageneralInfoForm.client_id,
       account_id: datageneralInfoForm.account_id,
@@ -100,7 +122,7 @@ export class Biller {
       items: billerItems,
     };
 
-    console.log('Biller Request', billerRequest);
+    this.registerSale(billerRequest);
   }
 
   addProduct() {
@@ -134,6 +156,29 @@ export class Biller {
 
       paymentDateControl.updateValueAndValidity({ emitEvent: false });
     });
+  }
+
+  private registerSale(billerRequest: BillerRequest) {
+    this.billerService
+      .registerSale(billerRequest)
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe({
+        next: (response: ApiResponse<BillerResponse>) => {
+          this.showNotification(
+            this.generateNotification(response.message, 'check_circle', '#4caf50'),
+            3000,
+          );
+          this.productsList = [];
+          this.generalInfoForm.reset();
+          this.billerForm.reset();
+        },
+        error: () => {
+          this.showNotification(
+            this.generateNotification('Error al cargar los datos', 'error', '#f44336'),
+            3000,
+          );
+        },
+      });
   }
 
   private loadBillerData() {
@@ -225,12 +270,13 @@ export class Biller {
 
   private setGeneralInfoForm() {
     return this._fb.group({
-      sale_date: [null, [Validators.required]],
+      sale_date: [new Date(), [Validators.required]],
       client_id: [null, [Validators.required]],
       sale_type: [null, [Validators.required]],
       account_id: [null, [Validators.required]],
       place: [null],
       payment_date: [null],
+      include_igv: [false],
     });
   }
 

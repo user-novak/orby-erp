@@ -247,8 +247,9 @@
             <span>S/{{ productListAmount }}</span>
           </div>
 
-          <div class="flex justify-between text-gray-600">
-            <span>IGV (18%)</span>
+          <div class="flex justify-between items-center text-gray-600">
+            <mat-checkbox [formControl]="includeIgvControl"> IGV (18%) </mat-checkbox>
+
             <span>S/{{ getIgv }}</span>
           </div>
 
