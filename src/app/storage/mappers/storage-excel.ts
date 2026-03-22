@@ -21,6 +21,8 @@ export class StorageExcelMapper {
       measure_unity: row.medida,
       unit_price: row.precio_unitario,
       price_general: row.precio_general,
+      price_distributor: row.precio_unitario,
+      price_major: row.precio_unitario,
       stock: row.stock,
     };
   }

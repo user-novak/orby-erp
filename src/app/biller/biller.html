@@ -14,13 +14,13 @@
                 <input
                   matInput
                   [matDatepicker]="picker"
-                  formControlName="registerDate"
+                  formControlName="sale_date"
                   [errorStateMatcher]="matcher"
                 />
                 <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
                 <mat-datepicker #picker></mat-datepicker>
 
-                @if (generalInfoForm.controls['registerDate'].hasError('required')) {
+                @if (generalInfoForm.controls['sale_date'].hasError('required')) {
                   <mat-error>Campo fecha de registro es obligatorio</mat-error>
                 }
               </mat-form-field>
@@ -29,12 +29,12 @@
             <div>
               <mat-form-field class="w-full">
                 <mat-label>Cliente</mat-label>
-                <mat-select formControlName="client">
+                <mat-select formControlName="client_id">
                   @for (client of clients; track client) {
                     <mat-option [value]="client.id!">{{ client.name }}</mat-option>
                   }
                 </mat-select>
-                @if (generalInfoForm.controls['client'].hasError('required')) {
+                @if (generalInfoForm.controls['client_id'].hasError('required')) {
                   <mat-error>Campo cliente es obligatorio</mat-error>
                 }
               </mat-form-field>
@@ -50,12 +50,12 @@
             <div>
               <mat-form-field class="w-full">
                 <mat-label>Tipo de venta</mat-label>
-                <mat-select formControlName="saleType">
+                <mat-select formControlName="sale_type">
                   @for (sale of saleTypes; track sale) {
                     <mat-option [value]="sale.value">{{ sale.label }}</mat-option>
                   }
                 </mat-select>
-                @if (generalInfoForm.controls['saleType'].hasError('required')) {
+                @if (generalInfoForm.controls['sale_type'].hasError('required')) {
                   <mat-error>Campo tipo de venta es obligatorio</mat-error>
                 }
               </mat-form-field>
@@ -64,25 +64,25 @@
             <div>
               <mat-form-field class="w-full">
                 <mat-label>Entidad financiera</mat-label>
-                <mat-select formControlName="account">
+                <mat-select formControlName="account_id">
                   @for (account of accounts; track account) {
                     <mat-option [value]="account.id!">{{ account.name }}</mat-option>
                   }
                 </mat-select>
-                @if (generalInfoForm.controls['account'].hasError('required')) {
+                @if (generalInfoForm.controls['account_id'].hasError('required')) {
                   <mat-error>Campo entidad financiera es obligatorio</mat-error>
                 }
               </mat-form-field>
             </div>
 
-            @if (generalInfoForm.controls['saleType'].value === 'ACR') {
+            @if (generalInfoForm.controls['sale_type'].value === 'ACR') {
               <div>
                 <mat-form-field class="w-full">
                   <mat-label>Fecha de pago</mat-label>
-                  <input matInput formControlName="paymentDate" [matDatepicker]="paymentDay" />
+                  <input matInput formControlName="payment_date" [matDatepicker]="paymentDay" />
                   <mat-datepicker-toggle matIconSuffix [for]="paymentDay"></mat-datepicker-toggle>
                   <mat-datepicker #paymentDay></mat-datepicker>
-                  @if (generalInfoForm.controls['paymentDate'].hasError('required')) {
+                  @if (generalInfoForm.controls['payment_date'].hasError('required')) {
                     <mat-error>Campo fecha de pago es obligatorio</mat-error>
                   }
                 </mat-form-field>
@@ -111,48 +111,48 @@
 
             <mat-form-field>
               <mat-label>Unidad de medida</mat-label>
-              <mat-select formControlName="measureUnity">
+              <mat-select formControlName="measure_unity">
                 @for (unity of mesaureUnities; track unity) {
                   <mat-option [value]="unity">{{ unity }}</mat-option>
                 }
               </mat-select>
-              @if (billerForm.controls['measureUnity'].hasError('required')) {
+              @if (billerForm.controls['measure_unity'].hasError('required')) {
                 <mat-error>Campo unidad de medida es obligatorio</mat-error>
               }
             </mat-form-field>
 
             <mat-form-field>
               <mat-label>Descripción</mat-label>
-              <mat-select formControlName="productDescription">
+              <mat-select formControlName="storage_id">
                 @for (product of products; track product) {
                   <mat-option [value]="product.id!">{{ product.description }}</mat-option>
                 }
               </mat-select>
-              @if (billerForm.controls['productDescription'].hasError('required')) {
+              @if (billerForm.controls['storage_id'].hasError('required')) {
                 <mat-error>Campo descripción es obligatorio</mat-error>
               }
             </mat-form-field>
 
             <mat-form-field>
               <mat-label>T. precio</mat-label>
-              <mat-select formControlName="clientType">
+              <mat-select formControlName="client_type">
                 @for (client of clientTypes; track client) {
                   <mat-option [value]="client">{{ client }}</mat-option>
                 }
               </mat-select>
-              @if (billerForm.controls['clientType'].hasError('required')) {
+              @if (billerForm.controls['client_type'].hasError('required')) {
                 <mat-error>Campo tipo de precio es obligatorio</mat-error>
               }
             </mat-form-field>
 
             <mat-form-field>
-              <mat-label>Precio unitario</mat-label>
-              <input matInput formControlName="unitPrice" type="number" />
+              <mat-label>Precio de venta</mat-label>
+              <input matInput formControlName="unit_price" type="number" />
             </mat-form-field>
 
             <mat-form-field>
               <mat-label>Total</mat-label>
-              <input matInput formControlName="totalPrice" type="number" />
+              <input matInput formControlName="total_price" type="number" />
             </mat-form-field>
 
             <div class="flex items-start justify-center gap-2">
@@ -212,11 +212,11 @@
                   @for (item of productsList; track item; let idx = $index) {
                     <tr class="hover:bg-gray-50">
                       <td class="px-4 py-2 text-sm">{{ item.quantity }}</td>
-                      <td class="px-4 py-2 text-sm">{{ item.measureUnity }}</td>
-                      <td class="px-4 py-2 text-sm">{{ item.productDescription }}</td>
-                      <td class="px-4 py-2 text-sm">S/. {{ item.unitPrice }}</td>
+                      <td class="px-4 py-2 text-sm">{{ item.measure_unity }}</td>
+                      <td class="px-4 py-2 text-sm">{{ item.storage_id }}</td>
+                      <td class="px-4 py-2 text-sm">S/. {{ item.unit_price }}</td>
                       <td class="px-4 py-2 text-sm font-semibold text-gray-700">
-                        S/.{{ item.totalPrice }}
+                        S/.{{ item.total_price }}
                       </td>
                       <td class="px-4 py-2 text-sm">
                         <button
@@ -249,7 +249,7 @@
 
           <div class="flex justify-between text-gray-600">
             <span>IGV (18%)</span>
-            <span>S/{{ taxAmount }}</span>
+            <span>S/{{ getIgv }}</span>
           </div>
 
           <div class="flex justify-between text-xl font-bold bg-blue-50 p-3 rounded">
@@ -261,7 +261,9 @@
             <p>Total items: {{ productsList.length }}</p>
           </div>
 
-          <button class="w-full" matButton="filled">Registrar pedido</button>
+          <button class="w-full" matButton="filled" (click)="prepareRegisterSale()">
+            Registrar pedido
+          </button>
         </div>
       </aside>
     </div>

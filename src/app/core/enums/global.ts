@@ -1,7 +1,7 @@
 export enum TYPE_CLIENT {
-  DISTRIBUTOR = 'distribuidor',
-  MAJOR = 'mayorista',
-  GENERAL = 'general',
+  DISTRIBUTOR = 'Distribuidor',
+  MAJOR = 'Mayorista',
+  GENERAL = 'U. final',
 }
 
 export type FORM_MODE = 'create' | 'edit';

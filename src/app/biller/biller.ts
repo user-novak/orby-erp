@@ -10,16 +10,17 @@ import { MyErrorStateMatcher } from '../core/classess/ErrorStateMatcher';
 import { SALES_OPTIONS_TYPES } from './constants/fields';
 import { NotificationData, Option } from '../core/models/global';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { BillerForm } from './models/biller';
+import { BillerForm, BillerItem, BillerRequest } from './models/biller';
 import { MatButtonModule } from '@angular/material/button';
 import { ModuleHeader } from '../core/components/module-header/module-header';
 import { MESAURE_UNITS } from '../core/constants/global';
-import { TYPES_CLIENT } from '../core/enums/global';
+import { TYPE_CLIENT, TYPES_CLIENT } from '../core/enums/global';
 import { BillerService } from './services/biller';
 import { Client } from '../clients/models/client';
 import { Account } from '../accounts/models/account';
 import { Storage } from '../storage/models/storage';
 import { NotificationService } from '../core/services/notification/notification';
+import { combineLatest, startWith } from 'rxjs';
 
 @Component({
   selector: 'app-biller',
@@ -67,16 +68,39 @@ export class Biller {
   }
 
   get productListAmount(): number {
-    const total = this.productsList.reduce((acc, item) => acc + item.totalPrice, 0);
+    const total = this.productsList.reduce((acc, item) => acc + item.total_price, 0);
     return Number(total.toFixed(2));
   }
 
-  get taxAmount(): number {
+  get getIgv(): number {
     return Number((this.productListAmount * 0.18).toFixed(2));
   }
 
   get totalAmount(): number {
-    return Number((this.productListAmount + this.taxAmount).toFixed(2));
+    return Number((this.productListAmount + this.getIgv).toFixed(2));
+  }
+
+  prepareRegisterSale(): void {
+    if (this.generalInfoForm.invalid) {
+      return;
+    }
+
+    const datageneralInfoForm = this.generalInfoForm.getRawValue();
+    const billerItems = this.setBillerItems();
+
+    const billerRequest: BillerRequest = {
+      subtotal: this.productListAmount,
+      igv: this.getIgv,
+      total: this.totalAmount,
+      sale_date: datageneralInfoForm.sale_date,
+      sale_type: datageneralInfoForm.sale_type,
+      client_id: datageneralInfoForm.client_id,
+      account_id: datageneralInfoForm.account_id,
+      place: datageneralInfoForm.place,
+      items: billerItems,
+    };
+
+    console.log('Biller Request', billerRequest);
   }
 
   addProduct() {
@@ -97,8 +121,8 @@ export class Biller {
   }
 
   private handleSaleTypeChanges() {
-    const saleTypeControl = this.generalInfoForm.get('saleType')!;
-    const paymentDateControl = this.generalInfoForm.get('paymentDate')!;
+    const saleTypeControl = this.generalInfoForm.get('sale_type')!;
+    const paymentDateControl = this.generalInfoForm.get('payment_date')!;
 
     saleTypeControl.valueChanges.pipe(takeUntilDestroyed()).subscribe((value) => {
       if (value === 'ACR') {
@@ -137,66 +161,88 @@ export class Biller {
       });
   }
 
-  private handleBillerFormChanges() {
-    const productCtrl = this.billerForm.get('productDescription')!;
-    const qtyCtrl = this.billerForm.get('quantity')!;
-    const unitPriceCtrl = this.billerForm.get('unitPrice')!;
-    const totalPriceCtrl = this.billerForm.get('totalPrice')!;
-
-    productCtrl.valueChanges.pipe(takeUntilDestroyed()).subscribe((product) => {
-      if (product == null) {
-        unitPriceCtrl.setValue(null, { emitEvent: false });
-        totalPriceCtrl.setValue(null, { emitEvent: false });
-        return;
-      }
-
-      const randomPrice = this.getRandomIntInclusive(1, 100);
-      unitPriceCtrl.setValue(randomPrice, { emitEvent: false });
-
-      const qty = Number(qtyCtrl.value) || 0;
-      const total = randomPrice * qty;
-      totalPriceCtrl.setValue(total, { emitEvent: false });
-    });
-
-    qtyCtrl.valueChanges.pipe(takeUntilDestroyed()).subscribe((qtyRaw) => {
-      const qty = Number(qtyRaw) || 0;
-      const unit = Number(unitPriceCtrl.value) || 0;
-      const total = unit * qty;
-      totalPriceCtrl.setValue(total, { emitEvent: false });
+  private setBillerItems(): BillerItem[] {
+    return this.productsList.map((product: BillerForm) => {
+      return {
+        quantity: product.quantity,
+        unit_price: product.unit_price,
+        storage_id: parseInt(product.storage_id),
+      };
     });
   }
 
+  private handleBillerFormChanges() {
+    const productControl = this.billerForm.get('storage_id')!;
+    const quantityControl = this.billerForm.get('quantity')!;
+    const unitPriceControl = this.billerForm.get('unit_price')!;
+    const clientTypeControl = this.billerForm.get('client_type')!;
+    const totalPriceControl = this.billerForm.get('total_price')!;
+
+    combineLatest([
+      productControl.valueChanges.pipe(startWith(productControl.value)),
+      quantityControl.valueChanges.pipe(startWith(quantityControl.value)),
+      clientTypeControl.valueChanges.pipe(startWith(clientTypeControl.value)),
+    ])
+      .pipe(takeUntilDestroyed())
+      .subscribe(([productId, qtyRaw, clientType]) => {
+        if (!productId) {
+          unitPriceControl.setValue(null, { emitEvent: false });
+          totalPriceControl.setValue(null, { emitEvent: false });
+          return;
+        }
+
+        const unitPrice = this.getUnitPriceByClientType(productId, clientType);
+        const qty = Number(qtyRaw) || 0;
+        const total = unitPrice * qty;
+
+        unitPriceControl.setValue(unitPrice, { emitEvent: false });
+        totalPriceControl.setValue(total, { emitEvent: false });
+      });
+  }
+
+  private getUnitPriceByClientType(productId: number, clientType: string): number {
+    const product = this.products.find((p) => p.id === productId);
+    if (!product) {
+      return 0;
+    }
+
+    switch (clientType) {
+      case TYPE_CLIENT.DISTRIBUTOR:
+        return product.price_distributor;
+      case TYPE_CLIENT.MAJOR:
+        return product.price_major;
+      case TYPE_CLIENT.GENERAL:
+        return product.price_general;
+      default:
+        return 0;
+    }
+  }
+
   private disabledBillerFields() {
-    this.billerForm.get('unitPrice')?.disable();
-    this.billerForm.get('totalPrice')?.disable();
+    this.billerForm.get('unit_price')?.disable();
+    this.billerForm.get('total_price')?.disable();
   }
 
   private setGeneralInfoForm() {
     return this._fb.group({
-      registerDate: [null, [Validators.required]],
-      client: [null, [Validators.required]],
-      saleType: [null, [Validators.required]],
-      account: [null, [Validators.required]],
+      sale_date: [null, [Validators.required]],
+      client_id: [null, [Validators.required]],
+      sale_type: [null, [Validators.required]],
+      account_id: [null, [Validators.required]],
       place: [null],
-      paymentDate: [null],
+      payment_date: [null],
     });
   }
 
   private setBillerForm() {
     return this._fb.group({
       quantity: [null, [Validators.required, Validators.min(1)]],
-      measureUnity: [null, [Validators.required]],
-      productDescription: [null, [Validators.required]],
-      clientType: ['U. final', [Validators.required]],
-      unitPrice: [null, [Validators.required, Validators.min(1)]],
-      totalPrice: [null, [Validators.required, Validators.min(1)]],
+      measure_unity: [null, [Validators.required]],
+      storage_id: [null, [Validators.required]],
+      client_type: ['U. final', [Validators.required]],
+      unit_price: [null, [Validators.required, Validators.min(1)]],
+      total_price: [null, [Validators.required, Validators.min(1)]],
     });
-  }
-
-  private getRandomIntInclusive(min: number, max: number) {
-    min = Math.ceil(min);
-    max = Math.floor(max);
-    return Math.floor(Math.random() * (max - min + 1)) + min;
   }
 
   private generateNotification(

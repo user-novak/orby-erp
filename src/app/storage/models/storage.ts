@@ -5,6 +5,8 @@ export interface Storage {
   measure_unity: string;
   unit_price: number;
   price_general: number;
+  price_distributor: number;
+  price_major: number;
   stock: number;
 }
 

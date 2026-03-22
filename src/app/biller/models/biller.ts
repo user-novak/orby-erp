@@ -4,21 +4,21 @@ import { Storage } from '../../storage/models/storage';
 import { SALES_TYPES } from '../constants/fields';
 
 export interface GeneralInfoBillerForm {
-  registerDate: string;
-  clientType: string;
+  sale_date: string;
+  client_id: string;
   client: string;
-  saleType: SALES_TYPES;
-  account: string;
-  paymentDate?: string;
+  sale_type: SALES_TYPES;
+  account_id: string;
+  payment_date?: string;
   place?: string;
 }
 
 export interface BillerForm {
   quantity: number;
-  measureUnity: string;
-  productDescription: string;
-  unitPrice: number;
-  totalPrice: number;
+  measure_unity: string;
+  storage_id: string;
+  unit_price: number;
+  total_price: number;
 }
 
 export interface BillerData {
