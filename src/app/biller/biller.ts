@@ -7,7 +7,7 @@ import { provideNativeDateAdapter } from '@angular/material/core';
 import { MatSelectModule } from '@angular/material/select';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MyErrorStateMatcher } from '../core/classess/ErrorStateMatcher';
-import { SALES_TYPES } from './constants/fields';
+import { SALES_OPTIONS_TYPES } from './constants/fields';
 import { NotificationData, Option } from '../core/models/global';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { BillerForm } from './models/biller';
@@ -39,7 +39,7 @@ import { NotificationService } from '../core/services/notification/notification'
   styleUrl: './biller.css',
 })
 export class Biller {
-  saleTypes: Option[] = SALES_TYPES;
+  saleTypes: Option[] = SALES_OPTIONS_TYPES;
   clients: Client[] = [];
   clientTypes: TYPES_CLIENT = ['Distribuidor', 'Mayorista', 'U. final'];
   products: Storage[] = [];
