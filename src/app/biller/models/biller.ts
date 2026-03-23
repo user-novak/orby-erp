@@ -27,6 +27,31 @@ export interface BillerData {
   accounts: Account[];
 }
 
+export interface BillerDataSalesResponse {
+  id: number;
+  sale_date: string;
+  sale_type: string;
+  subtotal: number;
+  igv: number;
+  total: number;
+  client_id: number;
+  account_id: number;
+  place: string;
+  payment_date: string;
+  account: Account;
+  client: Client;
+  items: BillerDataSalesItemResponse[];
+}
+
+export interface BillerDataSalesItemResponse {
+  id: number;
+  biller_id: number;
+  quantity: number;
+  unit_price: number;
+  subtotal: number;
+  storage: Storage;
+}
+
 export interface BillerRequest {
   subtotal: number;
   igv: number;

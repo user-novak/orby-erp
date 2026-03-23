@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { ApiResponse } from '../../core/models/global';
 import { Observable } from 'rxjs';
-import { BillerData, BillerRequest, BillerResponse } from '../models/biller';
+import { BillerData, BillerDataSalesResponse, BillerRequest, BillerResponse } from '../models/biller';
 import { SalesFilters } from '../../sales/models/sales';
 
 @Injectable({
@@ -21,7 +21,7 @@ export class BillerService {
     return this.http.post<ApiResponse<BillerResponse>>(this.apiUrl, billerRequest);
   }
 
-  getSales(filters?: SalesFilters): Observable<ApiResponse<any>> {
+  getSales(filters?: SalesFilters): Observable<ApiResponse<BillerDataSalesResponse[]>> {
     let params = new HttpParams();
 
     if (filters) {
@@ -32,6 +32,6 @@ export class BillerService {
       });
     }
 
-    return this.http.get<ApiResponse<any>>(`${this.apiUrl}/sales`, { params });
+    return this.http.get<ApiResponse<BillerDataSalesResponse[]>>(`${this.apiUrl}/sales`, { params });
   }
 }
