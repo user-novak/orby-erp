@@ -1,22 +1,22 @@
 <main class="module-main">
-  <div class="module_filters">
+  <form [formGroup]="filterForm" class="module_filters">
     <mat-form-field class="w-full">
       <mat-label>Fecha desde</mat-label>
-      <input matInput [matDatepicker]="date_since" />
+      <input matInput formControlName="date_from" [matDatepicker]="date_since" />
       <mat-datepicker-toggle matIconSuffix [for]="date_since"></mat-datepicker-toggle>
       <mat-datepicker #date_since></mat-datepicker>
     </mat-form-field>
 
     <mat-form-field class="w-full">
       <mat-label>Fecha hasta</mat-label>
-      <input matInput [matDatepicker]="date_to" />
+      <input matInput formControlName="date_to" [matDatepicker]="date_to" />
       <mat-datepicker-toggle matIconSuffix [for]="date_to"></mat-datepicker-toggle>
       <mat-datepicker #date_to></mat-datepicker>
     </mat-form-field>
 
     <mat-form-field>
       <mat-label>Cliente</mat-label>
-      <mat-select>
+      <mat-select formControlName="client_id">
         @for (client of clients; track client) {
           <mat-option [value]="client.id!">{{ client.name }}</mat-option>
         }
@@ -25,7 +25,7 @@
 
     <mat-form-field>
       <mat-label>Cuenta bancaria</mat-label>
-      <mat-select>
+      <mat-select formControlName="account_id">
         @for (account of accounts; track account) {
           <mat-option [value]="account.id!">{{ account.name }}</mat-option>
         }
@@ -34,7 +34,7 @@
 
     <mat-form-field>
       <mat-label>Producto</mat-label>
-      <mat-select>
+      <mat-select formControlName="storage_id">
         @for (product of products; track product) {
           <mat-option [value]="product.id!">{{ product.description }}</mat-option>
         }
@@ -43,21 +43,21 @@
 
     <mat-form-field>
       <mat-label>Tipo de venta</mat-label>
-      <mat-select>
+      <mat-select formControlName="sale_type">
         @for (sale of saleTypes; track sale) {
           <mat-option [value]="sale.value">{{ sale.label }}</mat-option>
         }
       </mat-select>
     </mat-form-field>
-  </div>
+  </form>
 
   <div class="module_buttons">
-    <button type="button" matButton="tonal">
+    <button type="button" matButton="tonal" (click)="cleanFilterForm()">
       Limpiar
       <mat-icon>autorenew</mat-icon>
     </button>
 
-    <button matButton="filled">
+    <button matButton="filled" (click)="applySearchByFilters()">
       Buscar
       <mat-icon>search</mat-icon>
     </button>

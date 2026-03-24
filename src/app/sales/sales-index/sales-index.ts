@@ -19,12 +19,15 @@ import { SALES_COLUMN_HEADERS } from '../constants/sales';
 import { BillerDataSalesItemResponse, BillerDataSalesResponse } from '../../biller/models/biller';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
+import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { SalesFilters } from '../models/sales';
 
 @Component({
   selector: 'app-sales-index',
   providers: [...provideNativeDateAdapter()],
   imports: [
     CommonModule,
+    ReactiveFormsModule,
     MatButtonModule,
     MatIconModule,
     MatFormFieldModule,
@@ -48,14 +51,21 @@ export class SalesIndex implements AfterViewInit, OnInit {
 
   dataSource = new MatTableDataSource<BillerDataSalesResponse>(this.ELEMENT_DATA);
 
+  filterForm: FormGroup;
+
   private readonly notification = inject(NotificationService);
   private readonly destroyRef = inject(DestroyRef);
   private readonly billerService = inject(BillerService);
+  private readonly _fb = inject(FormBuilder);
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
 
   getSaleTypeLabel(value: string): string {
     return this.saleTypes.find((type) => type.value === value)?.label ?? value;
+  }
+
+  constructor() {
+    this.filterForm = this.setFilterForm();
   }
 
   ngAfterViewInit() {
@@ -65,6 +75,34 @@ export class SalesIndex implements AfterViewInit, OnInit {
   ngOnInit(): void {
     this.loadBillerData();
     this.listSales();
+  }
+
+  cleanFilterForm(): void {
+    this.resetFilterForm();
+    this.listSales();
+  }
+
+  applySearchByFilters(): void {
+    const filters: SalesFilters = this.filterForm.getRawValue();
+    const normalizedFilters = this.normalizeDateFields(filters);
+    console.log(normalizedFilters);
+    this.listSales(normalizedFilters);
+  }
+
+  private normalizeDateFields(filters: SalesFilters): SalesFilters {
+    const normalizedFilters = { ...filters };
+
+    if (filters.date_from) {
+      const date = new Date(filters.date_from);
+      normalizedFilters.date_from = date.toISOString().split('T')[0];
+    }
+
+    if (filters.date_to) {
+      const date = new Date(filters.date_to);
+      normalizedFilters.date_to = date.toISOString().split('T')[0];
+    }
+
+    return normalizedFilters;
   }
 
   private loadBillerData() {
@@ -87,9 +125,9 @@ export class SalesIndex implements AfterViewInit, OnInit {
       });
   }
 
-  private listSales() {
+  private listSales(filters?: SalesFilters) {
     this.billerService
-      .getSales()
+      .getSales(filters)
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
         next: (response: ApiResponse<BillerDataSalesResponse[]>) => {
@@ -106,6 +144,21 @@ export class SalesIndex implements AfterViewInit, OnInit {
           );
         },
       });
+  }
+
+  private setFilterForm(): FormGroup {
+    return this._fb.group({
+      date_from: [null],
+      date_to: [null],
+      client_id: [null],
+      account_id: [null],
+      storage_id: [null],
+      sale_type: [null],
+    });
+  }
+
+  private resetFilterForm(): void {
+    this.filterForm.reset();
   }
 
   private generateNotification(
