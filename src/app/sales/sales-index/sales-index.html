@@ -62,4 +62,46 @@
       <mat-icon>search</mat-icon>
     </button>
   </div>
+
+  <div class="mat-elevation-z8">
+    <table mat-table [dataSource]="dataSource">
+      <ng-container matColumnDef="sale_date">
+        <th mat-header-cell *matHeaderCellDef>Fecha de venta</th>
+        <td mat-cell *matCellDef="let element">{{ element.sale_date | date: 'dd/MM/yyyy' }}</td>
+      </ng-container>
+      <ng-container matColumnDef="sale_type">
+        <th mat-header-cell *matHeaderCellDef>Tipo de venta</th>
+        <td mat-cell *matCellDef="let element">{{ getSaleTypeLabel(element.sale_type) }}</td>
+      </ng-container>
+      <ng-container matColumnDef="client">
+        <th mat-header-cell *matHeaderCellDef>Cliente</th>
+        <td mat-cell *matCellDef="let element">{{ element.client.name }}</td>
+      </ng-container>
+      <ng-container matColumnDef="account">
+        <th mat-header-cell *matHeaderCellDef>Cuenta bancaria</th>
+        <td mat-cell *matCellDef="let element">{{ element.account.name }}</td>
+      </ng-container>
+      <ng-container matColumnDef="total">
+        <th mat-header-cell *matHeaderCellDef>Total</th>
+        <td mat-cell *matCellDef="let element">{{ element.total }}</td>
+      </ng-container>
+      <ng-container matColumnDef="actions">
+        <th mat-header-cell *matHeaderCellDef></th>
+        <td mat-cell *matCellDef="let element">
+          <button mat-icon-button>
+            <mat-icon>remove_red_eye</mat-icon>
+          </button>
+        </td>
+      </ng-container>
+      <tr mat-header-row *matHeaderRowDef="SALES_COLUMN_HEADERS"></tr>
+      <tr mat-row *matRowDef="let row; columns: SALES_COLUMN_HEADERS"></tr>
+    </table>
+    <mat-paginator
+      [pageSize]="5"
+      [pageSizeOptions]="[5, 10, 20]"
+      showFirstLastButtons
+      aria-label="Select page of periodic elements"
+    >
+    </mat-paginator>
+  </div>
 </main>

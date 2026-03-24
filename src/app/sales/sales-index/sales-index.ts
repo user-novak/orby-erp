@@ -1,4 +1,5 @@
-import { Component, DestroyRef, inject, OnInit } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { AfterViewInit, Component, DestroyRef, inject, OnInit, ViewChild } from '@angular/core';
 import { BillerService } from '../../biller/services/biller';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { MatButtonModule } from '@angular/material/button';
@@ -9,35 +10,57 @@ import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { provideNativeDateAdapter } from '@angular/material/core';
 import { SALES_OPTIONS_TYPES } from '../../biller/constants/fields';
-import { NotificationData, Option } from '../../core/models/global';
+import { ApiResponse, NotificationData, Option } from '../../core/models/global';
 import { Account } from '../../accounts/models/account';
 import { Storage } from '../../storage/models/storage';
 import { Client } from '../../clients/models/client';
 import { NotificationService } from '../../core/services/notification/notification';
+import { SALES_COLUMN_HEADERS } from '../constants/sales';
+import { BillerDataSalesItemResponse, BillerDataSalesResponse } from '../../biller/models/biller';
+import { MatTableDataSource, MatTableModule } from '@angular/material/table';
+import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
 
 @Component({
   selector: 'app-sales-index',
   providers: [...provideNativeDateAdapter()],
   imports: [
+    CommonModule,
     MatButtonModule,
     MatIconModule,
     MatFormFieldModule,
     MatInputModule,
     MatSelectModule,
     MatDatepickerModule,
+    MatTableModule,
+    MatPaginatorModule,
   ],
   templateUrl: './sales-index.html',
   styleUrl: './sales-index.css',
 })
-export class SalesIndex implements OnInit {
+export class SalesIndex implements AfterViewInit, OnInit {
   saleTypes: Option[] = SALES_OPTIONS_TYPES;
   products: Storage[] = [];
   accounts: Account[] = [];
   clients: Client[] = [];
 
+  SALES_COLUMN_HEADERS = SALES_COLUMN_HEADERS;
+  ELEMENT_DATA: BillerDataSalesResponse[] = [];
+
+  dataSource = new MatTableDataSource<BillerDataSalesResponse>(this.ELEMENT_DATA);
+
   private readonly notification = inject(NotificationService);
   private readonly destroyRef = inject(DestroyRef);
   private readonly billerService = inject(BillerService);
+
+  @ViewChild(MatPaginator) paginator!: MatPaginator;
+
+  getSaleTypeLabel(value: string): string {
+    return this.saleTypes.find((type) => type.value === value)?.label ?? value;
+  }
+
+  ngAfterViewInit() {
+    this.dataSource.paginator = this.paginator;
+  }
 
   ngOnInit(): void {
     this.loadBillerData();
@@ -69,8 +92,12 @@ export class SalesIndex implements OnInit {
       .getSales()
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
-        next: (response) => {
-          console.log(response);
+        next: (response: ApiResponse<BillerDataSalesResponse[]>) => {
+          this.dataSource.data = response.data;
+
+          if (this.paginator) {
+            this.dataSource.paginator = this.paginator;
+          }
         },
         error: () => {
           this.showNotification(
