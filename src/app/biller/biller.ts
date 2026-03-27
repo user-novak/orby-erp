@@ -82,6 +82,20 @@ export class Biller {
     return this.generalInfoForm.get('include_igv') as FormControl;
   }
 
+  get registerIsDisabled(): boolean {
+    return this.totalAmount === 0;
+  }
+
+  getStorageStock(): number {
+    const storageId = this.billerForm.get('storage_id')?.value;
+    if (storageId == null) return 0;
+
+    const storage = this.products.find((p) => p.id === storageId);
+    if (storage == null) return 0;
+
+    return storage.stock;
+  }
+
   get productListAmount(): number {
     const total = this.productsList.reduce((acc, item) => acc + item.total_price, 0);
     return Number(total.toFixed(2));
@@ -117,6 +131,7 @@ export class Biller {
       payment_date: datageneralInfoForm.payment_date
         ? datageneralInfoForm.payment_date.toISOString().split('T')[0]
         : null,
+      amortization_amount: datageneralInfoForm.amortization_amount,
       sale_type: datageneralInfoForm.sale_type,
       client_id: datageneralInfoForm.client_id,
       account_id: datageneralInfoForm.account_id,

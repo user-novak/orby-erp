@@ -103,16 +103,17 @@
           <form
             [formGroup]="billerForm"
             (ngSubmit)="addProduct()"
-            class="grid grid-cols-1 md:grid-cols-7 gap-2"
+            class="grid grid-cols-1 md:grid-cols-4 gap-2"
           >
             <mat-form-field>
-              <mat-label>Cantidad</mat-label>
-              <input matInput formControlName="quantity" type="number" />
-              @if (billerForm.controls['quantity'].hasError('required')) {
-                <mat-error>Campo cantidad es obligatorio</mat-error>
-              }
-              @if (billerForm.controls['quantity'].hasError('min')) {
-                <mat-error>Campo cantidad debe ser mínimo 1</mat-error>
+              <mat-label>Descripción</mat-label>
+              <mat-select formControlName="storage_id">
+                @for (product of products; track product) {
+                  <mat-option [value]="product.id!">{{ product.description }}</mat-option>
+                }
+              </mat-select>
+              @if (billerForm.controls['storage_id'].hasError('required')) {
+                <mat-error>Campo descripción es obligatorio</mat-error>
               }
             </mat-form-field>
 
@@ -129,15 +130,19 @@
             </mat-form-field>
 
             <mat-form-field>
-              <mat-label>Descripción</mat-label>
-              <mat-select formControlName="storage_id">
-                @for (product of products; track product) {
-                  <mat-option [value]="product.id!">{{ product.description }}</mat-option>
-                }
-              </mat-select>
-              @if (billerForm.controls['storage_id'].hasError('required')) {
-                <mat-error>Campo descripción es obligatorio</mat-error>
+              <mat-label>Cantidad</mat-label>
+              <input matInput formControlName="quantity" type="number" />
+              @if (billerForm.controls['quantity'].hasError('required')) {
+                <mat-error>Campo cantidad es obligatorio</mat-error>
               }
+              @if (billerForm.controls['quantity'].hasError('min')) {
+                <mat-error>Campo cantidad debe ser mínimo 1</mat-error>
+              }
+            </mat-form-field>
+
+            <mat-form-field>
+              <mat-label>Stock de producto</mat-label>
+              <input matInput disabled [value]="getStorageStock()" />
             </mat-form-field>
 
             <mat-form-field>
@@ -269,7 +274,12 @@
             <p>Total items: {{ productsList.length }}</p>
           </div>
 
-          <button class="w-full" matButton="filled" (click)="prepareRegisterSale()">
+          <button
+            class="w-full"
+            matButton="filled"
+            [disabled]="registerIsDisabled"
+            (click)="prepareRegisterSale()"
+          >
             Registrar pedido
           </button>
         </div>
