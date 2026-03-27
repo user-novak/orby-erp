@@ -63,6 +63,7 @@ export interface BillerRequest {
   items: BillerItem[];
   place?: string;
   payment_date?: string;
+  amortization_amount?: number;
 }
 
 export interface BillerItem {

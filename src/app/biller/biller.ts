@@ -147,6 +147,7 @@ export class Biller {
   private handleSaleTypeChanges() {
     const saleTypeControl = this.generalInfoForm.get('sale_type')!;
     const paymentDateControl = this.generalInfoForm.get('payment_date')!;
+    const amortizationAmountControl = this.generalInfoForm.get('amortization_amount')!;
 
     saleTypeControl.valueChanges.pipe(takeUntilDestroyed()).subscribe((value) => {
       if (value === 'ACR') {
@@ -154,6 +155,7 @@ export class Biller {
       } else {
         paymentDateControl.clearValidators();
         paymentDateControl.setValue(null);
+        amortizationAmountControl.setValue(null);
       }
 
       paymentDateControl.updateValueAndValidity({ emitEvent: false });
@@ -283,6 +285,7 @@ export class Biller {
       account_id: [null, [Validators.required]],
       place: [null],
       payment_date: [null],
+      amortization_amount: [null],
       include_igv: [false],
     });
   }
