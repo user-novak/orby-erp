@@ -28,6 +28,7 @@ import { Account } from '../accounts/models/account';
 import { Storage } from '../storage/models/storage';
 import { NotificationService } from '../core/services/notification/notification';
 import { combineLatest, startWith } from 'rxjs';
+import { LoaderService } from '../core/services';
 
 @Component({
   selector: 'app-biller',
@@ -66,6 +67,7 @@ export class Biller {
   private readonly billerService = inject(BillerService);
   private readonly notification = inject(NotificationService);
   private readonly destroyRef = inject(DestroyRef);
+  private readonly loaderService: LoaderService = inject(LoaderService);
 
   constructor() {
     this.generalInfoForm = this.setGeneralInfoForm();
@@ -182,6 +184,8 @@ export class Biller {
   }
 
   private loadBillerData() {
+    this.loaderService.show();
+
     this.billerService
       .getBillerData()
       .pipe(takeUntilDestroyed())
@@ -192,12 +196,15 @@ export class Biller {
           this.products = data.storages;
           this.accounts = data.accounts;
 
+          this.loaderService.hide();
+
           this.showNotification(
             this.generateNotification('Datos cargados exitosamente', 'check_circle', '#4caf50'),
             3000,
           );
         },
         error: () => {
+          this.loaderService.hide();
           this.showNotification(
             this.generateNotification('Error al cargar los datos', 'error', '#f44336'),
             3000,
