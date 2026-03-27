@@ -13,6 +13,7 @@ import { StorageService } from '../services/storage';
 import { NotificationService } from '../../core/services/notification/notification';
 import { ApiResponse, NotificationData } from '../../core/models/global';
 import { ConfirmDialogService } from '../../core/services/confirm-dialog/confirm-dialog';
+import { LoaderService } from '../../core/services';
 
 @Component({
   selector: 'app-storage-index',
@@ -27,6 +28,7 @@ export class StorageIndex implements AfterViewInit, OnInit {
   private readonly router = inject(Router);
   private readonly excelService: ExcelImportService = inject(ExcelImportService);
   private readonly destroyRef = inject(DestroyRef);
+  private readonly loaderService: LoaderService = inject(LoaderService);
 
   storageColumHeader: string[] = storageColumHeader;
 
@@ -114,6 +116,7 @@ export class StorageIndex implements AfterViewInit, OnInit {
   }
 
   private listStorages() {
+    this.loaderService.show();
     this.storageService
       .getStorages()
       .pipe(takeUntilDestroyed(this.destroyRef))
@@ -125,12 +128,15 @@ export class StorageIndex implements AfterViewInit, OnInit {
             this.dataSource.paginator = this.paginator;
           }
 
+          this.loaderService.hide();
+
           this.showNotification(
             this.generateNotification('Productos cargados exitosamente', 'check_circle', '#4caf50'),
             3000,
           );
         },
         error: () => {
+          this.loaderService.hide();
           this.showNotification(
             this.generateNotification('Error al cargar productos', 'error', '#f44336'),
             3000,

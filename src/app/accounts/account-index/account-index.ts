@@ -13,6 +13,7 @@ import { NotificationService } from '../../core/services/notification/notificati
 import { ApiResponse, NotificationData } from '../../core/models/global';
 import { AccountService } from '../services/account';
 import { ConfirmDialogService } from '../../core/services/confirm-dialog/confirm-dialog';
+import { LoaderService } from '../../core/services';
 
 @Component({
   selector: 'app-account-index',
@@ -32,6 +33,7 @@ export class AccountIndex implements AfterViewInit, OnInit {
   private readonly destroyRef = inject(DestroyRef);
   private readonly notification = inject(NotificationService);
   private readonly confirmDialogService = inject(ConfirmDialogService);
+  private readonly loaderService: LoaderService = inject(LoaderService);
   private readonly router = inject(Router);
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
@@ -117,6 +119,7 @@ export class AccountIndex implements AfterViewInit, OnInit {
   }
 
   private listAccounts() {
+    this.loaderService.show();
     this.accountService
       .getAccounts()
       .pipe(takeUntilDestroyed(this.destroyRef))
@@ -128,12 +131,15 @@ export class AccountIndex implements AfterViewInit, OnInit {
             this.dataSource.paginator = this.paginator;
           }
 
+          this.loaderService.hide();
+
           this.showNotification(
             this.generateNotification('Cuentas cargadas exitosamente', 'check_circle', '#4caf50'),
             3000,
           );
         },
         error: () => {
+          this.loaderService.hide();
           this.showNotification(
             this.generateNotification('Error al cargar cuentas', 'error', '#f44336'),
             3000,

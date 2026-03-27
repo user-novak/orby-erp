@@ -13,6 +13,7 @@ import { ApiResponse, NotificationData } from '../../core/models/global';
 import { Router } from '@angular/router';
 import { ConfirmDialogService } from '../../core/services/confirm-dialog/confirm-dialog';
 import { NotificationService } from '../../core/services/notification/notification';
+import { LoaderService } from '../../core/services';
 
 @Component({
   selector: 'app-client-index',
@@ -31,6 +32,7 @@ export class ClientIndex implements AfterViewInit, OnInit {
   private readonly router = inject(Router);
   private readonly excelService: ExcelImportService = inject(ExcelImportService);
   private readonly destroyRef = inject(DestroyRef);
+  private readonly loaderService: LoaderService = inject(LoaderService);
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
 
@@ -96,6 +98,7 @@ export class ClientIndex implements AfterViewInit, OnInit {
   }
 
   private listClients() {
+    this.loaderService.show();
     this.clientService
       .getClients()
       .pipe(takeUntilDestroyed(this.destroyRef))
@@ -107,12 +110,15 @@ export class ClientIndex implements AfterViewInit, OnInit {
             this.dataSource.paginator = this.paginator;
           }
 
+          this.loaderService.hide();
+
           this.showNotification(
             this.generateNotification('Clientes cargados exitosamente', 'check_circle', '#4caf50'),
             3000,
           );
         },
         error: () => {
+          this.loaderService.hide();
           this.showNotification(
             this.generateNotification('Error al cargar clientes', 'error', '#f44336'),
             3000,

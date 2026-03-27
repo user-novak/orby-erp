@@ -21,6 +21,7 @@ import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { SalesFilters } from '../models/sales';
+import { LoaderService } from '../../core/services';
 
 @Component({
   selector: 'app-sales-index',
@@ -57,6 +58,7 @@ export class SalesIndex implements AfterViewInit, OnInit {
   private readonly destroyRef = inject(DestroyRef);
   private readonly billerService = inject(BillerService);
   private readonly _fb = inject(FormBuilder);
+  private readonly loaderService: LoaderService = inject(LoaderService);
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
 
@@ -74,7 +76,6 @@ export class SalesIndex implements AfterViewInit, OnInit {
 
   ngOnInit(): void {
     this.loadBillerData();
-    this.listSales();
   }
 
   cleanFilterForm(): void {
@@ -85,7 +86,6 @@ export class SalesIndex implements AfterViewInit, OnInit {
   applySearchByFilters(): void {
     const filters: SalesFilters = this.filterForm.getRawValue();
     const normalizedFilters = this.normalizeDateFields(filters);
-    console.log(normalizedFilters);
     this.listSales(normalizedFilters);
   }
 
@@ -106,6 +106,8 @@ export class SalesIndex implements AfterViewInit, OnInit {
   }
 
   private loadBillerData() {
+    this.loaderService.show();
+
     this.billerService
       .getBillerData()
       .pipe(takeUntilDestroyed(this.destroyRef))
@@ -115,8 +117,11 @@ export class SalesIndex implements AfterViewInit, OnInit {
           this.clients = data.clients;
           this.products = data.storages;
           this.accounts = data.accounts;
+
+          this.listSales();
         },
         error: () => {
+          this.loaderService.hide();
           this.showNotification(
             this.generateNotification('Error al cargar los datos', 'error', '#f44336'),
             3000,
@@ -126,6 +131,7 @@ export class SalesIndex implements AfterViewInit, OnInit {
   }
 
   private listSales(filters?: SalesFilters) {
+    this.loaderService.show();
     this.billerService
       .getSales(filters)
       .pipe(takeUntilDestroyed(this.destroyRef))
@@ -136,8 +142,10 @@ export class SalesIndex implements AfterViewInit, OnInit {
           if (this.paginator) {
             this.dataSource.paginator = this.paginator;
           }
+          this.loaderService.hide();
         },
         error: () => {
+          this.loaderService.hide();
           this.showNotification(
             this.generateNotification('Error al cargar los datos', 'error', '#f44336'),
             3000,
