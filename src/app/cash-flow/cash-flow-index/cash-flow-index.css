@@ -15,3 +15,7 @@
 .ml-8 {
   @apply ml-8;
 }
+
+.accounts-tab {
+  @apply mt-8 w-1/2;
+}
