@@ -1,0 +1,17 @@
+@import 'tailwindcss';
+
+.accounts-block {
+  @apply mx-96 flex justify-center;
+}
+
+.accounts-header {
+  @apply bg-gray-300 w-32 flex justify-center border font-bold;
+}
+
+.accounts-content {
+  @apply bg-white w-32 flex justify-center border;
+}
+
+.ml-8 {
+  @apply ml-8;
+}
