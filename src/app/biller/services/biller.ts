@@ -4,12 +4,13 @@ import { ApiResponse } from '../../core/models/global';
 import { Observable } from 'rxjs';
 import { BillerData, BillerDataSalesResponse, BillerRequest, BillerResponse } from '../models/biller';
 import { SalesFilters } from '../../sales/models/sales';
+import { API_BASE_URL } from '../../core/constants/global';
 
 @Injectable({
   providedIn: 'root',
 })
 export class BillerService {
-  private apiUrl = 'https://orby-engine.fly.dev/api/biller';
+  private readonly apiUrl = `${API_BASE_URL}/biller`;
 
   constructor(private http: HttpClient) {}
 

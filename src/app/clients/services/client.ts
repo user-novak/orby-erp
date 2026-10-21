@@ -3,12 +3,13 @@ import { Injectable } from '@angular/core';
 import { Client, ClientFormValues } from '../models/client';
 import { Observable } from 'rxjs';
 import { ApiResponse } from '../../core/models/global';
+import { API_BASE_URL } from '../../core/constants/global';
 
 @Injectable({
   providedIn: 'root',
 })
 export class ClientService {
-  private apiUrl = 'https://orby-engine.fly.dev/api/clients';
+  private readonly apiUrl = `${API_BASE_URL}/clients`;
 
   constructor(private http: HttpClient) {}
 

@@ -2,13 +2,14 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Account, AccountFormValues } from '../models/account';
 import { ApiResponse } from '../../core/models/global';
+import { API_BASE_URL } from '../../core/constants/global';
 import { Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
 })
 export class AccountService {
-  private apiUrl = 'https://orby-engine.fly.dev/api/accounts';
+  private readonly apiUrl = `${API_BASE_URL}/accounts`;
 
   constructor(private http: HttpClient) {}
 

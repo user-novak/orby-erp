@@ -3,12 +3,13 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { Amortization, AmortizationRequest } from '../../models/amortization';
 import { ApiResponse } from '../../models/global';
+import { API_BASE_URL } from '../../constants/global';
 
 @Injectable({
   providedIn: 'root',
 })
 export class AmortizationService {
-  private apiUrl = 'https://orby-engine.fly.dev/api/payments/';
+  private readonly apiUrl = `${API_BASE_URL}/payments/`;
 
   constructor(private http: HttpClient) {}
 

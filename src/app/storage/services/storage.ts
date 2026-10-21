@@ -2,13 +2,14 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { ApiResponse } from '../../core/models/global';
+import { API_BASE_URL } from '../../core/constants/global';
 import { Storage, StorageFormValues } from '../models/storage';
 
 @Injectable({
   providedIn: 'root',
 })
 export class StorageService {
-  private apiUrl = 'https://orby-engine.fly.dev/api/storages';
+  private readonly apiUrl = `${API_BASE_URL}/storages`;
 
   constructor(private http: HttpClient) {}
 
