@@ -14,10 +14,11 @@ import { Router } from '@angular/router';
 import { ConfirmDialogService } from '../../core/services/confirm-dialog/confirm-dialog';
 import { NotificationService } from '../../core/services/notification/notification';
 import { LoaderService } from '../../core/services';
+import { NoData } from '../../core/components/no-data/no-data';
 
 @Component({
   selector: 'app-client-index',
-  imports: [MatButtonModule, MatIconModule, MatTableModule, MatPaginatorModule],
+  imports: [MatButtonModule, MatIconModule, MatTableModule, MatPaginatorModule, NoData],
   templateUrl: './client-index.html',
   styleUrl: './client-index.css',
 })
