@@ -14,10 +14,11 @@ import { ApiResponse, NotificationData } from '../../core/models/global';
 import { AccountService } from '../services/account';
 import { ConfirmDialogService } from '../../core/services/confirm-dialog/confirm-dialog';
 import { LoaderService } from '../../core/services';
+import { NoData } from '../../core/components/no-data/no-data';
 
 @Component({
   selector: 'app-account-index',
-  imports: [MatButtonModule, MatIconModule, MatTableModule, MatPaginatorModule],
+  imports: [MatButtonModule, MatIconModule, MatTableModule, MatPaginatorModule, NoData],
   templateUrl: './account-index.html',
   styleUrl: './account-index.css',
 })
