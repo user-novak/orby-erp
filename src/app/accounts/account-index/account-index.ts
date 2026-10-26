@@ -15,6 +15,7 @@ import { AccountService } from '../services/account';
 import { ConfirmDialogService } from '../../core/services/confirm-dialog/confirm-dialog';
 import { LoaderService } from '../../core/services';
 import { NoData } from '../../core/components/no-data/no-data';
+import { SOL_PREFIX } from '../../core/constants/global';
 
 @Component({
   selector: 'app-account-index',
@@ -24,6 +25,7 @@ import { NoData } from '../../core/components/no-data/no-data';
 })
 export class AccountIndex implements OnInit {
   accountColumHeader = accountColumHeader;
+  SOL_PREFIX = SOL_PREFIX;
 
   dataSource = new MatTableDataSource<Account>([]);
   pageSize = 5;
