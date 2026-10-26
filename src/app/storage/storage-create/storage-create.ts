@@ -6,7 +6,7 @@ import { Router } from '@angular/router';
 import { NotificationService } from '../../core/services/notification/notification';
 import { StorageService } from '../services/storage';
 import { NotificationData } from '../../core/models/global';
-import { StorageFormValues } from '../models/storage';
+import { ProductFormValues } from '../models/storage';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 @Component({
@@ -21,7 +21,7 @@ export class StorageCreate {
   private readonly destroyRef = inject(DestroyRef);
   private readonly router = inject(Router);
 
-  createNewStorage(storageFormValue: StorageFormValues) {
+  createNewStorage(storageFormValue: ProductFormValues) {
     this.storageService
       .createStorage(storageFormValue)
       .pipe(takeUntilDestroyed(this.destroyRef))

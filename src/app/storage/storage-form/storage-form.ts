@@ -7,7 +7,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { Storage, StorageFormValues } from '../models/storage';
+import { Product, ProductFormValues } from '../models/storage';
 import { FORM_MODE } from '../../core/enums/global';
 
 @Component({
@@ -24,10 +24,10 @@ import { FORM_MODE } from '../../core/enums/global';
   styleUrl: './storage-form.css',
 })
 export class StorageForm {
-  readonly storage = input<Storage | null>(null);
+  readonly storage = input<Product | null>(null);
   readonly formMode = input<FORM_MODE>('create');
 
-  @Output() formSubmit = new EventEmitter<StorageFormValues>();
+  @Output() formSubmit = new EventEmitter<ProductFormValues>();
 
   mesaureUnities: string[] = MESAURE_UNITS;
 
@@ -62,7 +62,7 @@ export class StorageForm {
     this.formSubmit.emit(this.getStorageFormValues());
   }
 
-  private patchFormValues(storage: Storage): void {
+  private patchFormValues(storage: Product): void {
     this.storageForm.patchValue(storage);
   }
 
@@ -72,7 +72,7 @@ export class StorageForm {
     this.storageForm.get('stock')?.disable();
   }
 
-  private getStorageFormValues(): StorageFormValues {
+  private getStorageFormValues(): ProductFormValues {
     return this.storageForm.getRawValue();
   }
 

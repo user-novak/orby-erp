@@ -1,4 +1,4 @@
-export interface Storage {
+export interface Product {
   id?: number;
   description: string;
   brand: string;
@@ -10,7 +10,7 @@ export interface Storage {
   stock: number;
 }
 
-export interface StorageExcel extends Record<string, unknown> {
+export interface ProductExcel extends Record<string, unknown> {
   descripcion: string;
   marca: string;
   medida: string;
@@ -19,7 +19,7 @@ export interface StorageExcel extends Record<string, unknown> {
   stock: number;
 }
 
-export interface StorageFormValues {
+export interface ProductFormValues {
   description: string;
   brand: string;
   measure_unity: string;

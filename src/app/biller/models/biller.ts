@@ -1,6 +1,6 @@
 import { Account } from '../../accounts/models/account';
 import { Client } from '../../clients/models/client';
-import { Storage } from '../../storage/models/storage';
+import { Product } from '../../storage/models/storage';
 import { SALES_TYPES } from '../constants/fields';
 
 export interface GeneralInfoBillerForm {
@@ -23,7 +23,7 @@ export interface BillerForm {
 
 export interface BillerData {
   clients: Client[];
-  storages: Storage[];
+  storages: Product[];
   accounts: Account[];
 }
 
@@ -49,7 +49,7 @@ export interface BillerDataSalesItemResponse {
   quantity: number;
   unit_price: number;
   subtotal: number;
-  storage: Storage;
+  storage: Product;
 }
 
 export interface BillerRequest {
@@ -91,5 +91,5 @@ export interface BillerItemResponse {
   unit_price: number;
   subtotal: number;
   storage_id: number;
-  storage: Storage;
+  storage: Product;
 }

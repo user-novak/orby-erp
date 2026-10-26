@@ -25,7 +25,7 @@ import { TYPE_CLIENT, TYPES_CLIENT } from '../core/enums/global';
 import { BillerService } from './services/biller';
 import { Client } from '../clients/models/client';
 import { Account } from '../accounts/models/account';
-import { Storage } from '../storage/models/storage';
+import { Product } from '../storage/models/storage';
 import { NotificationService } from '../core/services/notification/notification';
 import { combineLatest, startWith } from 'rxjs';
 import { LoaderService } from '../core/services';
@@ -52,7 +52,7 @@ export class Biller {
   saleTypes: Option[] = SALES_OPTIONS_TYPES;
   clients: Client[] = [];
   clientTypes: TYPES_CLIENT = ['Distribuidor', 'Mayorista', 'U. final'];
-  products: Storage[] = [];
+  products: Product[] = [];
   accounts: Account[] = [];
   mesaureUnities: string[] = MESAURE_UNITS;
 

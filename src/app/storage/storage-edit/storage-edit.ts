@@ -4,7 +4,7 @@ import { StorageService } from '../services/storage';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ApiResponse, NotificationData } from '../../core/models/global';
 import { FORM_MODE } from '../../core/enums/global';
-import { Storage, StorageFormValues } from '../models/storage';
+import { Product, ProductFormValues } from '../models/storage';
 import { NotificationService } from '../../core/services/notification/notification';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
@@ -18,7 +18,7 @@ import { StorageForm } from '../storage-form/storage-form';
 })
 export class StorageEdit implements OnInit {
   readonly formMode: FORM_MODE = 'edit';
-  readonly storage = signal<Storage | null>(null);
+  readonly storage = signal<Product | null>(null);
   storageId!: number;
 
   private readonly storageService = inject(StorageService);
@@ -35,7 +35,7 @@ export class StorageEdit implements OnInit {
     this.router.navigate(['/storage']);
   }
 
-  editStorage(storageFormValue: StorageFormValues) {
+  editStorage(storageFormValue: ProductFormValues) {
     this.storageService
       .updateStorage(this.storageId, storageFormValue)
       .pipe(takeUntilDestroyed(this.destroyRef))
@@ -68,7 +68,7 @@ export class StorageEdit implements OnInit {
       .getStorage(this.storageId)
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
-        next: (response: ApiResponse<Storage>) => {
+        next: (response: ApiResponse<Product>) => {
           this.storage.set(response.data);
         },
         error: () => {

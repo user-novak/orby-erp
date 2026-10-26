@@ -12,7 +12,7 @@ import { provideNativeDateAdapter } from '@angular/material/core';
 import { SALES_OPTIONS_TYPES } from '../../biller/constants/fields';
 import { ApiResponse, NotificationData, Option } from '../../core/models/global';
 import { Account } from '../../accounts/models/account';
-import { Storage } from '../../storage/models/storage';
+import { Product } from '../../storage/models/storage';
 import { Client } from '../../clients/models/client';
 import { NotificationService } from '../../core/services/notification/notification';
 import { SALES_COLUMN_HEADERS } from '../constants/sales';
@@ -43,7 +43,7 @@ import { LoaderService } from '../../core/services';
 })
 export class SalesIndex implements AfterViewInit, OnInit {
   saleTypes: Option[] = SALES_OPTIONS_TYPES;
-  products: Storage[] = [];
+  products: Product[] = [];
   accounts: Account[] = [];
   clients: Client[] = [];
 

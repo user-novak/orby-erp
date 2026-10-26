@@ -1,9 +1,9 @@
-import { Component, AfterViewInit, ViewChild, inject, DestroyRef, OnInit } from '@angular/core';
+import { Component, inject, DestroyRef, OnInit } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
-import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
+import { MatPaginatorModule, PageEvent } from '@angular/material/paginator';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
-import { StorageExcel, Storage } from '../models/storage';
+import { ProductExcel, Product } from '../models/storage';
 import { Router } from '@angular/router';
 import { storageColumHeader } from '../constants/storage';
 import { ExcelImportService } from '../../core/services/excel/excel-import';
@@ -11,7 +11,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { StorageExcelMapper } from '../mappers/storage-excel';
 import { StorageService } from '../services/storage';
 import { NotificationService } from '../../core/services/notification/notification';
-import { ApiResponse, NotificationData } from '../../core/models/global';
+import { NotificationData, PaginatedResponse } from '../../core/models/global';
 import { ConfirmDialogService } from '../../core/services/confirm-dialog/confirm-dialog';
 import { LoaderService } from '../../core/services';
 import { NoData } from '../../core/components/no-data/no-data';
@@ -22,7 +22,14 @@ import { NoData } from '../../core/components/no-data/no-data';
   templateUrl: './storage-index.html',
   styleUrl: './storage-index.css',
 })
-export class StorageIndex implements AfterViewInit, OnInit {
+export class StorageIndex implements OnInit {
+  storageColumHeader: string[] = storageColumHeader;
+
+  dataSource = new MatTableDataSource<Product>([]);
+  pageSize = 5;
+  pageIndex = 0;
+  totalItems = 0;
+
   private readonly storageService = inject(StorageService);
   private readonly notification = inject(NotificationService);
   private readonly confirmDialogService = inject(ConfirmDialogService);
@@ -31,24 +38,18 @@ export class StorageIndex implements AfterViewInit, OnInit {
   private readonly destroyRef = inject(DestroyRef);
   private readonly loaderService: LoaderService = inject(LoaderService);
 
-  storageColumHeader: string[] = storageColumHeader;
-
-  ELEMENT_DATA: Storage[] = [];
-
-  dataSource = new MatTableDataSource<Storage>(this.ELEMENT_DATA);
-
-  @ViewChild(MatPaginator) paginator!: MatPaginator;
-
-  ngAfterViewInit() {
-    this.dataSource.paginator = this.paginator;
-  }
-
   ngOnInit() {
-    this.listStorages();
+    this.listProducts();
   }
 
   goToEdit(storageID: number) {
     this.router.navigate(['/storage/edit', storageID]);
+  }
+
+  onPageChange(event: PageEvent) {
+    this.pageIndex = event.pageIndex;
+    this.pageSize = event.pageSize;
+    this.listProducts();
   }
 
   confirmDelete(storageID: number) {
@@ -76,21 +77,16 @@ export class StorageIndex implements AfterViewInit, OnInit {
     const file = input.files[0];
 
     this.excelService
-      .importExcel<StorageExcel>(file)
+      .importExcel<ProductExcel>(file)
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
         next: (rows) => {
-          const storageItems: Storage[] = rows.map((rawRow) => {
+          const storageItems: Product[] = rows.map((rawRow) => {
             const excelRow = StorageExcelMapper.normalizeExcelRow(rawRow);
             return StorageExcelMapper.toStorageItem(excelRow);
           });
 
-          this.ELEMENT_DATA = storageItems;
           this.dataSource.data = storageItems;
-
-          if (this.paginator) {
-            this.dataSource.paginator = this.paginator;
-          }
         },
         error: (err) => {
           console.error('Error al importar Excel', err);
@@ -105,7 +101,7 @@ export class StorageIndex implements AfterViewInit, OnInit {
   private deleteStorage(storageID: number) {
     this.storageService.deleteStorage(storageID).subscribe({
       next: () => {
-        this.listStorages();
+        this.listProducts();
       },
       error: () => {
         this.showNotification(
@@ -116,18 +112,15 @@ export class StorageIndex implements AfterViewInit, OnInit {
     });
   }
 
-  private listStorages() {
+  private listProducts() {
     this.loaderService.show();
     this.storageService
-      .getStorages()
+      .getProducts()
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
-        next: (response: ApiResponse<Storage[]>) => {
+        next: (response: PaginatedResponse<Product>) => {
           this.dataSource.data = response.data;
-
-          if (this.paginator) {
-            this.dataSource.paginator = this.paginator;
-          }
+          this.totalItems = response.meta.total;
 
           this.loaderService.hide();
 
