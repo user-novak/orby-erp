@@ -14,10 +14,11 @@ import { NotificationService } from '../../core/services/notification/notificati
 import { ApiResponse, NotificationData } from '../../core/models/global';
 import { ConfirmDialogService } from '../../core/services/confirm-dialog/confirm-dialog';
 import { LoaderService } from '../../core/services';
+import { NoData } from '../../core/components/no-data/no-data';
 
 @Component({
   selector: 'app-storage-index',
-  imports: [MatButtonModule, MatIconModule, MatTableModule, MatPaginatorModule],
+  imports: [MatButtonModule, MatIconModule, MatTableModule, MatPaginatorModule, NoData],
   templateUrl: './storage-index.html',
   styleUrl: './storage-index.css',
 })
