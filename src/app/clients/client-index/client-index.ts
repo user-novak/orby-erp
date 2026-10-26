@@ -1,15 +1,15 @@
-import { AfterViewInit, Component, DestroyRef, inject, OnInit, ViewChild } from '@angular/core';
+import { Component, DestroyRef, inject, OnInit } from '@angular/core';
 import { Client, ClientExcel } from '../models/client';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
-import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
+import { MatPaginatorModule, PageEvent } from '@angular/material/paginator';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { clientColumHeader } from '../constants/client';
 import { ExcelImportService } from '../../core/services/excel/excel-import';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ClientExcelMapper } from '../mappers/client-excel';
 import { ClientService } from '../services/client';
-import { ApiResponse, NotificationData } from '../../core/models/global';
+import { NotificationData, PaginatedResponse } from '../../core/models/global';
 import { Router } from '@angular/router';
 import { ConfirmDialogService } from '../../core/services/confirm-dialog/confirm-dialog';
 import { NotificationService } from '../../core/services/notification/notification';
@@ -22,10 +22,13 @@ import { NoData } from '../../core/components/no-data/no-data';
   templateUrl: './client-index.html',
   styleUrl: './client-index.css',
 })
-export class ClientIndex implements AfterViewInit, OnInit {
+export class ClientIndex implements OnInit {
   clientColumHeader = clientColumHeader;
 
   dataSource = new MatTableDataSource<Client>([]);
+  pageSize = 5;
+  pageIndex = 0;
+  totalItems = 0;
 
   private readonly clientService: ClientService = inject(ClientService);
   private readonly confirmDialogService = inject(ConfirmDialogService);
@@ -34,12 +37,6 @@ export class ClientIndex implements AfterViewInit, OnInit {
   private readonly excelService: ExcelImportService = inject(ExcelImportService);
   private readonly destroyRef = inject(DestroyRef);
   private readonly loaderService: LoaderService = inject(LoaderService);
-
-  @ViewChild(MatPaginator) paginator!: MatPaginator;
-
-  ngAfterViewInit() {
-    this.dataSource.paginator = this.paginator;
-  }
 
   ngOnInit() {
     this.listClients();
@@ -66,6 +63,12 @@ export class ClientIndex implements AfterViewInit, OnInit {
           this.deleteClient(clientID);
         }
       });
+  }
+
+  onPageChange(event: PageEvent) {
+    this.pageIndex = event.pageIndex;
+    this.pageSize = event.pageSize;
+    this.listClients();
   }
 
   async onFileSelected(event: Event) {
@@ -101,22 +104,13 @@ export class ClientIndex implements AfterViewInit, OnInit {
   private listClients() {
     this.loaderService.show();
     this.clientService
-      .getClients()
+      .getClients(this.pageIndex + 1, this.pageSize)
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
-        next: (response: ApiResponse<Client[]>) => {
+        next: (response: PaginatedResponse<Client>) => {
           this.dataSource.data = response.data;
-
-          if (this.paginator) {
-            this.dataSource.paginator = this.paginator;
-          }
-
+          this.totalItems = response.meta.total;
           this.loaderService.hide();
-
-          this.showNotification(
-            this.generateNotification('Clientes cargados exitosamente', 'check_circle', '#4caf50'),
-            3000,
-          );
         },
         error: () => {
           this.loaderService.hide();
@@ -134,6 +128,9 @@ export class ClientIndex implements AfterViewInit, OnInit {
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
         next: () => {
+          if (this.dataSource.data.length === 1 && this.pageIndex > 0) {
+            this.pageIndex--;
+          }
           this.listClients();
         },
         error: () => {
@@ -151,6 +148,7 @@ export class ClientIndex implements AfterViewInit, OnInit {
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
         next: () => {
+          this.pageIndex = 0;
           this.listClients();
         },
         error: () => {

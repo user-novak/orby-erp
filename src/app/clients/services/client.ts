@@ -1,8 +1,8 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Client, ClientFormValues } from '../models/client';
 import { Observable } from 'rxjs';
-import { ApiResponse } from '../../core/models/global';
+import { ApiResponse, PaginatedResponse } from '../../core/models/global';
 import { API_BASE_URL } from '../../core/constants/global';
 
 @Injectable({
@@ -13,8 +13,10 @@ export class ClientService {
 
   constructor(private http: HttpClient) {}
 
-  getClients(): Observable<ApiResponse<Client[]>> {
-    return this.http.get<ApiResponse<Client[]>>(this.apiUrl);
+  getClients(page = 1, perPage = 5): Observable<PaginatedResponse<Client>> {
+    const params = new HttpParams().set('page', page).set('per_page', perPage);
+
+    return this.http.get<PaginatedResponse<Client>>(this.apiUrl, { params });
   }
 
   getClient(id: number): Observable<ApiResponse<Client>> {

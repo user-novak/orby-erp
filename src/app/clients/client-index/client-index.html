@@ -13,7 +13,7 @@
     </button>
   </div>
 
-  @if (dataSource.data.length > 0) {
+  @if (totalItems > 0) {
     <div class="mat-elevation-z8">
       <table mat-table [dataSource]="dataSource">
         <ng-container matColumnDef="name">
@@ -46,17 +46,19 @@
         <tr mat-header-row *matHeaderRowDef="clientColumHeader"></tr>
         <tr mat-row *matRowDef="let row; columns: clientColumHeader"></tr>
       </table>
+
       <mat-paginator
-        [pageSize]="5"
+        [length]="totalItems"
+        [pageIndex]="pageIndex"
+        [pageSize]="pageSize"
         [pageSizeOptions]="[5, 10, 20]"
+        (page)="onPageChange($event)"
         showFirstLastButtons
-        aria-label="Select page of periodic elements"
+        aria-label="Seleccionar página de clientes"
       >
       </mat-paginator>
     </div>
-  }
-
-  @if (dataSource.data.length == 0) {
+  } @else {
     <app-no-data
       [message]="'No hay clientes registrados'"
       [description]="
