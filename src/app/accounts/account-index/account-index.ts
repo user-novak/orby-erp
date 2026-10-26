@@ -1,7 +1,7 @@
-import { AfterViewInit, Component, DestroyRef, inject, OnInit, ViewChild } from '@angular/core';
+import { Component, DestroyRef, inject, OnInit } from '@angular/core';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
-import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
+import { MatPaginatorModule, PageEvent } from '@angular/material/paginator';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { ExcelImportService } from '../../core/services/excel/excel-import';
 import { accountColumHeader } from '../constants/account';
@@ -10,7 +10,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { AccountExcelMapper } from '../mapper/account-excel';
 import { Router } from '@angular/router';
 import { NotificationService } from '../../core/services/notification/notification';
-import { ApiResponse, NotificationData } from '../../core/models/global';
+import { NotificationData, PaginatedResponse } from '../../core/models/global';
 import { AccountService } from '../services/account';
 import { ConfirmDialogService } from '../../core/services/confirm-dialog/confirm-dialog';
 import { LoaderService } from '../../core/services';
@@ -22,12 +22,13 @@ import { NoData } from '../../core/components/no-data/no-data';
   templateUrl: './account-index.html',
   styleUrl: './account-index.css',
 })
-export class AccountIndex implements AfterViewInit, OnInit {
+export class AccountIndex implements OnInit {
   accountColumHeader = accountColumHeader;
 
-  ELEMENT_DATA: Account[] = [];
-
-  dataSource = new MatTableDataSource<Account>(this.ELEMENT_DATA);
+  dataSource = new MatTableDataSource<Account>([]);
+  pageSize = 5;
+  pageIndex = 0;
+  totalItems = 0;
 
   private readonly accountService: AccountService = inject(AccountService);
   private readonly excelService: ExcelImportService = inject(ExcelImportService);
@@ -36,12 +37,6 @@ export class AccountIndex implements AfterViewInit, OnInit {
   private readonly confirmDialogService = inject(ConfirmDialogService);
   private readonly loaderService: LoaderService = inject(LoaderService);
   private readonly router = inject(Router);
-
-  @ViewChild(MatPaginator) paginator!: MatPaginator;
-
-  ngAfterViewInit() {
-    this.dataSource.paginator = this.paginator;
-  }
 
   ngOnInit(): void {
     this.listAccounts();
@@ -70,6 +65,12 @@ export class AccountIndex implements AfterViewInit, OnInit {
       });
   }
 
+  onPageChange(event: PageEvent) {
+    this.pageIndex = event.pageIndex;
+    this.pageSize = event.pageSize;
+    this.listAccounts();
+  }
+
   async onFileSelected(event: Event) {
     const input = event.target as HTMLInputElement;
 
@@ -89,12 +90,7 @@ export class AccountIndex implements AfterViewInit, OnInit {
             return AccountExcelMapper.toAccount(excelRow);
           });
 
-          this.ELEMENT_DATA = accounts;
           this.dataSource.data = accounts;
-
-          if (this.paginator) {
-            this.dataSource.paginator = this.paginator;
-          }
         },
         error: (err) => {
           console.error('Error al importar Excel', err);
@@ -108,6 +104,9 @@ export class AccountIndex implements AfterViewInit, OnInit {
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
         next: () => {
+          if (this.dataSource.data.length === 1 && this.pageIndex > 0) {
+            this.pageIndex--;
+          }
           this.listAccounts();
         },
         error: () => {
@@ -122,22 +121,14 @@ export class AccountIndex implements AfterViewInit, OnInit {
   private listAccounts() {
     this.loaderService.show();
     this.accountService
-      .getAccounts()
+      .getAccounts(this.pageIndex + 1, this.pageSize)
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
-        next: (response: ApiResponse<Account[]>) => {
+        next: (response: PaginatedResponse<Account>) => {
           this.dataSource.data = response.data;
-
-          if (this.paginator) {
-            this.dataSource.paginator = this.paginator;
-          }
+          this.totalItems = response.meta.total;
 
           this.loaderService.hide();
-
-          this.showNotification(
-            this.generateNotification('Cuentas cargadas exitosamente', 'check_circle', '#4caf50'),
-            3000,
-          );
         },
         error: () => {
           this.loaderService.hide();

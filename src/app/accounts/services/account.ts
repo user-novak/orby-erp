@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Account, AccountFormValues } from '../models/account';
-import { ApiResponse } from '../../core/models/global';
+import { ApiResponse, PaginatedResponse } from '../../core/models/global';
 import { API_BASE_URL } from '../../core/constants/global';
 import { Observable } from 'rxjs';
 
@@ -13,8 +13,10 @@ export class AccountService {
 
   constructor(private http: HttpClient) {}
 
-  getAccounts(): Observable<ApiResponse<Account[]>> {
-    return this.http.get<ApiResponse<Account[]>>(this.apiUrl);
+  getAccounts(page = 1, perPage = 5): Observable<PaginatedResponse<Account>> {
+    const params = new HttpParams().set('page', page).set('per_page', perPage);
+
+    return this.http.get<PaginatedResponse<Account>>(this.apiUrl, { params });
   }
 
   getAccount(id: number): Observable<ApiResponse<Account>> {
