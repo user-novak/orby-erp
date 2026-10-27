@@ -5,7 +5,6 @@ import { MatSelectModule } from '@angular/material/select';
 import { MESAURE_UNITS } from '../../core/constants/global';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Product, ProductFormValues } from '../models/storage';
 import { FORM_MODE } from '../../core/enums/global';
@@ -37,8 +36,6 @@ export class StorageForm {
 
   constructor() {
     this.storageForm = this.setStorageForm();
-    this.disablePriceFields();
-    this.handlePriceCalculations();
 
     effect(() => {
       const storageValue = this.storage();
@@ -67,73 +64,11 @@ export class StorageForm {
   }
 
   private disabledStockFields(): void {
-    this.storageForm.get('input')?.disable();
-    this.storageForm.get('output')?.disable();
     this.storageForm.get('stock')?.disable();
   }
 
   private getStorageFormValues(): ProductFormValues {
-    return this.storageForm.getRawValue();
-  }
-
-  private handlePriceCalculations(): void {
-    const unitPriceCtrl = this.storageForm.get('unit_price')!;
-
-    const map = [
-      {
-        percentage: 'percentage_distributor',
-        price: 'price_distributor',
-      },
-      {
-        percentage: 'percentage_major',
-        price: 'price_major',
-      },
-      {
-        percentage: 'percentage_general',
-        price: 'price_general',
-      },
-    ];
-
-    unitPriceCtrl.valueChanges
-      .pipe(takeUntilDestroyed())
-      .subscribe(() => this.recalculatePrices(map));
-
-    map.forEach(({ percentage }) => {
-      this.storageForm
-        .get(percentage)!
-        .valueChanges.pipe(takeUntilDestroyed())
-        .subscribe(() => this.recalculatePrices(map));
-    });
-  }
-
-  private recalculatePrices(map: { percentage: string; price: string }[]): void {
-    const unitPrice = Number(this.storageForm.get('unit_price')?.value);
-
-    if (!unitPrice) {
-      map.forEach(({ price }) => {
-        this.storageForm.get(price)?.setValue(null, { emitEvent: false });
-      });
-      return;
-    }
-
-    map.forEach(({ percentage, price }) => {
-      const percentageValue = Number(this.storageForm.get(percentage)?.value);
-
-      if (!percentageValue) {
-        this.storageForm.get(price)?.setValue(null, { emitEvent: false });
-        return;
-      }
-
-      const calculatedPrice = unitPrice + (unitPrice * percentageValue) / 100;
-
-      this.storageForm.get(price)?.setValue(calculatedPrice, { emitEvent: false });
-    });
-  }
-
-  private disablePriceFields(): void {
-    this.storageForm.get('price_distributor')?.disable();
-    this.storageForm.get('price_major')?.disable();
-    this.storageForm.get('price_general')?.disable();
+    return this.storageForm.value;
   }
 
   private setStorageForm(): FormGroup {
@@ -143,13 +78,8 @@ export class StorageForm {
       measure_unity: [null, [Validators.required]],
       unit_price: [null, [Validators.required]],
       percentage_distributor: [null, [Validators.required]],
-      price_distributor: [null, [Validators.required]],
       percentage_major: [null, [Validators.required]],
-      price_major: [null, [Validators.required]],
       percentage_general: [null, [Validators.required]],
-      price_general: [null, [Validators.required]],
-      input: [null, [Validators.required]],
-      output: [null, [Validators.required]],
       stock: [null, [Validators.required]],
     });
   }

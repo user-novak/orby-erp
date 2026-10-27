@@ -31,7 +31,7 @@ export class StorageService {
     return this.http.post<ApiResponse<null>>(`${this.apiUrl}/bulk`, { storages });
   }
 
-  updateStorage(id: number, storage: Partial<Product>): Observable<ApiResponse<Product>> {
+  updateStorage(id: number, storage: ProductFormValues): Observable<ApiResponse<Product>> {
     return this.http.put<ApiResponse<Product>>(`${this.apiUrl}/${id}`, storage);
   }
 
