@@ -2,7 +2,7 @@ import { Component, effect, EventEmitter, inject, input, Output } from '@angular
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
-import { MESAURE_UNITS } from '../../core/constants/global';
+import { MESAURE_UNITS, PERCENTAGE_PREFIX, SOL_PREFIX } from '../../core/constants/global';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
@@ -29,6 +29,8 @@ export class StorageForm {
   @Output() formSubmit = new EventEmitter<ProductFormValues>();
 
   mesaureUnities: string[] = MESAURE_UNITS;
+  SOL_PREFIX = SOL_PREFIX;
+  PERCENTAGE_PREFIX = PERCENTAGE_PREFIX;
 
   storageForm: FormGroup;
 
@@ -60,15 +62,28 @@ export class StorageForm {
   }
 
   private patchFormValues(storage: Product): void {
-    this.storageForm.patchValue(storage);
+    this.storageForm.patchValue({
+      ...storage,
+      percentage_distributor: this.toNumber(storage.percentage_distributor),
+      percentage_major: this.toNumber(storage.percentage_major),
+      percentage_general: this.toNumber(storage.percentage_general),
+    });
   }
 
   private disabledStockFields(): void {
     this.storageForm.get('stock')?.disable();
+    this.storageForm.get('price_distributor')?.disable();
+    this.storageForm.get('price_major')?.disable();
+    this.storageForm.get('price_general')?.disable();
   }
 
   private getStorageFormValues(): ProductFormValues {
     return this.storageForm.value;
+  }
+
+  private toNumber(value: string | number | null | undefined): number | null {
+    if (value === null || value === undefined || value === '') return null;
+    return Number(value);
   }
 
   private setStorageForm(): FormGroup {
@@ -80,6 +95,9 @@ export class StorageForm {
       percentage_distributor: [null, [Validators.required]],
       percentage_major: [null, [Validators.required]],
       percentage_general: [null, [Validators.required]],
+      price_distributor: [null],
+      price_major: [null],
+      price_general: [null],
       stock: [null, [Validators.required]],
     });
   }

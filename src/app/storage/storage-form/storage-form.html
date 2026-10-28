@@ -32,7 +32,7 @@
     <mat-form-field class="w-full" floatLabel="always">
       <mat-label>Costo unitario</mat-label>
       <input matInput type="number" placeholder="0" formControlName="unit_price" />
-      <span matTextPrefix>S/.&nbsp;</span>
+      <span matTextPrefix>{{ SOL_PREFIX }}</span>
     </mat-form-field>
   </div>
 
@@ -44,19 +44,37 @@
     <mat-form-field class="w-full" floatLabel="always">
       <mat-label>Porcentaje distribuidor</mat-label>
       <input matInput type="number" placeholder="0" formControlName="percentage_distributor" />
-      <span matTextSuffix>%</span>
+      <span matTextSuffix>{{ PERCENTAGE_PREFIX }}</span>
     </mat-form-field>
 
     <mat-form-field class="w-full" floatLabel="always">
       <mat-label>Porcentaje mayorista</mat-label>
       <input matInput type="number" placeholder="0" formControlName="percentage_major" />
-      <span matTextSuffix>%</span>
+      <span matTextSuffix>{{ PERCENTAGE_PREFIX }}</span>
     </mat-form-field>
 
     <mat-form-field class="w-full" floatLabel="always">
       <mat-label>Porcentaje general</mat-label>
       <input matInput type="number" placeholder="0" formControlName="percentage_general" />
-      <span matTextSuffix>%</span>
+      <span matTextSuffix>{{ PERCENTAGE_PREFIX }}</span>
+    </mat-form-field>
+
+    <mat-form-field class="w-full" floatLabel="always">
+      <mat-label>Precio distribuidor</mat-label>
+      <input matInput type="number" placeholder="0" formControlName="price_distributor" />
+      <span matTextSuffix>{{ SOL_PREFIX }}</span>
+    </mat-form-field>
+
+    <mat-form-field class="w-full" floatLabel="always">
+      <mat-label>Precio mayorista</mat-label>
+      <input matInput type="number" placeholder="0" formControlName="price_major" />
+      <span matTextSuffix>{{ SOL_PREFIX }}</span>
+    </mat-form-field>
+
+    <mat-form-field class="w-full" floatLabel="always">
+      <mat-label>Precio general</mat-label>
+      <input matInput type="number" placeholder="0" formControlName="price_general" />
+      <span matTextSuffix>{{ SOL_PREFIX }}</span>
     </mat-form-field>
   </div>
 
