@@ -24,6 +24,9 @@ export class StorageExcelMapper {
       price_distributor: row.precio_unitario,
       price_major: row.precio_unitario,
       stock: row.stock,
+      percentage_distributor: 0,
+      percentage_major: 0,
+      percentage_general: 0,
     };
   }
 }

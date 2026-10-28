@@ -15,6 +15,7 @@ import { NotificationData, PaginatedResponse } from '../../core/models/global';
 import { ConfirmDialogService } from '../../core/services/confirm-dialog/confirm-dialog';
 import { LoaderService } from '../../core/services';
 import { NoData } from '../../core/components/no-data/no-data';
+import { SOL_PREFIX } from '../../core/constants/global';
 
 @Component({
   selector: 'app-storage-index',
@@ -24,6 +25,7 @@ import { NoData } from '../../core/components/no-data/no-data';
 })
 export class StorageIndex implements OnInit {
   storageColumHeader: string[] = storageColumHeader;
+  SOL_PREFIX = SOL_PREFIX;
 
   dataSource = new MatTableDataSource<Product>([]);
   pageSize = 5;
