@@ -3,13 +3,13 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatPaginatorModule, PageEvent } from '@angular/material/paginator';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
-import { ProductExcel, Product } from '../models/storage';
+import { ProductExcel, Product } from '../models/product';
 import { Router } from '@angular/router';
-import { storageColumHeader } from '../constants/storage';
+import { productColumnHeaders } from '../constants/product';
 import { ExcelImportService } from '../../core/services/excel/excel-import';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { StorageExcelMapper } from '../mappers/storage-excel';
-import { StorageService } from '../services/storage';
+import { ProductExcelMapper } from '../mappers/product-excel';
+import { ProductService } from '../services/product';
 import { NotificationService } from '../../core/services/notification/notification';
 import { NotificationData, PaginatedResponse } from '../../core/models/global';
 import { ConfirmDialogService } from '../../core/services/confirm-dialog/confirm-dialog';
@@ -18,13 +18,13 @@ import { NoData } from '../../core/components/no-data/no-data';
 import { SOL_PREFIX } from '../../core/constants/global';
 
 @Component({
-  selector: 'app-storage-index',
+  selector: 'app-product-index',
   imports: [MatButtonModule, MatIconModule, MatTableModule, MatPaginatorModule, NoData],
-  templateUrl: './storage-index.html',
-  styleUrl: './storage-index.css',
+  templateUrl: './product-index.html',
+  styleUrl: './product-index.css',
 })
-export class StorageIndex implements OnInit {
-  storageColumHeader: string[] = storageColumHeader;
+export class ProductIndex implements OnInit {
+  productColumnHeaders: string[] = productColumnHeaders;
   SOL_PREFIX = SOL_PREFIX;
 
   dataSource = new MatTableDataSource<Product>([]);
@@ -32,7 +32,7 @@ export class StorageIndex implements OnInit {
   pageIndex = 0;
   totalItems = 0;
 
-  private readonly storageService = inject(StorageService);
+  private readonly productService = inject(ProductService);
   private readonly notification = inject(NotificationService);
   private readonly confirmDialogService = inject(ConfirmDialogService);
   private readonly router = inject(Router);
@@ -44,8 +44,8 @@ export class StorageIndex implements OnInit {
     this.listProducts();
   }
 
-  goToEdit(storageID: number) {
-    this.router.navigate(['/storage/edit', storageID]);
+  goToEdit(productId: number) {
+    this.router.navigate(['/products/edit', productId]);
   }
 
   onPageChange(event: PageEvent) {
@@ -54,7 +54,7 @@ export class StorageIndex implements OnInit {
     this.listProducts();
   }
 
-  confirmDelete(storageID: number) {
+  confirmDelete(productId: number) {
     this.confirmDialogService
       .open({
         message: '¿Deseas eliminar este producto?',
@@ -64,7 +64,7 @@ export class StorageIndex implements OnInit {
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe((result) => {
         if (result === 'accept') {
-          this.deleteStorage(storageID);
+          this.deleteProduct(productId);
         }
       });
   }
@@ -83,12 +83,12 @@ export class StorageIndex implements OnInit {
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
         next: (rows) => {
-          const storageItems: Product[] = rows.map((rawRow) => {
-            const excelRow = StorageExcelMapper.normalizeExcelRow(rawRow);
-            return StorageExcelMapper.toStorageItem(excelRow);
+          const products: Product[] = rows.map((rawRow) => {
+            const excelRow = ProductExcelMapper.normalizeExcelRow(rawRow);
+            return ProductExcelMapper.toProduct(excelRow);
           });
 
-          this.dataSource.data = storageItems;
+          this.dataSource.data = products;
         },
         error: (err) => {
           console.error('Error al importar Excel', err);
@@ -97,11 +97,11 @@ export class StorageIndex implements OnInit {
   }
 
   goToCreate() {
-    this.router.navigateByUrl('/storage/create');
+    this.router.navigateByUrl('/products/create');
   }
 
-  private deleteStorage(storageID: number) {
-    this.storageService.deleteStorage(storageID).subscribe({
+  private deleteProduct(productId: number) {
+    this.productService.deleteProduct(productId).subscribe({
       next: () => {
         this.listProducts();
       },
@@ -116,7 +116,7 @@ export class StorageIndex implements OnInit {
 
   private listProducts() {
     this.loaderService.show();
-    this.storageService
+    this.productService
       .getProducts()
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({

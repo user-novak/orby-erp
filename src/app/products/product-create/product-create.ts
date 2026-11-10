@@ -1,45 +1,45 @@
 import { Component, DestroyRef, inject } from '@angular/core';
-import { StorageForm } from '../storage-form/storage-form';
+import { ProductForm } from '../product-form/product-form';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { Router } from '@angular/router';
 import { NotificationService } from '../../core/services/notification/notification';
-import { StorageService } from '../services/storage';
+import { ProductService } from '../services/product';
 import { NotificationData } from '../../core/models/global';
-import { ProductFormValues } from '../models/storage';
+import { ProductFormValues } from '../models/product';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 @Component({
-  selector: 'app-storage-create',
-  imports: [StorageForm, MatButtonModule, MatIconModule],
-  templateUrl: './storage-create.html',
-  styleUrl: './storage-create.css',
+  selector: 'app-product-create',
+  imports: [ProductForm, MatButtonModule, MatIconModule],
+  templateUrl: './product-create.html',
+  styleUrl: './product-create.css',
 })
-export class StorageCreate {
-  private readonly storageService = inject(StorageService);
+export class ProductCreate {
+  private readonly productService = inject(ProductService);
   private readonly notification = inject(NotificationService);
   private readonly destroyRef = inject(DestroyRef);
   private readonly router = inject(Router);
 
-  createNewStorage(storageFormValue: ProductFormValues) {
-    this.storageService
-      .createStorage(storageFormValue)
+  createProduct(productFormValue: ProductFormValues) {
+    this.productService
+      .createProduct(productFormValue)
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
         next: () => {
-          this.goStorage();
+          this.goToProducts();
         },
         error: () => {
           this.showNotification(
-            this.generateNotification('Error al crear cliente', 'error', '#f44336'),
+            this.generateNotification('Error al crear producto', 'error', '#f44336'),
             3000,
           );
         },
       });
   }
 
-  goStorage() {
-    this.router.navigate(['/storage']);
+  goToProducts() {
+    this.router.navigate(['/products']);
   }
 
   private generateNotification(

@@ -25,7 +25,7 @@ import { TYPE_CLIENT, TYPES_CLIENT } from '../core/enums/global';
 import { BillerService } from './services/biller';
 import { Client } from '../clients/models/client';
 import { Account } from '../accounts/models/account';
-import { Product } from '../storage/models/storage';
+import { Product } from '../products/models/product';
 import { NotificationService } from '../core/services/notification/notification';
 import { combineLatest, startWith } from 'rxjs';
 import { LoaderService } from '../core/services';
@@ -86,14 +86,14 @@ export class Biller {
     return this.totalAmount === 0;
   }
 
-  getStorageStock(): number {
-    const storageId = this.billerForm.get('storage_id')?.value;
-    if (storageId == null) return 0;
+  getProductStock(): number {
+    const productId = this.billerForm.get('storage_id')?.value;
+    if (productId == null) return 0;
 
-    const storage = this.products.find((p) => p.id === storageId);
-    if (storage == null) return 0;
+    const product = this.products.find((item) => item.id === productId);
+    if (product == null) return 0;
 
-    return storage.stock;
+    return product.stock;
   }
 
   get productListAmount(): number {

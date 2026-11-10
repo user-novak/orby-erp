@@ -51,8 +51,8 @@
             </button>
           </td>
         </ng-container>
-        <tr mat-header-row *matHeaderRowDef="storageColumHeader"></tr>
-        <tr mat-row *matRowDef="let row; columns: storageColumHeader"></tr>
+        <tr mat-header-row *matHeaderRowDef="productColumnHeaders"></tr>
+        <tr mat-row *matRowDef="let row; columns: productColumnHeaders"></tr>
       </table>
       <mat-paginator
         [length]="totalItems"

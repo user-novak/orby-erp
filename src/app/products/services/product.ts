@@ -3,12 +3,12 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { ApiResponse, PaginatedResponse } from '../../core/models/global';
 import { API_BASE_URL } from '../../core/constants/global';
-import { Product, ProductFormValues } from '../models/storage';
+import { Product, ProductFormValues } from '../models/product';
 
 @Injectable({
   providedIn: 'root',
 })
-export class StorageService {
+export class ProductService {
   private readonly apiUrl = `${API_BASE_URL}/products`;
 
   constructor(private http: HttpClient) {}
@@ -19,23 +19,23 @@ export class StorageService {
     return this.http.get<PaginatedResponse<Product>>(this.apiUrl, { params });
   }
 
-  getStorage(id: number): Observable<ApiResponse<Product>> {
+  getProduct(id: number): Observable<ApiResponse<Product>> {
     return this.http.get<ApiResponse<Product>>(`${this.apiUrl}/${id}`);
   }
 
-  createStorage(storage: ProductFormValues): Observable<ApiResponse<Product>> {
-    return this.http.post<ApiResponse<Product>>(this.apiUrl, storage);
+  createProduct(product: ProductFormValues): Observable<ApiResponse<Product>> {
+    return this.http.post<ApiResponse<Product>>(this.apiUrl, product);
   }
 
-  createBulk(storages: Product[]): Observable<ApiResponse<null>> {
-    return this.http.post<ApiResponse<null>>(`${this.apiUrl}/bulk`, { storages });
+  createBulk(products: Product[]): Observable<ApiResponse<null>> {
+    return this.http.post<ApiResponse<null>>(`${this.apiUrl}/bulk`, { storages: products });
   }
 
-  updateStorage(id: number, storage: ProductFormValues): Observable<ApiResponse<Product>> {
-    return this.http.put<ApiResponse<Product>>(`${this.apiUrl}/${id}`, storage);
+  updateProduct(id: number, product: ProductFormValues): Observable<ApiResponse<Product>> {
+    return this.http.put<ApiResponse<Product>>(`${this.apiUrl}/${id}`, product);
   }
 
-  deleteStorage(id: number): Observable<ApiResponse<null>> {
+  deleteProduct(id: number): Observable<ApiResponse<null>> {
     return this.http.delete<ApiResponse<null>>(`${this.apiUrl}/${id}`);
   }
 }

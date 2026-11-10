@@ -3,12 +3,12 @@ import { Router, RouterOutlet } from '@angular/router';
 import { ModuleHeader } from '../core/components/module-header/module-header';
 
 @Component({
-  selector: 'app-storage',
+  selector: 'app-products',
   imports: [RouterOutlet, ModuleHeader],
-  templateUrl: './storage.html',
-  styleUrl: './storage.css',
+  templateUrl: './products.html',
+  styleUrl: './products.css',
 })
-export class Storage {
+export class Products {
   private readonly router = inject(Router);
 
   goHome() {

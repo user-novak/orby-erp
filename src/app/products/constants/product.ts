@@ -1,4 +1,4 @@
-export const storageColumHeader: string[] = [
+export const productColumnHeaders: string[] = [
   'description',
   'brand',
   'measure_unity',

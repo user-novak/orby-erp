@@ -28,7 +28,10 @@ export interface ProductFormValues {
   measure_unity: string;
   unit_price: number;
   percentage_distributor: number;
+  price_distributor: number;
   percentage_major: number;
+  price_major: number;
   percentage_general: number;
+  price_general: number;
   stock?: number;
 }

@@ -1,7 +1,7 @@
 <main class="module-main">
   <div class="w-full grid grid-cols-3 items-center">
     <div class="justify-self-start mx-8">
-      <button (click)="goStorages()" mat-fab aria-label="Back button" class="cursor-pointer">
+      <button (click)="goToProducts()" mat-fab aria-label="Back button" class="cursor-pointer">
         <mat-icon>keyboard_backspace</mat-icon>
       </button>
     </div>
@@ -9,11 +9,11 @@
     <h2 class="text-lg sm:text-2xl font-black text-center">Editar Producto</h2>
   </div>
 
-  @if (storage(); as storageData) {
-    <app-storage-form
+  @if (product(); as productData) {
+    <app-product-form
       [formMode]="formMode"
-      [storage]="storageData"
-      (formSubmit)="editStorage($event)"
-    ></app-storage-form>
+      [product]="productData"
+      (formSubmit)="editProduct($event)"
+    ></app-product-form>
   }
 </main>

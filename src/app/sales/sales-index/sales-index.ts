@@ -12,7 +12,7 @@ import { provideNativeDateAdapter } from '@angular/material/core';
 import { SALES_OPTIONS_TYPES } from '../../biller/constants/fields';
 import { ApiResponse, NotificationData, Option } from '../../core/models/global';
 import { Account } from '../../accounts/models/account';
-import { Product } from '../../storage/models/storage';
+import { Product } from '../../products/models/product';
 import { Client } from '../../clients/models/client';
 import { NotificationService } from '../../core/services/notification/notification';
 import { SALES_COLUMN_HEADERS } from '../constants/sales';

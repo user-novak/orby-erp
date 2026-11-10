@@ -1,47 +1,47 @@
 import { Component, DestroyRef, inject, OnInit, signal } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { StorageService } from '../services/storage';
+import { ProductService } from '../services/product';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ApiResponse, NotificationData } from '../../core/models/global';
 import { FORM_MODE } from '../../core/enums/global';
-import { Product, ProductFormValues } from '../models/storage';
+import { Product, ProductFormValues } from '../models/product';
 import { NotificationService } from '../../core/services/notification/notification';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
-import { StorageForm } from '../storage-form/storage-form';
+import { ProductForm } from '../product-form/product-form';
 
 @Component({
-  selector: 'app-storage-edit',
-  imports: [MatButtonModule, MatIconModule, StorageForm],
-  templateUrl: './storage-edit.html',
-  styleUrl: './storage-edit.css',
+  selector: 'app-product-edit',
+  imports: [MatButtonModule, MatIconModule, ProductForm],
+  templateUrl: './product-edit.html',
+  styleUrl: './product-edit.css',
 })
-export class StorageEdit implements OnInit {
+export class ProductEdit implements OnInit {
   readonly formMode: FORM_MODE = 'edit';
-  readonly storage = signal<Product | null>(null);
-  storageId!: number;
+  readonly product = signal<Product | null>(null);
+  productId!: number;
 
-  private readonly storageService = inject(StorageService);
+  private readonly productService = inject(ProductService);
   private readonly route = inject(ActivatedRoute);
   private readonly router = inject(Router);
   private readonly destroyRef = inject(DestroyRef);
   private readonly notification = inject(NotificationService);
 
   ngOnInit(): void {
-    this.validateStorageID();
+    this.validateProductId();
   }
 
-  goStorages() {
-    this.router.navigate(['/storage']);
+  goToProducts() {
+    this.router.navigate(['/products']);
   }
 
-  editStorage(storageFormValue: ProductFormValues) {
-    this.storageService
-      .updateStorage(this.storageId, storageFormValue)
+  editProduct(productFormValue: ProductFormValues) {
+    this.productService
+      .updateProduct(this.productId, productFormValue)
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
         next: () => {
-          this.goStorages();
+          this.goToProducts();
         },
         error: () => {
           this.showNotification(
@@ -52,31 +52,31 @@ export class StorageEdit implements OnInit {
       });
   }
 
-  private validateStorageID(): void {
-    this.storageId = Number(this.route.snapshot.paramMap.get('id'));
+  private validateProductId(): void {
+    this.productId = Number(this.route.snapshot.paramMap.get('id'));
 
-    if (!this.storageId) {
-      this.goStorages();
+    if (!this.productId) {
+      this.goToProducts();
       return;
     }
 
-    this.loadStorage();
+    this.loadProduct();
   }
 
-  private loadStorage(): void {
-    this.storageService
-      .getStorage(this.storageId)
+  private loadProduct(): void {
+    this.productService
+      .getProduct(this.productId)
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
         next: (response: ApiResponse<Product>) => {
-          this.storage.set(response.data);
+          this.product.set(response.data);
         },
         error: () => {
           this.showNotification(
             this.generateNotification('Error al cargar producto', 'error', '#f44336'),
             3000,
           );
-          this.goStorages();
+          this.goToProducts();
         },
       });
   }

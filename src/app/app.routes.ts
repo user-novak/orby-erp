@@ -16,8 +16,8 @@ export const routes: Routes = [
     loadChildren: () => import('./clients/clients.routes').then((m) => m.CLIENTS_ROUTES),
   },
   {
-    path: 'storage',
-    loadChildren: () => import('./storage/storage.routes').then((m) => m.STORAGE_ROUTES),
+    path: 'products',
+    loadChildren: () => import('./products/products.routes').then((m) => m.PRODUCTS_ROUTES),
   },
   {
     path: 'accounts',

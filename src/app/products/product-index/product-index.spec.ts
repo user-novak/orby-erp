@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { StorageForm } from './storage-form';
+import { ProductIndex } from './product-index';
 
-describe('StorageForm', () => {
-  let component: StorageForm;
-  let fixture: ComponentFixture<StorageForm>;
+describe('ProductIndex', () => {
+  let component: ProductIndex;
+  let fixture: ComponentFixture<ProductIndex>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [StorageForm]
+      imports: [ProductIndex]
     })
     .compileComponents();
 
-    fixture = TestBed.createComponent(StorageForm);
+    fixture = TestBed.createComponent(ProductIndex);
     component = fixture.componentInstance;
     await fixture.whenStable();
   });

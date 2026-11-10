@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { StorageIndex } from './storage-index';
+import { ProductCreate } from './product-create';
 
-describe('StorageIndex', () => {
-  let component: StorageIndex;
-  let fixture: ComponentFixture<StorageIndex>;
+describe('ProductCreate', () => {
+  let component: ProductCreate;
+  let fixture: ComponentFixture<ProductCreate>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [StorageIndex]
+      imports: [ProductCreate]
     })
     .compileComponents();
 
-    fixture = TestBed.createComponent(StorageIndex);
+    fixture = TestBed.createComponent(ProductCreate);
     component = fixture.componentInstance;
     await fixture.whenStable();
   });

@@ -1,6 +1,6 @@
-import { ProductExcel, Product } from '../models/storage';
+import { ProductExcel, Product } from '../models/product';
 
-export class StorageExcelMapper {
+export class ProductExcelMapper {
   static normalizeExcelRow(raw: Record<string, unknown>): ProductExcel {
     const normalized = {
       descripcion: toString(raw['descripcion']) ?? '',
@@ -14,7 +14,7 @@ export class StorageExcelMapper {
     return normalized;
   }
 
-  static toStorageItem(row: ProductExcel): Product {
+  static toProduct(row: ProductExcel): Product {
     return {
       description: row.descripcion,
       brand: row.marca,

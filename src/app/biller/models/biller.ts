@@ -1,6 +1,6 @@
 import { Account } from '../../accounts/models/account';
 import { Client } from '../../clients/models/client';
-import { Product } from '../../storage/models/storage';
+import { Product } from '../../products/models/product';
 import { SALES_TYPES } from '../constants/fields';
 
 export interface GeneralInfoBillerForm {
