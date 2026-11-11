@@ -42,13 +42,6 @@
 
             <div>
               <mat-form-field class="w-full">
-                <mat-label>Lugar</mat-label>
-                <input matInput formControlName="place" />
-              </mat-form-field>
-            </div>
-
-            <div>
-              <mat-form-field class="w-full">
                 <mat-label>Tipo de venta</mat-label>
                 <mat-select formControlName="sale_type">
                   @for (sale of saleTypes; track sale) {
@@ -75,7 +68,7 @@
               </mat-form-field>
             </div>
 
-            @if (generalInfoForm.controls['sale_type'].value === 'ACR') {
+            @if (generalInfoForm.controls['sale_type'].value === saleType.CREDIT) {
               <div>
                 <mat-form-field class="w-full">
                   <mat-label>Fecha de pago</mat-label>
@@ -90,8 +83,8 @@
 
               <div>
                 <mat-form-field class="w-full">
-                  <mat-label>Amortización (opcional)</mat-label>
-                  <input matInput formControlName="amortization_amount" type="number" />
+                  <mat-label>Pago inicial (opcional)</mat-label>
+                  <input matInput formControlName="initial_payment" type="number" />
                 </mat-form-field>
               </div>
             }
@@ -107,12 +100,12 @@
           >
             <mat-form-field>
               <mat-label>Descripción</mat-label>
-              <mat-select formControlName="storage_id">
+              <mat-select formControlName="product_id">
                 @for (product of products; track product) {
                   <mat-option [value]="product.id!">{{ product.description }}</mat-option>
                 }
               </mat-select>
-              @if (billerForm.controls['storage_id'].hasError('required')) {
+              @if (billerForm.controls['product_id'].hasError('required')) {
                 <mat-error>Campo descripción es obligatorio</mat-error>
               }
             </mat-form-field>
@@ -147,12 +140,12 @@
 
             <mat-form-field>
               <mat-label>T. precio</mat-label>
-              <mat-select formControlName="client_type">
-                @for (client of clientTypes; track client) {
-                  <mat-option [value]="client">{{ client }}</mat-option>
+              <mat-select formControlName="price_tier">
+                @for (tier of priceTiers; track tier) {
+                  <mat-option [value]="tier.value">{{ tier.label }}</mat-option>
                 }
               </mat-select>
-              @if (billerForm.controls['client_type'].hasError('required')) {
+              @if (billerForm.controls['price_tier'].hasError('required')) {
                 <mat-error>Campo tipo de precio es obligatorio</mat-error>
               }
             </mat-form-field>
@@ -225,7 +218,7 @@
                     <tr class="hover:bg-gray-50">
                       <td class="px-4 py-2 text-sm">{{ item.quantity }}</td>
                       <td class="px-4 py-2 text-sm">{{ item.measure_unity }}</td>
-                      <td class="px-4 py-2 text-sm">{{ item.storage_id }}</td>
+                      <td class="px-4 py-2 text-sm">{{ item.product_id }}</td>
                       <td class="px-4 py-2 text-sm">S/. {{ item.unit_price }}</td>
                       <td class="px-4 py-2 text-sm font-semibold text-gray-700">
                         S/.{{ item.total_price }}
@@ -260,7 +253,7 @@
           </div>
 
           <div class="flex justify-between items-center text-gray-600">
-            <mat-checkbox [formControl]="includeIgvControl"> IGV (18%) </mat-checkbox>
+            <span>IGV (18%)</span>
 
             <span>S/{{ getIgv }}</span>
           </div>

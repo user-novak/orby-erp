@@ -1,12 +1,12 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
-import { ApiResponse, PaginatedResponse } from '../../core/models/global';
+import { PaginatedResponse } from '../../core/models/global';
 import { forkJoin, map, Observable } from 'rxjs';
 import {
   BillerData,
   BillerDataSalesResponse,
   BillerRequest,
-  BillerResponse,
+  BillerResourceResponse,
 } from '../models/biller';
 import { SalesFilters } from '../../sales/models/sales';
 import { API_BASE_URL } from '../../core/constants/global';
@@ -35,8 +35,8 @@ export class BillerService {
     });
   }
 
-  registerSale(billerRequest: BillerRequest): Observable<ApiResponse<BillerResponse>> {
-    return this.http.post<ApiResponse<BillerResponse>>(this.apiUrl, billerRequest);
+  registerSale(billerRequest: BillerRequest): Observable<BillerResourceResponse> {
+    return this.http.post<BillerResourceResponse>(this.apiUrl, billerRequest);
   }
 
   getSales(filters?: SalesFilters): Observable<PaginatedResponse<BillerDataSalesResponse>> {

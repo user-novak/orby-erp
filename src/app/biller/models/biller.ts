@@ -1,22 +1,22 @@
 import { Account } from '../../accounts/models/account';
 import { Client } from '../../clients/models/client';
 import { Product } from '../../products/models/product';
-import { SALES_TYPES } from '../constants/fields';
+import { PRICE_TIER, SALE_TYPE } from '../constants/fields';
 
 export interface GeneralInfoBillerForm {
-  sale_date: string;
-  client_id: string;
-  client: string;
-  sale_type: SALES_TYPES;
-  account_id: string;
-  payment_date?: string;
-  place?: string;
+  sale_date: Date;
+  client_id: number;
+  sale_type: SALE_TYPE;
+  account_id: number | null;
+  payment_date?: Date | null;
+  initial_payment?: number | null;
 }
 
 export interface BillerForm {
   quantity: number;
   measure_unity: string;
-  storage_id: string;
+  product_id: number;
+  price_tier: PRICE_TIER;
   unit_price: number;
   total_price: number;
 }
@@ -30,7 +30,7 @@ export interface BillerData {
 export interface BillerDataSalesResponse {
   id: number;
   sale_date: string;
-  sale_type: string;
+  sale_type: SALE_TYPE;
   subtotal: number;
   igv: number;
   total: number;
@@ -53,43 +53,58 @@ export interface BillerDataSalesItemResponse {
 }
 
 export interface BillerRequest {
-  subtotal: number;
-  igv: number;
-  total: number;
   sale_date: string;
-  sale_type: SALES_TYPES;
+  sale_type: SALE_TYPE;
   client_id: number;
-  account_id: number;
+  account_id?: number | null;
   items: BillerItem[];
-  place?: string;
-  payment_date?: string;
-  amortization_amount?: number;
+  payment_date?: string | null;
+  initial_payment?: number | null;
 }
 
 export interface BillerItem {
   quantity: number;
-  unit_price: number;
-  storage_id: number;
+  product_id: number;
+  price_tier: PRICE_TIER;
 }
 
 export interface BillerResponse {
   id: number;
   sale_date: string;
-  sale_type: string;
+  payment_date: string | null;
+  sale_type: SALE_TYPE;
   subtotal: number;
   igv: number;
   total: number;
   client_id: number;
-  account_id: number;
-  place?: string;
+  account_id: number | null;
+  client: Client;
   items: BillerItemResponse[];
+  account_movements: AccountMovementResponse[];
+  created_at: string;
 }
 
 export interface BillerItemResponse {
   id: number;
+  biller_id: number;
+  product_id: number;
   quantity: number;
   unit_price: number;
   subtotal: number;
-  storage_id: number;
-  storage: Product;
+  product: Product;
+}
+
+export interface AccountMovementResponse {
+  id: number;
+  amount: number;
+  movement_date: string;
+  type: string;
+  status: string;
+  description: string;
+  account_id: number | null;
+  biller_id: number;
+}
+
+export interface BillerResourceResponse {
+  data: BillerResponse;
 }

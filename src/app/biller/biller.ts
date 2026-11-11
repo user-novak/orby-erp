@@ -1,7 +1,6 @@
 import { ChangeDetectionStrategy, Component, DestroyRef, inject } from '@angular/core';
 import { MatIconModule } from '@angular/material/icon';
 import { MatDatepickerModule } from '@angular/material/datepicker';
-import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { provideNativeDateAdapter } from '@angular/material/core';
@@ -11,17 +10,20 @@ import {
   FormGroup,
   ReactiveFormsModule,
   Validators,
-  FormControl,
 } from '@angular/forms';
 import { MyErrorStateMatcher } from '../core/classess/ErrorStateMatcher';
-import { SALES_OPTIONS_TYPES } from './constants/fields';
-import { ApiResponse, NotificationData, Option } from '../core/models/global';
+import {
+  PRICE_TIER,
+  PRICE_TIER_OPTIONS,
+  SALE_TYPE,
+  SALES_OPTIONS_TYPES,
+} from './constants/fields';
+import { NotificationData, Option } from '../core/models/global';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { BillerForm, BillerItem, BillerRequest, BillerResponse } from './models/biller';
+import { BillerForm, BillerItem, BillerRequest } from './models/biller';
 import { MatButtonModule } from '@angular/material/button';
 import { ModuleHeader } from '../core/components/module-header/module-header';
 import { MESAURE_UNITS } from '../core/constants/global';
-import { TYPE_CLIENT, TYPES_CLIENT } from '../core/enums/global';
 import { BillerService } from './services/biller';
 import { Client } from '../clients/models/client';
 import { Account } from '../accounts/models/account';
@@ -42,16 +44,16 @@ import { LoaderService } from '../core/services';
     MatButtonModule,
     MatIconModule,
     ModuleHeader,
-    MatCheckboxModule,
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './biller.html',
   styleUrl: './biller.css',
 })
 export class Biller {
+  readonly saleType = SALE_TYPE;
   saleTypes: Option[] = SALES_OPTIONS_TYPES;
   clients: Client[] = [];
-  clientTypes: TYPES_CLIENT = ['Distribuidor', 'Mayorista', 'U. final'];
+  priceTiers: Option[] = PRICE_TIER_OPTIONS;
   products: Product[] = [];
   accounts: Account[] = [];
   mesaureUnities: string[] = MESAURE_UNITS;
@@ -78,16 +80,12 @@ export class Biller {
     this.loadBillerData();
   }
 
-  get includeIgvControl(): FormControl {
-    return this.generalInfoForm.get('include_igv') as FormControl;
-  }
-
   get registerIsDisabled(): boolean {
     return this.totalAmount === 0;
   }
 
   getProductStock(): number {
-    const productId = this.billerForm.get('storage_id')?.value;
+    const productId = this.billerForm.get('product_id')?.value;
     if (productId == null) return 0;
 
     const product = this.products.find((item) => item.id === productId);
@@ -102,12 +100,6 @@ export class Biller {
   }
 
   get getIgv(): number {
-    const includeIgv = this.generalInfoForm.get('include_igv')?.value;
-
-    if (!includeIgv) {
-      return 0;
-    }
-
     return Number((this.productListAmount * 0.18).toFixed(2));
   }
 
@@ -124,18 +116,14 @@ export class Biller {
     const billerItems = this.setBillerItems();
 
     const billerRequest: BillerRequest = {
-      subtotal: this.productListAmount,
-      igv: this.getIgv,
-      total: this.totalAmount,
       sale_date: datageneralInfoForm.sale_date.toISOString().split('T')[0],
       payment_date: datageneralInfoForm.payment_date
         ? datageneralInfoForm.payment_date.toISOString().split('T')[0]
         : null,
-      amortization_amount: datageneralInfoForm.amortization_amount,
+      initial_payment: datageneralInfoForm.initial_payment || undefined,
       sale_type: datageneralInfoForm.sale_type,
       client_id: datageneralInfoForm.client_id,
       account_id: datageneralInfoForm.account_id,
-      place: datageneralInfoForm.place,
       items: billerItems,
     };
 
@@ -156,25 +144,36 @@ export class Biller {
   }
 
   resetBillerForm() {
-    this.billerForm.reset();
+    this.billerForm.reset({ price_tier: PRICE_TIER.GENERAL });
   }
 
   private handleSaleTypeChanges() {
     const saleTypeControl = this.generalInfoForm.get('sale_type')!;
     const paymentDateControl = this.generalInfoForm.get('payment_date')!;
-    const amortizationAmountControl = this.generalInfoForm.get('amortization_amount')!;
+    const initialPaymentControl = this.generalInfoForm.get('initial_payment')!;
+    const accountControl = this.generalInfoForm.get('account_id')!;
 
-    saleTypeControl.valueChanges.pipe(takeUntilDestroyed()).subscribe((value) => {
-      if (value === 'ACR') {
-        paymentDateControl.setValidators([Validators.required]);
-      } else {
-        paymentDateControl.clearValidators();
-        paymentDateControl.setValue(null);
-        amortizationAmountControl.setValue(null);
-      }
+    combineLatest([
+      saleTypeControl.valueChanges.pipe(startWith(saleTypeControl.value)),
+      initialPaymentControl.valueChanges.pipe(startWith(initialPaymentControl.value)),
+    ])
+      .pipe(takeUntilDestroyed())
+      .subscribe(([saleType, initialPayment]) => {
+        if (saleType === SALE_TYPE.CASH) {
+          paymentDateControl.setValue(null, { emitEvent: false });
+          initialPaymentControl.setValue(null, { emitEvent: false });
+        }
 
-      paymentDateControl.updateValueAndValidity({ emitEvent: false });
-    });
+        const accountIsRequired =
+          saleType === SALE_TYPE.CASH ||
+          (saleType === SALE_TYPE.CREDIT && Number(initialPayment) > 0);
+
+        accountIsRequired
+          ? accountControl.setValidators([Validators.required])
+          : accountControl.clearValidators();
+
+        accountControl.updateValueAndValidity({ emitEvent: false });
+      });
   }
 
   private registerSale(billerRequest: BillerRequest) {
@@ -182,18 +181,18 @@ export class Biller {
       .registerSale(billerRequest)
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
-        next: (response: ApiResponse<BillerResponse>) => {
+        next: () => {
           this.showNotification(
-            this.generateNotification(response.message, 'check_circle', '#4caf50'),
+            this.generateNotification('Venta registrada exitosamente', 'check_circle', '#4caf50'),
             3000,
           );
           this.productsList = [];
-          this.generalInfoForm.reset();
-          this.billerForm.reset();
+          this.generalInfoForm.reset({ sale_date: new Date() });
+          this.resetBillerForm();
         },
         error: () => {
           this.showNotification(
-            this.generateNotification('Error al cargar los datos', 'error', '#f44336'),
+            this.generateNotification('Error al registrar la venta', 'error', '#f44336'),
             3000,
           );
         },
@@ -233,33 +232,33 @@ export class Biller {
     return this.productsList.map((product: BillerForm) => {
       return {
         quantity: product.quantity,
-        unit_price: product.unit_price,
-        storage_id: parseInt(product.storage_id),
+        product_id: product.product_id,
+        price_tier: product.price_tier,
       };
     });
   }
 
   private handleBillerFormChanges() {
-    const productControl = this.billerForm.get('storage_id')!;
+    const productControl = this.billerForm.get('product_id')!;
     const quantityControl = this.billerForm.get('quantity')!;
     const unitPriceControl = this.billerForm.get('unit_price')!;
-    const clientTypeControl = this.billerForm.get('client_type')!;
+    const priceTierControl = this.billerForm.get('price_tier')!;
     const totalPriceControl = this.billerForm.get('total_price')!;
 
     combineLatest([
       productControl.valueChanges.pipe(startWith(productControl.value)),
       quantityControl.valueChanges.pipe(startWith(quantityControl.value)),
-      clientTypeControl.valueChanges.pipe(startWith(clientTypeControl.value)),
+      priceTierControl.valueChanges.pipe(startWith(priceTierControl.value)),
     ])
       .pipe(takeUntilDestroyed())
-      .subscribe(([productId, qtyRaw, clientType]) => {
+      .subscribe(([productId, qtyRaw, priceTier]) => {
         if (!productId) {
           unitPriceControl.setValue(null, { emitEvent: false });
           totalPriceControl.setValue(null, { emitEvent: false });
           return;
         }
 
-        const unitPrice = this.getUnitPriceByClientType(productId, clientType);
+        const unitPrice = this.getUnitPriceByPriceTier(productId, priceTier);
         const qty = Number(qtyRaw) || 0;
         const total = unitPrice * qty;
 
@@ -268,18 +267,18 @@ export class Biller {
       });
   }
 
-  private getUnitPriceByClientType(productId: number, clientType: string): number {
+  private getUnitPriceByPriceTier(productId: number, priceTier: PRICE_TIER): number {
     const product = this.products.find((p) => p.id === productId);
     if (!product) {
       return 0;
     }
 
-    switch (clientType) {
-      case TYPE_CLIENT.DISTRIBUTOR:
+    switch (priceTier) {
+      case PRICE_TIER.DISTRIBUTOR:
         return product.price_distributor;
-      case TYPE_CLIENT.MAJOR:
+      case PRICE_TIER.MAJOR:
         return product.price_major;
-      case TYPE_CLIENT.GENERAL:
+      case PRICE_TIER.GENERAL:
         return product.price_general;
       default:
         return 0;
@@ -296,20 +295,18 @@ export class Biller {
       sale_date: [new Date(), [Validators.required]],
       client_id: [null, [Validators.required]],
       sale_type: [null, [Validators.required]],
-      account_id: [null, [Validators.required]],
-      place: [null],
+      account_id: [null],
       payment_date: [null],
-      amortization_amount: [null],
-      include_igv: [false],
+      initial_payment: [null, [Validators.min(0.01)]],
     });
   }
 
   private setBillerForm() {
     return this._fb.group({
-      quantity: [null, [Validators.required, Validators.min(1)]],
+      quantity: [null, [Validators.required, Validators.min(0.01)]],
       measure_unity: [null, [Validators.required]],
-      storage_id: [null, [Validators.required]],
-      client_type: ['U. final', [Validators.required]],
+      product_id: [null, [Validators.required]],
+      price_tier: [PRICE_TIER.GENERAL, [Validators.required]],
       unit_price: [null, [Validators.required, Validators.min(1)]],
       total_price: [null, [Validators.required, Validators.min(1)]],
     });
