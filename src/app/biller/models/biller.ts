@@ -10,6 +10,8 @@ export interface GeneralInfoBillerForm {
   account_id: number | null;
   payment_date?: Date | null;
   initial_payment?: number | null;
+  include_igv: boolean;
+  igv_percentage: number;
 }
 
 export interface BillerForm {
@@ -33,6 +35,7 @@ export interface BillerDataSalesResponse {
   sale_type: SALE_TYPE;
   subtotal: number;
   igv: number;
+  igv_percentage: number | null;
   total: number;
   client_id: number;
   account_id: number;
@@ -53,6 +56,10 @@ export interface BillerDataSalesItemResponse {
 }
 
 export interface BillerRequest {
+  subtotal: number;
+  igv?: number;
+  igv_percentage?: number;
+  total: number;
   sale_date: string;
   sale_type: SALE_TYPE;
   client_id: number;
@@ -66,6 +73,7 @@ export interface BillerItem {
   quantity: number;
   product_id: number;
   price_tier: PRICE_TIER;
+  unit_price: number;
 }
 
 export interface BillerResponse {
@@ -75,6 +83,7 @@ export interface BillerResponse {
   sale_type: SALE_TYPE;
   subtotal: number;
   igv: number;
+  igv_percentage: number | null;
   total: number;
   client_id: number;
   account_id: number | null;

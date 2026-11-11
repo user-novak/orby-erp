@@ -1,18 +1,21 @@
 import { ChangeDetectionStrategy, Component, DestroyRef, inject } from '@angular/core';
 import { MatIconModule } from '@angular/material/icon';
 import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { provideNativeDateAdapter } from '@angular/material/core';
 import { MatSelectModule } from '@angular/material/select';
 import {
   FormBuilder,
+  FormControl,
   FormGroup,
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
 import { MyErrorStateMatcher } from '../core/classess/ErrorStateMatcher';
 import {
+  DEFAULT_IGV_PERCENTAGE,
   PRICE_TIER,
   PRICE_TIER_OPTIONS,
   SALE_TYPE,
@@ -44,6 +47,7 @@ import { LoaderService } from '../core/services';
     MatButtonModule,
     MatIconModule,
     ModuleHeader,
+    MatCheckboxModule,
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './biller.html',
@@ -76,12 +80,21 @@ export class Biller {
     this.billerForm = this.setBillerForm();
     this.disabledBillerFields();
     this.handleSaleTypeChanges();
+    this.handleIgvChanges();
     this.handleBillerFormChanges();
     this.loadBillerData();
   }
 
   get registerIsDisabled(): boolean {
     return this.totalAmount === 0;
+  }
+
+  get includeIgvControl(): FormControl {
+    return this.generalInfoForm.get('include_igv') as FormControl;
+  }
+
+  get igvPercentageControl(): FormControl {
+    return this.generalInfoForm.get('igv_percentage') as FormControl;
   }
 
   getProductStock(): number {
@@ -96,15 +109,21 @@ export class Biller {
 
   get productListAmount(): number {
     const total = this.productsList.reduce((acc, item) => acc + item.total_price, 0);
-    return Number(total.toFixed(2));
+    return this.roundAmount(total);
   }
 
   get getIgv(): number {
-    return Number((this.productListAmount * 0.18).toFixed(2));
+    if (!this.includeIgvControl.value) {
+      return 0;
+    }
+
+    return this.roundAmount(
+      (this.productListAmount * Number(this.igvPercentageControl.value)) / 100,
+    );
   }
 
   get totalAmount(): number {
-    return Number((this.productListAmount + this.getIgv).toFixed(2));
+    return this.roundAmount(this.productListAmount + this.getIgv);
   }
 
   prepareRegisterSale(): void {
@@ -114,8 +133,17 @@ export class Biller {
 
     const datageneralInfoForm = this.generalInfoForm.getRawValue();
     const billerItems = this.setBillerItems();
+    const igvData = datageneralInfoForm.include_igv
+      ? {
+          igv: this.getIgv,
+          igv_percentage: Number(datageneralInfoForm.igv_percentage),
+        }
+      : {};
 
     const billerRequest: BillerRequest = {
+      subtotal: this.productListAmount,
+      ...igvData,
+      total: this.totalAmount,
       sale_date: datageneralInfoForm.sale_date.toISOString().split('T')[0],
       payment_date: datageneralInfoForm.payment_date
         ? datageneralInfoForm.payment_date.toISOString().split('T')[0]
@@ -187,7 +215,11 @@ export class Biller {
             3000,
           );
           this.productsList = [];
-          this.generalInfoForm.reset({ sale_date: new Date() });
+          this.generalInfoForm.reset({
+            sale_date: new Date(),
+            include_igv: false,
+            igv_percentage: DEFAULT_IGV_PERCENTAGE,
+          });
           this.resetBillerForm();
         },
         error: () => {
@@ -196,6 +228,16 @@ export class Biller {
             3000,
           );
         },
+      });
+  }
+
+  private handleIgvChanges(): void {
+    this.includeIgvControl.valueChanges
+      .pipe(startWith(this.includeIgvControl.value), takeUntilDestroyed())
+      .subscribe((includeIgv) => {
+        includeIgv
+          ? this.igvPercentageControl.enable({ emitEvent: false })
+          : this.igvPercentageControl.disable({ emitEvent: false });
       });
   }
 
@@ -234,6 +276,7 @@ export class Biller {
         quantity: product.quantity,
         product_id: product.product_id,
         price_tier: product.price_tier,
+        unit_price: Number(product.unit_price),
       };
     });
   }
@@ -258,9 +301,9 @@ export class Biller {
           return;
         }
 
-        const unitPrice = this.getUnitPriceByPriceTier(productId, priceTier);
+        const unitPrice = Number(this.getUnitPriceByPriceTier(productId, priceTier));
         const qty = Number(qtyRaw) || 0;
-        const total = unitPrice * qty;
+        const total = this.roundAmount(unitPrice * qty);
 
         unitPriceControl.setValue(unitPrice, { emitEvent: false });
         totalPriceControl.setValue(total, { emitEvent: false });
@@ -298,6 +341,11 @@ export class Biller {
       account_id: [null],
       payment_date: [null],
       initial_payment: [null, [Validators.min(0.01)]],
+      include_igv: [false],
+      igv_percentage: [
+        { value: DEFAULT_IGV_PERCENTAGE, disabled: true },
+        [Validators.required, Validators.min(0.01), Validators.max(100)],
+      ],
     });
   }
 
@@ -326,5 +374,9 @@ export class Biller {
 
   private showNotification(notification: NotificationData, duration?: number) {
     this.notification.show(notification, duration);
+  }
+
+  private roundAmount(value: number): number {
+    return Math.round((value + Number.EPSILON) * 100) / 100;
   }
 }

@@ -253,7 +253,15 @@
           </div>
 
           <div class="flex justify-between items-center text-gray-600">
-            <span>IGV (18%)</span>
+            <mat-checkbox [formControl]="includeIgvControl">Aplicar IGV</mat-checkbox>
+
+            @if (includeIgvControl.value) {
+              <mat-form-field class="w-28" subscriptSizing="dynamic">
+                <mat-label>Porcentaje</mat-label>
+                <input matInput type="number" [formControl]="igvPercentageControl" />
+                <span matTextSuffix>%</span>
+              </mat-form-field>
+            }
 
             <span>S/{{ getIgv }}</span>
           </div>

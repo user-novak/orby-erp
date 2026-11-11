@@ -1,5 +1,7 @@
 import { Option } from '../../core/models/global';
 
+export const DEFAULT_IGV_PERCENTAGE = 18;
+
 export enum SALE_TYPE {
   CASH = 'contado',
   CREDIT = 'credito',
