@@ -62,6 +62,11 @@ export class SalesIndex implements AfterViewInit, OnInit {
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
 
+  getAccountName(accountId: number): string {
+    const account = this.accounts.find((acc) => acc.id === accountId);
+    return account ? account.name : '';
+  }
+
   getSaleTypeLabel(value: string): string {
     return this.saleTypes.find((type) => type.value === value)?.label ?? value;
   }

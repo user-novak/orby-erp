@@ -79,7 +79,7 @@
       </ng-container>
       <ng-container matColumnDef="account">
         <th mat-header-cell *matHeaderCellDef>Cuenta bancaria</th>
-        <td mat-cell *matCellDef="let element">{{ element.account.name }}</td>
+        <td mat-cell *matCellDef="let element">{{ getAccountName(element.account_id) }}</td>
       </ng-container>
       <ng-container matColumnDef="total">
         <th mat-header-cell *matHeaderCellDef>Total</th>
