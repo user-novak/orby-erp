@@ -207,10 +207,9 @@ export class Biller {
       .getBillerData()
       .pipe(takeUntilDestroyed())
       .subscribe({
-        next: (response) => {
-          const data = response.data;
+        next: (data) => {
           this.clients = data.clients;
-          this.products = data.storages;
+          this.products = data.products;
           this.accounts = data.accounts;
 
           this.loaderService.hide();

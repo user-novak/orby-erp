@@ -1,28 +1,45 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
-import { ApiResponse } from '../../core/models/global';
-import { Observable } from 'rxjs';
-import { BillerData, BillerDataSalesResponse, BillerRequest, BillerResponse } from '../models/biller';
+import { ApiResponse, PaginatedResponse } from '../../core/models/global';
+import { forkJoin, map, Observable } from 'rxjs';
+import {
+  BillerData,
+  BillerDataSalesResponse,
+  BillerRequest,
+  BillerResponse,
+} from '../models/biller';
 import { SalesFilters } from '../../sales/models/sales';
 import { API_BASE_URL } from '../../core/constants/global';
+import { ClientService } from '../../clients/services/client';
+import { ProductService } from '../../products/services/product';
+import { AccountService } from '../../accounts/services/account';
 
 @Injectable({
   providedIn: 'root',
 })
 export class BillerService {
-  private readonly apiUrl = `${API_BASE_URL}/biller`;
+  private readonly apiUrl = `${API_BASE_URL}/billers`;
 
-  constructor(private http: HttpClient) {}
+  constructor(
+    private readonly http: HttpClient,
+    private readonly clientService: ClientService,
+    private readonly productService: ProductService,
+    private readonly accountService: AccountService,
+  ) {}
 
-  getBillerData(): Observable<ApiResponse<BillerData>> {
-    return this.http.get<ApiResponse<BillerData>>(`${this.apiUrl}/data`);
+  getBillerData(): Observable<BillerData> {
+    return forkJoin({
+      clients: this.clientService.getClients(1, 50).pipe(map((response) => response.data)),
+      products: this.productService.getProducts(1, 50).pipe(map((response) => response.data)),
+      accounts: this.accountService.getAccounts(1, 50).pipe(map((response) => response.data)),
+    });
   }
 
   registerSale(billerRequest: BillerRequest): Observable<ApiResponse<BillerResponse>> {
     return this.http.post<ApiResponse<BillerResponse>>(this.apiUrl, billerRequest);
   }
 
-  getSales(filters?: SalesFilters): Observable<ApiResponse<BillerDataSalesResponse[]>> {
+  getSales(filters?: SalesFilters): Observable<PaginatedResponse<BillerDataSalesResponse>> {
     let params = new HttpParams();
 
     if (filters) {
@@ -33,6 +50,6 @@ export class BillerService {
       });
     }
 
-    return this.http.get<ApiResponse<BillerDataSalesResponse[]>>(`${this.apiUrl}/sales`, { params });
+    return this.http.get<PaginatedResponse<BillerDataSalesResponse>>(this.apiUrl, { params });
   }
 }

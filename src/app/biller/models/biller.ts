@@ -23,7 +23,7 @@ export interface BillerForm {
 
 export interface BillerData {
   clients: Client[];
-  storages: Product[];
+  products: Product[];
   accounts: Account[];
 }
 

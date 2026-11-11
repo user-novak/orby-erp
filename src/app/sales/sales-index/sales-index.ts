@@ -10,7 +10,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { provideNativeDateAdapter } from '@angular/material/core';
 import { SALES_OPTIONS_TYPES } from '../../biller/constants/fields';
-import { ApiResponse, NotificationData, Option } from '../../core/models/global';
+import { NotificationData, Option, PaginatedResponse } from '../../core/models/global';
 import { Account } from '../../accounts/models/account';
 import { Product } from '../../products/models/product';
 import { Client } from '../../clients/models/client';
@@ -112,10 +112,9 @@ export class SalesIndex implements AfterViewInit, OnInit {
       .getBillerData()
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
-        next: (response) => {
-          const data = response.data;
+        next: (data) => {
           this.clients = data.clients;
-          this.products = data.storages;
+          this.products = data.products;
           this.accounts = data.accounts;
 
           this.listSales();
@@ -136,7 +135,7 @@ export class SalesIndex implements AfterViewInit, OnInit {
       .getSales(filters)
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
-        next: (response: ApiResponse<BillerDataSalesResponse[]>) => {
+        next: (response: PaginatedResponse<BillerDataSalesResponse>) => {
           this.dataSource.data = response.data;
 
           if (this.paginator) {
