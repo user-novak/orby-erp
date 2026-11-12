@@ -39,8 +39,12 @@ export class BillerService {
     return this.http.post<BillerResourceResponse>(this.apiUrl, billerRequest);
   }
 
-  getSales(filters?: SalesFilters): Observable<PaginatedResponse<BillerDataSalesResponse>> {
-    let params = new HttpParams();
+  getSales(
+    page = 1,
+    perPage = 5,
+    filters?: SalesFilters,
+  ): Observable<PaginatedResponse<BillerDataSalesResponse>> {
+    let params = new HttpParams().set('page', page).set('per_page', perPage);
 
     if (filters) {
       Object.entries(filters).forEach(([key, value]) => {

@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { AfterViewInit, Component, DestroyRef, inject, OnInit, ViewChild } from '@angular/core';
+import { Component, DestroyRef, inject, OnInit } from '@angular/core';
 import { BillerService } from '../../biller/services/biller';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { MatButtonModule } from '@angular/material/button';
@@ -16,9 +16,9 @@ import { Product } from '../../products/models/product';
 import { Client } from '../../clients/models/client';
 import { NotificationService } from '../../core/services/notification/notification';
 import { SALES_COLUMN_HEADERS } from '../constants/sales';
-import { BillerDataSalesItemResponse, BillerDataSalesResponse } from '../../biller/models/biller';
+import { BillerDataSalesResponse } from '../../biller/models/biller';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
-import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
+import { MatPaginatorModule, PageEvent } from '@angular/material/paginator';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { SalesFilters } from '../models/sales';
 import { LoaderService } from '../../core/services';
@@ -41,16 +41,17 @@ import { LoaderService } from '../../core/services';
   templateUrl: './sales-index.html',
   styleUrl: './sales-index.css',
 })
-export class SalesIndex implements AfterViewInit, OnInit {
+export class SalesIndex implements OnInit {
   saleTypes: Option[] = SALES_OPTIONS_TYPES;
   products: Product[] = [];
   accounts: Account[] = [];
   clients: Client[] = [];
 
   SALES_COLUMN_HEADERS = SALES_COLUMN_HEADERS;
-  ELEMENT_DATA: BillerDataSalesResponse[] = [];
-
-  dataSource = new MatTableDataSource<BillerDataSalesResponse>(this.ELEMENT_DATA);
+  dataSource = new MatTableDataSource<BillerDataSalesResponse>([]);
+  pageSize = 5;
+  pageIndex = 0;
+  totalItems = 0;
 
   filterForm: FormGroup;
 
@@ -59,8 +60,7 @@ export class SalesIndex implements AfterViewInit, OnInit {
   private readonly billerService = inject(BillerService);
   private readonly _fb = inject(FormBuilder);
   private readonly loaderService: LoaderService = inject(LoaderService);
-
-  @ViewChild(MatPaginator) paginator!: MatPaginator;
+  private currentFilters: SalesFilters = {};
 
   getAccountName(accountId: number): string {
     const account = this.accounts.find((acc) => acc.id === accountId);
@@ -75,23 +75,28 @@ export class SalesIndex implements AfterViewInit, OnInit {
     this.filterForm = this.setFilterForm();
   }
 
-  ngAfterViewInit() {
-    this.dataSource.paginator = this.paginator;
-  }
-
   ngOnInit(): void {
     this.loadBillerData();
   }
 
   cleanFilterForm(): void {
     this.resetFilterForm();
+    this.currentFilters = {};
+    this.pageIndex = 0;
     this.listSales();
   }
 
   applySearchByFilters(): void {
     const filters: SalesFilters = this.filterForm.getRawValue();
-    const normalizedFilters = this.normalizeDateFields(filters);
-    this.listSales(normalizedFilters);
+    this.currentFilters = this.normalizeDateFields(filters);
+    this.pageIndex = 0;
+    this.listSales();
+  }
+
+  onPageChange(event: PageEvent): void {
+    this.pageIndex = event.pageIndex;
+    this.pageSize = event.pageSize;
+    this.listSales();
   }
 
   private normalizeDateFields(filters: SalesFilters): SalesFilters {
@@ -134,18 +139,15 @@ export class SalesIndex implements AfterViewInit, OnInit {
       });
   }
 
-  private listSales(filters?: SalesFilters) {
+  private listSales() {
     this.loaderService.show();
     this.billerService
-      .getSales(filters)
+      .getSales(this.pageIndex + 1, this.pageSize, this.currentFilters)
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
         next: (response: PaginatedResponse<BillerDataSalesResponse>) => {
           this.dataSource.data = response.data;
-
-          if (this.paginator) {
-            this.dataSource.paginator = this.paginator;
-          }
+          this.totalItems = response.meta.total;
           this.loaderService.hide();
         },
         error: () => {

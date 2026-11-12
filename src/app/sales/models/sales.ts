@@ -6,5 +6,4 @@ export interface SalesFilters {
   storage_id?: number;
   sale_type?: string;
   status?: 'pending' | 'paid';
-  per_page?: number;
 }
