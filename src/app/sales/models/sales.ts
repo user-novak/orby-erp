@@ -1,9 +1,10 @@
+import { SALE_TYPE } from '../../biller/constants/fields';
+
 export interface SalesFilters {
   date_from?: string;
   date_to?: string;
   client_id?: number;
   account_id?: number;
-  storage_id?: number;
-  sale_type?: string;
-  status?: 'pending' | 'paid';
+  product_id?: number;
+  sale_type?: SALE_TYPE;
 }

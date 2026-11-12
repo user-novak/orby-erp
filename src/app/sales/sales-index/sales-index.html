@@ -34,7 +34,7 @@
 
     <mat-form-field>
       <mat-label>Producto</mat-label>
-      <mat-select formControlName="storage_id">
+      <mat-select formControlName="product_id">
         @for (product of products; track product) {
           <mat-option [value]="product.id!">{{ product.description }}</mat-option>
         }

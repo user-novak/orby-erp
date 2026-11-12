@@ -166,7 +166,7 @@ export class SalesIndex implements OnInit {
       date_to: [null],
       client_id: [null],
       account_id: [null],
-      storage_id: [null],
+      product_id: [null],
       sale_type: [null],
     });
   }
