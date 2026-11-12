@@ -210,13 +210,17 @@ export class SalesIndex implements OnInit {
           fields: [
             { label: 'Fecha de venta', value: this.formatDate(sale.sale_date) },
             { label: 'Tipo de venta', value: this.getSaleTypeLabel(sale.sale_type) },
+            { label: 'Cuenta bancaria', value: sale.account?.name ?? 'Pendiente de pago' },
+            { label: 'Fecha de pago', value: this.formatDate(sale.payment_date) },
+          ],
+        },
+        {
+          title: 'Información cliente',
+          fields: [
             { label: 'Cliente', value: sale.client.name },
             { label: 'DNI', value: sale.client.dni },
             { label: 'RUC', value: sale.client.ruc },
             { label: 'Teléfono', value: sale.client.phone },
-            { label: 'Cuenta bancaria', value: sale.account?.name ?? 'Sin cuenta' },
-            { label: 'Fecha de pago', value: this.formatDate(sale.payment_date) },
-            { label: 'Fecha de registro', value: this.formatDate(sale.created_at) },
           ],
         },
         {
@@ -264,7 +268,7 @@ export class SalesIndex implements OnInit {
           ],
           rows: sale.account_movements.map((movement) => ({
             date: this.formatDate(movement.movement_date),
-            account: movement.account?.name ?? 'Sin cuenta',
+            account: movement.account?.name ?? 'Pendiente de pago',
             type: movement.type,
             status: movement.status,
             description: movement.description,
@@ -282,7 +286,7 @@ export class SalesIndex implements OnInit {
     }).format(Number(value));
   }
 
-  private formatDate(value: string | null): string {
+  formatDate(value: string | null): string {
     if (!value) {
       return '-';
     }

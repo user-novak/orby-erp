@@ -67,7 +67,7 @@
     <table mat-table [dataSource]="dataSource">
       <ng-container matColumnDef="sale_date">
         <th mat-header-cell *matHeaderCellDef>Fecha de venta</th>
-        <td mat-cell *matCellDef="let element">{{ element.sale_date | date: 'dd/MM/yyyy' }}</td>
+        <td mat-cell *matCellDef="let element">{{ formatDate(element.sale_date) }}</td>
       </ng-container>
       <ng-container matColumnDef="sale_type">
         <th mat-header-cell *matHeaderCellDef>Tipo de venta</th>
