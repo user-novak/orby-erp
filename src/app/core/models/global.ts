@@ -30,6 +30,36 @@ export interface ConfirmDialogData {
   cancelText?: string;
 }
 
+export type DetailDialogValue = string | number | null | undefined;
+
+export interface DetailDialogField {
+  label: string;
+  value: DetailDialogValue;
+}
+
+export interface DetailDialogSection {
+  title: string;
+  fields: DetailDialogField[];
+}
+
+export interface DetailDialogColumn {
+  key: string;
+  label: string;
+}
+
+export interface DetailDialogTable {
+  title: string;
+  columns: DetailDialogColumn[];
+  rows: Record<string, DetailDialogValue>[];
+}
+
+export interface DetailDialogData {
+  title: string;
+  sections: DetailDialogSection[];
+  tables?: DetailDialogTable[];
+  closeText?: string;
+}
+
 export interface NotificationData {
   message: string;
   icon?: string;

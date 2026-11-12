@@ -39,6 +39,10 @@ export class BillerService {
     return this.http.post<BillerResourceResponse>(this.apiUrl, billerRequest);
   }
 
+  getSale(id: number): Observable<BillerResourceResponse> {
+    return this.http.get<BillerResourceResponse>(`${this.apiUrl}/${id}`);
+  }
+
   getSales(
     page = 1,
     perPage = 5,

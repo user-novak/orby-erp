@@ -88,6 +88,7 @@ export interface BillerResponse {
   client_id: number;
   account_id: number | null;
   client: Client;
+  account: Account | null;
   items: BillerItemResponse[];
   account_movements: AccountMovementResponse[];
   created_at: string;
@@ -112,6 +113,7 @@ export interface AccountMovementResponse {
   description: string;
   account_id: number | null;
   biller_id: number;
+  account: Account | null;
 }
 
 export interface BillerResourceResponse {

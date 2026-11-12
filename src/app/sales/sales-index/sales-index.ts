@@ -10,18 +10,23 @@ import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { provideNativeDateAdapter } from '@angular/material/core';
 import { SALES_OPTIONS_TYPES } from '../../biller/constants/fields';
-import { NotificationData, Option, PaginatedResponse } from '../../core/models/global';
+import {
+  DetailDialogData,
+  NotificationData,
+  Option,
+  PaginatedResponse,
+} from '../../core/models/global';
 import { Account } from '../../accounts/models/account';
 import { Product } from '../../products/models/product';
 import { Client } from '../../clients/models/client';
 import { NotificationService } from '../../core/services/notification/notification';
 import { SALES_COLUMN_HEADERS } from '../constants/sales';
-import { BillerDataSalesResponse } from '../../biller/models/biller';
+import { BillerDataSalesResponse, BillerResponse } from '../../biller/models/biller';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { MatPaginatorModule, PageEvent } from '@angular/material/paginator';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { SalesFilters } from '../models/sales';
-import { LoaderService } from '../../core/services';
+import { DetailDialogService, LoaderService } from '../../core/services';
 
 @Component({
   selector: 'app-sales-index',
@@ -60,6 +65,7 @@ export class SalesIndex implements OnInit {
   private readonly billerService = inject(BillerService);
   private readonly _fb = inject(FormBuilder);
   private readonly loaderService: LoaderService = inject(LoaderService);
+  private readonly detailDialogService = inject(DetailDialogService);
   private currentFilters: SalesFilters = {};
 
   getAccountName(accountId: number): string {
@@ -97,6 +103,26 @@ export class SalesIndex implements OnInit {
     this.pageIndex = event.pageIndex;
     this.pageSize = event.pageSize;
     this.listSales();
+  }
+
+  openSaleDetail(saleId: number): void {
+    this.loaderService.show();
+    this.billerService
+      .getSale(saleId)
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe({
+        next: (response) => {
+          this.loaderService.hide();
+          this.detailDialogService.open(this.buildSaleDetail(response.data));
+        },
+        error: () => {
+          this.loaderService.hide();
+          this.showNotification(
+            this.generateNotification('Error al cargar el detalle de la venta', 'error', '#f44336'),
+            3000,
+          );
+        },
+      });
   }
 
   private normalizeDateFields(filters: SalesFilters): SalesFilters {
@@ -173,6 +199,96 @@ export class SalesIndex implements OnInit {
 
   private resetFilterForm(): void {
     this.filterForm.reset();
+  }
+
+  private buildSaleDetail(sale: BillerResponse): DetailDialogData {
+    return {
+      title: `Detalle de venta #${sale.id}`,
+      sections: [
+        {
+          title: 'Información general',
+          fields: [
+            { label: 'Fecha de venta', value: this.formatDate(sale.sale_date) },
+            { label: 'Tipo de venta', value: this.getSaleTypeLabel(sale.sale_type) },
+            { label: 'Cliente', value: sale.client.name },
+            { label: 'DNI', value: sale.client.dni },
+            { label: 'RUC', value: sale.client.ruc },
+            { label: 'Teléfono', value: sale.client.phone },
+            { label: 'Cuenta bancaria', value: sale.account?.name ?? 'Sin cuenta' },
+            { label: 'Fecha de pago', value: this.formatDate(sale.payment_date) },
+            { label: 'Fecha de registro', value: this.formatDate(sale.created_at) },
+          ],
+        },
+        {
+          title: 'Importes',
+          fields: [
+            { label: 'Subtotal', value: this.formatCurrency(sale.subtotal) },
+            {
+              label: 'Porcentaje IGV',
+              value: sale.igv_percentage === null ? 'Exonerada' : `${sale.igv_percentage}%`,
+            },
+            { label: 'IGV', value: this.formatCurrency(sale.igv) },
+            { label: 'Total', value: this.formatCurrency(sale.total) },
+          ],
+        },
+      ],
+      tables: [
+        {
+          title: 'Productos',
+          columns: [
+            { key: 'product', label: 'Producto' },
+            { key: 'brand', label: 'Marca' },
+            { key: 'measureUnity', label: 'U.M.' },
+            { key: 'quantity', label: 'Cantidad' },
+            { key: 'unitPrice', label: 'Precio unitario' },
+            { key: 'subtotal', label: 'Subtotal' },
+          ],
+          rows: sale.items.map((item) => ({
+            product: item.product.description,
+            brand: item.product.brand,
+            measureUnity: item.product.measure_unity,
+            quantity: item.quantity,
+            unitPrice: this.formatCurrency(item.unit_price),
+            subtotal: this.formatCurrency(item.subtotal),
+          })),
+        },
+        {
+          title: 'Movimientos de cuenta',
+          columns: [
+            { key: 'date', label: 'Fecha' },
+            { key: 'account', label: 'Cuenta' },
+            { key: 'type', label: 'Tipo' },
+            { key: 'status', label: 'Estado' },
+            { key: 'description', label: 'Descripción' },
+            { key: 'amount', label: 'Monto' },
+          ],
+          rows: sale.account_movements.map((movement) => ({
+            date: this.formatDate(movement.movement_date),
+            account: movement.account?.name ?? 'Sin cuenta',
+            type: movement.type,
+            status: movement.status,
+            description: movement.description,
+            amount: this.formatCurrency(movement.amount),
+          })),
+        },
+      ],
+    };
+  }
+
+  private formatCurrency(value: number): string {
+    return new Intl.NumberFormat('es-PE', {
+      style: 'currency',
+      currency: 'PEN',
+    }).format(Number(value));
+  }
+
+  private formatDate(value: string | null): string {
+    if (!value) {
+      return '-';
+    }
+
+    const [year, month, day] = value.slice(0, 10).split('-');
+    return `${day}/${month}/${year}`;
   }
 
   private generateNotification(

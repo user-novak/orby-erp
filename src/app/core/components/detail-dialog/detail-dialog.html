@@ -1,0 +1,55 @@
+<h2 mat-dialog-title>{{ data.title }}</h2>
+
+<mat-dialog-content>
+  <div class="detail-content">
+    @for (section of data.sections; track section.title) {
+      <section>
+        <h3>{{ section.title }}</h3>
+        <div class="field-grid">
+          @for (field of section.fields; track field.label) {
+            <div class="field">
+              <span class="field-label">{{ field.label }}</span>
+              <span>{{ field.value ?? '-' }}</span>
+            </div>
+          }
+        </div>
+      </section>
+    }
+
+    @for (table of data.tables ?? []; track table.title) {
+      <section>
+        <h3>{{ table.title }}</h3>
+        <div class="table-container">
+          <table>
+            <thead>
+              <tr>
+                @for (column of table.columns; track column.key) {
+                  <th>{{ column.label }}</th>
+                }
+              </tr>
+            </thead>
+            <tbody>
+              @for (row of table.rows; track $index) {
+                <tr>
+                  @for (column of table.columns; track column.key) {
+                    <td>{{ row[column.key] ?? '-' }}</td>
+                  }
+                </tr>
+              } @empty {
+                <tr>
+                  <td [attr.colspan]="table.columns.length">Sin registros</td>
+                </tr>
+              }
+            </tbody>
+          </table>
+        </div>
+      </section>
+    }
+  </div>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+  <button matButton="filled" type="button" (click)="close()">
+    {{ data.closeText ?? 'Cerrar' }}
+  </button>
+</mat-dialog-actions>
