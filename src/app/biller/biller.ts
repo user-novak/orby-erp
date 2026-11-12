@@ -221,6 +221,7 @@ export class Biller {
             igv_percentage: DEFAULT_IGV_PERCENTAGE,
           });
           this.resetBillerForm();
+          this.loadBillerData(false);
         },
         error: () => {
           this.showNotification(
@@ -241,7 +242,7 @@ export class Biller {
       });
   }
 
-  private loadBillerData() {
+  private loadBillerData(showSuccessNotification = true) {
     this.loaderService.show();
 
     this.billerService
@@ -255,10 +256,12 @@ export class Biller {
 
           this.loaderService.hide();
 
-          this.showNotification(
-            this.generateNotification('Datos cargados exitosamente', 'check_circle', '#4caf50'),
-            3000,
-          );
+          if (showSuccessNotification) {
+            this.showNotification(
+              this.generateNotification('Datos cargados exitosamente', 'check_circle', '#4caf50'),
+              3000,
+            );
+          }
         },
         error: () => {
           this.loaderService.hide();
