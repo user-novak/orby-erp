@@ -10,23 +10,24 @@ import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { provideNativeDateAdapter } from '@angular/material/core';
 import { SALES_OPTIONS_TYPES } from '../../biller/constants/fields';
-import {
-  DetailDialogData,
-  NotificationData,
-  Option,
-  PaginatedResponse,
-} from '../../core/models/global';
+import { NotificationData, Option, PaginatedResponse } from '../../core/models/global';
 import { Account } from '../../accounts/models/account';
 import { Product } from '../../products/models/product';
 import { Client } from '../../clients/models/client';
 import { NotificationService } from '../../core/services/notification/notification';
 import { SALES_COLUMN_HEADERS } from '../constants/sales';
-import { BillerDataSalesResponse, BillerResponse } from '../../biller/models/biller';
+import {
+  BillerData,
+  BillerDataSalesResponse,
+  BillerResourceResponse,
+} from '../../biller/models/biller';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { MatPaginatorModule, PageEvent } from '@angular/material/paginator';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { SalesFilters } from '../models/sales';
 import { DetailDialogService, LoaderService } from '../../core/services';
+import { formatDate } from '../../core/utils/formatters';
+import { SaleDetailMapper } from '../mappers/sale-detail';
 
 @Component({
   selector: 'app-sales-index',
@@ -47,6 +48,7 @@ import { DetailDialogService, LoaderService } from '../../core/services';
   styleUrl: './sales-index.css',
 })
 export class SalesIndex implements OnInit {
+  readonly formatDate = formatDate;
   saleTypes: Option[] = SALES_OPTIONS_TYPES;
   products: Product[] = [];
   accounts: Account[] = [];
@@ -111,9 +113,9 @@ export class SalesIndex implements OnInit {
       .getSale(saleId)
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
-        next: (response) => {
+        next: (response: BillerResourceResponse) => {
           this.loaderService.hide();
-          this.detailDialogService.open(this.buildSaleDetail(response.data));
+          this.detailDialogService.open(SaleDetailMapper.toDetailDialogData(response.data));
         },
         error: () => {
           this.loaderService.hide();
@@ -148,7 +150,7 @@ export class SalesIndex implements OnInit {
       .getBillerData()
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
-        next: (data) => {
+        next: (data: BillerData) => {
           this.clients = data.clients;
           this.products = data.products;
           this.accounts = data.accounts;
@@ -199,100 +201,6 @@ export class SalesIndex implements OnInit {
 
   private resetFilterForm(): void {
     this.filterForm.reset();
-  }
-
-  private buildSaleDetail(sale: BillerResponse): DetailDialogData {
-    return {
-      title: `Detalle de venta #${sale.id}`,
-      sections: [
-        {
-          title: 'Información general',
-          fields: [
-            { label: 'Fecha de venta', value: this.formatDate(sale.sale_date) },
-            { label: 'Tipo de venta', value: this.getSaleTypeLabel(sale.sale_type) },
-            { label: 'Cuenta bancaria', value: sale.account?.name ?? 'Pendiente de pago' },
-            { label: 'Fecha de pago', value: this.formatDate(sale.payment_date) },
-          ],
-        },
-        {
-          title: 'Información cliente',
-          fields: [
-            { label: 'Cliente', value: sale.client.name },
-            { label: 'DNI', value: sale.client.dni },
-            { label: 'RUC', value: sale.client.ruc },
-            { label: 'Teléfono', value: sale.client.phone },
-          ],
-        },
-        {
-          title: 'Importes',
-          fields: [
-            { label: 'Subtotal', value: this.formatCurrency(sale.subtotal) },
-            {
-              label: 'Porcentaje IGV',
-              value: sale.igv_percentage === null ? 'Exonerada' : `${sale.igv_percentage}%`,
-            },
-            { label: 'IGV', value: this.formatCurrency(sale.igv) },
-            { label: 'Total', value: this.formatCurrency(sale.total) },
-          ],
-        },
-      ],
-      tables: [
-        {
-          title: 'Productos',
-          columns: [
-            { key: 'product', label: 'Producto' },
-            { key: 'brand', label: 'Marca' },
-            { key: 'measureUnity', label: 'U.M.' },
-            { key: 'quantity', label: 'Cantidad' },
-            { key: 'unitPrice', label: 'Precio unitario' },
-            { key: 'subtotal', label: 'Subtotal' },
-          ],
-          rows: sale.items.map((item) => ({
-            product: item.product.description,
-            brand: item.product.brand,
-            measureUnity: item.product.measure_unity,
-            quantity: item.quantity,
-            unitPrice: this.formatCurrency(item.unit_price),
-            subtotal: this.formatCurrency(item.subtotal),
-          })),
-        },
-        {
-          title: 'Movimientos de cuenta',
-          columns: [
-            { key: 'date', label: 'Fecha' },
-            { key: 'account', label: 'Cuenta' },
-            { key: 'type', label: 'Tipo' },
-            { key: 'status', label: 'Estado' },
-            { key: 'description', label: 'Descripción' },
-            { key: 'amount', label: 'Monto' },
-          ],
-          rows: sale.account_movements.map((movement) => ({
-            date: this.formatDate(movement.movement_date),
-            account: movement.account?.name ?? 'Pendiente de pago',
-            type: movement.type,
-            status: movement.status,
-            description: movement.description,
-            amount: this.formatCurrency(movement.amount),
-          })),
-        },
-      ],
-    };
-  }
-
-  private formatCurrency(value: number): string {
-    return new Intl.NumberFormat('es-PE', {
-      style: 'currency',
-      currency: 'PEN',
-    }).format(Number(value));
-  }
-
-  formatDate(value: string | null): string {
-    if (!value) {
-      return '-';
-    }
-
-    const [year, month, day] = value.slice(0, 10).split('-');
-    return `${day}/${month}/${year}`;
   }
 
   private generateNotification(
