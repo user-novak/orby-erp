@@ -247,7 +247,7 @@ export class Biller {
 
     this.billerService
       .getBillerData()
-      .pipe(takeUntilDestroyed())
+      .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
         next: (data) => {
           this.clients = data.clients;
