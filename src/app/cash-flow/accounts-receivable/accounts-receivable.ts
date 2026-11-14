@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatTableModule } from '@angular/material/table';
+import { MatTooltipModule } from '@angular/material/tooltip';
 import { formatCurrency } from '../../core/utils/formatters';
 
 interface ReceivableAccount {
@@ -14,7 +15,7 @@ interface ReceivableAccount {
 
 @Component({
   selector: 'app-accounts-receivable',
-  imports: [MatButtonModule, MatIconModule, MatTableModule],
+  imports: [MatButtonModule, MatIconModule, MatTableModule, MatTooltipModule],
   templateUrl: './accounts-receivable.html',
 })
 export class AccountsReceivable {

@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatTableModule } from '@angular/material/table';
+import { MatTooltipModule } from '@angular/material/tooltip';
 import { formatCurrency } from '../../core/utils/formatters';
 
 interface PayableAccount {
@@ -14,7 +15,7 @@ interface PayableAccount {
 
 @Component({
   selector: 'app-accounts-payable',
-  imports: [MatButtonModule, MatIconModule, MatTableModule],
+  imports: [MatButtonModule, MatIconModule, MatTableModule, MatTooltipModule],
   templateUrl: './accounts-payable.html',
 })
 export class AccountsPayable {

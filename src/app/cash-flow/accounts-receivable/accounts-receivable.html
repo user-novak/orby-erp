@@ -1,5 +1,4 @@
-<div class="p-6">
-  <div class="mat-elevation-z8 overflow-x-auto">
+<div class="mat-elevation-z8">
     <table mat-table [dataSource]="dataSource" class="w-full">
       <ng-container matColumnDef="client">
         <th mat-header-cell *matHeaderCellDef>Cliente</th>
@@ -29,10 +28,20 @@
       <ng-container matColumnDef="actions">
         <th mat-header-cell *matHeaderCellDef>Acciones</th>
         <td mat-cell *matCellDef="let element">
-          <button type="button" mat-icon-button aria-label="Amortizar deuda">
+          <button
+            type="button"
+            mat-icon-button
+            matTooltip="Amortizar deuda"
+            aria-label="Amortizar deuda"
+          >
             <mat-icon>savings</mat-icon>
           </button>
-          <button type="button" mat-icon-button aria-label="Cobrar deuda">
+          <button
+            type="button"
+            mat-icon-button
+            matTooltip="Cobrar deuda"
+            aria-label="Cobrar deuda"
+          >
             <mat-icon>payments</mat-icon>
           </button>
         </td>
@@ -41,5 +50,4 @@
       <tr mat-header-row *matHeaderRowDef="columnHeaders"></tr>
       <tr mat-row *matRowDef="let row; columns: columnHeaders"></tr>
     </table>
-  </div>
 </div>
