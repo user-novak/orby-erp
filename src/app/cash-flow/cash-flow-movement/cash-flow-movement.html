@@ -1,0 +1,57 @@
+<form class="mx-auto max-w-6xl px-4 py-6 lg:px-8 grid grid-cols-1 lg:grid-cols-2 gap-x-6 gap-y-6">
+  <mat-form-field class="w-full">
+    <mat-label>Tipo de movimiento</mat-label>
+    <mat-select>
+      <mat-option value="income">Ingreso</mat-option>
+      <mat-option value="expense">Egreso</mat-option>
+    </mat-select>
+  </mat-form-field>
+
+  <mat-form-field class="w-full">
+    <mat-label>Cuenta bancaria</mat-label>
+    <mat-select>
+      @for (accountName of accountNames; track accountName) {
+        <mat-option [value]="accountName">{{ accountName }}</mat-option>
+      }
+    </mat-select>
+  </mat-form-field>
+
+  <mat-form-field class="w-full">
+    <mat-label>Categoría</mat-label>
+    <mat-select>
+      <mat-option value="sale">Venta</mat-option>
+      <mat-option value="service">Servicio</mat-option>
+      <mat-option value="other">Otro</mat-option>
+    </mat-select>
+  </mat-form-field>
+
+  <mat-form-field class="w-full">
+    <mat-label>Fecha</mat-label>
+    <input matInput [matDatepicker]="movementDate" />
+    <mat-datepicker-toggle matIconSuffix [for]="movementDate"></mat-datepicker-toggle>
+    <mat-datepicker #movementDate></mat-datepicker>
+  </mat-form-field>
+
+  <mat-form-field class="w-full" floatLabel="always">
+    <mat-label>Monto</mat-label>
+    <input matInput type="number" min="0" placeholder="0" />
+    <span matTextPrefix>{{ SOL_PREFIX }}</span>
+  </mat-form-field>
+
+  <mat-form-field class="w-full lg:col-span-2">
+    <mat-label>Descripción</mat-label>
+    <textarea matInput rows="3"></textarea>
+  </mat-form-field>
+
+  <div class="lg:col-span-2 flex flex-col-reverse sm:flex-row justify-end gap-3 pt-4">
+    <button type="button" matButton="tonal">
+      Limpiar
+      <mat-icon>autorenew</mat-icon>
+    </button>
+
+    <button type="button" matButton="filled">
+      Registrar movimiento
+      <mat-icon>add</mat-icon>
+    </button>
+  </div>
+</form>

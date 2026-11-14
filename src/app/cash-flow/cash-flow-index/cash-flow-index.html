@@ -1,254 +1,34 @@
-<main class="cash-flow-page">
-  <section class="balance-overview" aria-labelledby="balance-title">
-    <div class="overview-copy">
-      <span class="eyebrow">Resumen financiero</span>
-      <h2 id="balance-title">Tus cuentas, siempre a la vista</h2>
-      <p>Consulta el saldo disponible en cada cuenta y registra tus movimientos desde un solo lugar.</p>
-    </div>
-
-    <div class="total-balance">
-      <span>Saldo total</span>
-      <strong>{{ formatCurrency(totalBalance) }}</strong>
-      <small>Suma de todas tus cuentas</small>
-    </div>
-  </section>
-
-  <section class="account-grid" aria-label="Saldos de cuentas">
+<main class="module-main">
+  <section class="mb-6 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
     @for (account of accounts; track account.name) {
-      <article class="account-card">
-        <div class="account-icon">
-          <mat-icon>{{ account.icon }}</mat-icon>
-        </div>
-        <div class="account-info">
-          <span>{{ account.name }}</span>
-          <small>{{ account.reference }}</small>
-        </div>
-        <strong>{{ formatCurrency(account.amount) }}</strong>
-      </article>
+      <div class="bg-white border border-gray-200 rounded-lg shadow p-5">
+        <span class="block text-sm text-gray-500">{{ account.name }}</span>
+        <strong class="block mt-2 text-xl text-gray-900">
+          {{ formatCurrency(account.amount) }}
+        </strong>
+      </div>
     }
 
-    <button type="button" class="add-account-card" aria-label="Agregar otra cuenta">
-      <mat-icon>add</mat-icon>
-      <span>Agregar cuenta</span>
-    </button>
+    <div class="bg-white border border-blue-500 rounded-lg shadow p-5">
+      <span class="block text-sm font-medium text-blue-700">Saldo total</span>
+      <strong class="block mt-2 text-xl text-gray-900">
+        {{ formatCurrency(totalBalance) }}
+      </strong>
+    </div>
   </section>
 
-  <section class="workspace-card">
-    <mat-tab-group class="cash-flow-tabs" mat-stretch-tabs="false" animationDuration="250ms">
-      <mat-tab>
-        <ng-template mat-tab-label>
-          <mat-icon>swap_vert</mat-icon>
-          Ingreso / egreso
-        </ng-template>
-
-        <div class="tab-content movement-layout">
-          <div class="section-heading">
-            <div>
-              <span class="eyebrow">Nuevo movimiento</span>
-              <h3>Registra un ingreso o egreso</h3>
-              <p>Completa la información para mantener actualizados los saldos de tus cuentas.</p>
-            </div>
-          </div>
-
-          <div class="movement-content">
-            <div class="movement-form">
-              <mat-form-field appearance="outline">
-                <mat-label>Tipo de movimiento</mat-label>
-                <mat-select>
-                  <mat-option value="income">Ingreso</mat-option>
-                  <mat-option value="expense">Egreso</mat-option>
-                </mat-select>
-              </mat-form-field>
-
-              <mat-form-field appearance="outline">
-                <mat-label>Cuenta</mat-label>
-                <mat-select>
-                  @for (account of accounts; track account.name) {
-                    <mat-option [value]="account.name">{{ account.name }}</mat-option>
-                  }
-                </mat-select>
-              </mat-form-field>
-
-              <mat-form-field appearance="outline">
-                <mat-label>Categoría</mat-label>
-                <mat-select>
-                  <mat-option value="sale">Venta</mat-option>
-                  <mat-option value="service">Servicio</mat-option>
-                  <mat-option value="other">Otro</mat-option>
-                </mat-select>
-              </mat-form-field>
-
-              <mat-form-field appearance="outline">
-                <mat-label>Fecha</mat-label>
-                <input matInput type="date" />
-              </mat-form-field>
-
-              <mat-form-field appearance="outline" class="amount-field">
-                <mat-label>Monto</mat-label>
-                <span matTextPrefix>S/&nbsp;</span>
-                <input matInput type="number" min="0" placeholder="0.00" />
-              </mat-form-field>
-
-              <mat-form-field appearance="outline" class="description-field">
-                <mat-label>Descripción</mat-label>
-                <textarea
-                  matInput
-                  rows="3"
-                  placeholder="Describe brevemente el movimiento"
-                ></textarea>
-              </mat-form-field>
-
-              <div class="form-actions">
-                <button type="button" matButton="outlined">Limpiar</button>
-                <button type="button" matButton="filled">
-                  <mat-icon>add</mat-icon>
-                  Registrar movimiento
-                </button>
-              </div>
-            </div>
-
-            <aside class="movement-guide">
-              <div class="guide-icon"><mat-icon>lightbulb</mat-icon></div>
-              <h4>Controla tu flujo diario</h4>
-              <p>
-                Cada movimiento actualizará el saldo de la cuenta seleccionada y quedará disponible
-                en su historial.
-              </p>
-              <div class="guide-row">
-                <mat-icon>arrow_downward</mat-icon>
-                <span><strong>Ingreso</strong> aumenta el saldo de la cuenta.</span>
-              </div>
-              <div class="guide-row expense">
-                <mat-icon>arrow_upward</mat-icon>
-                <span><strong>Egreso</strong> disminuye el saldo disponible.</span>
-              </div>
-            </aside>
-          </div>
-        </div>
+  <section class="bg-white mat-elevation-z8">
+    <mat-tab-group>
+      <mat-tab label="Ingresos y egresos">
+        <app-cash-flow-movement></app-cash-flow-movement>
       </mat-tab>
 
-      <mat-tab>
-        <ng-template mat-tab-label>
-          <mat-icon>request_quote</mat-icon>
-          Cuentas por cobrar
-        </ng-template>
-
-        <div class="tab-content">
-          <div class="section-heading list-heading">
-            <div>
-              <span class="eyebrow">Pendientes de cobro</span>
-              <h3>Cuentas por cobrar</h3>
-              <p>Revisa las ventas a crédito y registra cobros totales o amortizaciones.</p>
-            </div>
-            <div class="pending-total receivable-total">
-              <span>Total por cobrar</span>
-              <strong>{{ formatCurrency(totalReceivable) }}</strong>
-            </div>
-          </div>
-
-          <div class="responsive-table">
-            <table>
-              <thead>
-                <tr>
-                  <th>Cliente</th>
-                  <th>Documento</th>
-                  <th>Vencimiento</th>
-                  <th>Estado</th>
-                  <th class="amount-column">Saldo pendiente</th>
-                  <th class="actions-column">Acciones</th>
-                </tr>
-              </thead>
-              <tbody>
-                @for (account of receivables; track account.document) {
-                  <tr>
-                    <td data-label="Cliente"><strong>{{ account.name }}</strong></td>
-                    <td data-label="Documento">{{ account.document }}</td>
-                    <td data-label="Vencimiento">{{ account.dueDate }}</td>
-                    <td data-label="Estado">
-                      <span
-                        class="status-badge"
-                        [class.status-warning]="account.statusClass === 'status-warning'"
-                        [class.status-danger]="account.statusClass === 'status-danger'"
-                        [class.status-info]="account.statusClass === 'status-info'"
-                      >
-                        {{ account.status }}
-                      </span>
-                    </td>
-                    <td data-label="Saldo pendiente" class="amount-column">
-                      <strong>{{ formatCurrency(account.amount) }}</strong>
-                    </td>
-                    <td data-label="Acciones" class="actions-column">
-                      <button type="button" matButton="outlined">Amortizar</button>
-                      <button type="button" matButton="filled">Cobrar</button>
-                    </td>
-                  </tr>
-                }
-              </tbody>
-            </table>
-          </div>
-        </div>
+      <mat-tab label="Cuentas por cobrar">
+        <app-accounts-receivable></app-accounts-receivable>
       </mat-tab>
 
-      <mat-tab>
-        <ng-template mat-tab-label>
-          <mat-icon>receipt_long</mat-icon>
-          Cuentas por pagar
-        </ng-template>
-
-        <div class="tab-content">
-          <div class="section-heading list-heading">
-            <div>
-              <span class="eyebrow">Compromisos pendientes</span>
-              <h3>Cuentas por pagar</h3>
-              <p>Organiza tus pagos y registra abonos sin perder de vista el saldo disponible.</p>
-            </div>
-            <div class="pending-total payable-total">
-              <span>Total por pagar</span>
-              <strong>{{ formatCurrency(totalPayable) }}</strong>
-            </div>
-          </div>
-
-          <div class="responsive-table">
-            <table>
-              <thead>
-                <tr>
-                  <th>Proveedor</th>
-                  <th>Documento</th>
-                  <th>Vencimiento</th>
-                  <th>Estado</th>
-                  <th class="amount-column">Saldo pendiente</th>
-                  <th class="actions-column">Acciones</th>
-                </tr>
-              </thead>
-              <tbody>
-                @for (account of payables; track account.document) {
-                  <tr>
-                    <td data-label="Proveedor"><strong>{{ account.name }}</strong></td>
-                    <td data-label="Documento">{{ account.document }}</td>
-                    <td data-label="Vencimiento">{{ account.dueDate }}</td>
-                    <td data-label="Estado">
-                      <span
-                        class="status-badge"
-                        [class.status-warning]="account.statusClass === 'status-warning'"
-                        [class.status-danger]="account.statusClass === 'status-danger'"
-                        [class.status-info]="account.statusClass === 'status-info'"
-                      >
-                        {{ account.status }}
-                      </span>
-                    </td>
-                    <td data-label="Saldo pendiente" class="amount-column">
-                      <strong>{{ formatCurrency(account.amount) }}</strong>
-                    </td>
-                    <td data-label="Acciones" class="actions-column">
-                      <button type="button" matButton="outlined">Amortizar</button>
-                      <button type="button" matButton="filled">Pagar</button>
-                    </td>
-                  </tr>
-                }
-              </tbody>
-            </table>
-          </div>
-        </div>
+      <mat-tab label="Cuentas por pagar">
+        <app-accounts-payable></app-accounts-payable>
       </mat-tab>
     </mat-tab-group>
   </section>
