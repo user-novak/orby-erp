@@ -1,21 +1,431 @@
-@import 'tailwindcss';
-
-.accounts-block {
-  @apply mx-96 flex justify-center;
+:host {
+  display: block;
+  color: #172033;
 }
 
-.accounts-header {
-  @apply bg-gray-300 w-32 flex justify-center border font-bold;
+.cash-flow-page {
+  max-width: 1440px;
+  margin: 0 auto;
+  padding: 28px 32px 48px;
 }
 
-.accounts-content {
-  @apply bg-white w-32 flex justify-center border;
+.balance-overview {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 32px;
+  padding: 30px 34px;
+  overflow: hidden;
+  border-radius: 22px;
+  background:
+    radial-gradient(circle at 86% 18%, rgb(255 255 255 / 14%) 0 90px, transparent 91px),
+    linear-gradient(125deg, #173b7a 0%, #1556a6 52%, #1673c8 100%);
+  box-shadow: 0 16px 38px rgb(18 62 122 / 20%);
+  color: #fff;
 }
 
-.ml-8 {
-  @apply ml-8;
+.overview-copy {
+  max-width: 650px;
 }
 
-.accounts-tab {
-  @apply mt-8 w-1/2;
+.eyebrow {
+  display: block;
+  margin-bottom: 6px;
+  color: #2876c7;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+}
+
+.balance-overview .eyebrow {
+  color: #bfe0ff;
+}
+
+.overview-copy h2,
+.section-heading h3 {
+  margin: 0;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+
+.overview-copy h2 {
+  font-size: clamp(1.5rem, 3vw, 2.15rem);
+}
+
+.overview-copy p,
+.section-heading p {
+  margin: 8px 0 0;
+  line-height: 1.55;
+}
+
+.overview-copy p {
+  color: #d8eaff;
+}
+
+.total-balance {
+  min-width: 280px;
+  padding: 20px 24px;
+  border: 1px solid rgb(255 255 255 / 22%);
+  border-radius: 16px;
+  background: rgb(255 255 255 / 12%);
+  backdrop-filter: blur(8px);
+}
+
+.total-balance span,
+.total-balance small {
+  display: block;
+  color: #d8eaff;
+}
+
+.total-balance strong {
+  display: block;
+  margin: 5px 0;
+  font-size: clamp(1.75rem, 3vw, 2.35rem);
+}
+
+.account-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 16px;
+  margin: 22px 0 28px;
+}
+
+.account-card,
+.add-account-card {
+  min-height: 104px;
+  border: 1px solid #e4eaf2;
+  border-radius: 16px;
+  background: #fff;
+}
+
+.account-card {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  align-items: center;
+  gap: 12px;
+  padding: 18px;
+  box-shadow: 0 5px 18px rgb(28 49 77 / 6%);
+}
+
+.account-icon {
+  display: grid;
+  width: 42px;
+  height: 42px;
+  place-items: center;
+  border-radius: 12px;
+  background: #eaf4ff;
+  color: #1769b5;
+}
+
+.account-info span,
+.account-info small {
+  display: block;
+}
+
+.account-info span {
+  font-weight: 600;
+}
+
+.account-info small {
+  margin-top: 2px;
+  color: #7b8799;
+}
+
+.account-card > strong {
+  grid-column: 1 / -1;
+  font-size: 1.25rem;
+}
+
+.add-account-card {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  border-style: dashed;
+  color: #3f5877;
+  cursor: pointer;
+  font: inherit;
+  font-weight: 600;
+  transition: border-color 160ms ease, background-color 160ms ease;
+}
+
+.add-account-card:hover {
+  border-color: #2876c7;
+  background: #f5faff;
+}
+
+.workspace-card {
+  overflow: hidden;
+  border: 1px solid #e1e8f0;
+  border-radius: 20px;
+  background: #fff;
+  box-shadow: 0 10px 30px rgb(28 49 77 / 7%);
+}
+
+.cash-flow-tabs ::ng-deep .mat-mdc-tab-header {
+  padding: 0 24px;
+  border-bottom: 1px solid #edf0f4;
+}
+
+.cash-flow-tabs ::ng-deep .mdc-tab {
+  min-width: 190px;
+  height: 64px;
+}
+
+.cash-flow-tabs ::ng-deep .mdc-tab__content {
+  gap: 8px;
+}
+
+.tab-content {
+  padding: 30px;
+}
+
+.section-heading {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 24px;
+  margin-bottom: 28px;
+}
+
+.section-heading h3 {
+  font-size: 1.45rem;
+}
+
+.section-heading p {
+  color: #68758a;
+}
+
+.movement-content {
+  display: grid;
+  grid-template-columns: minmax(0, 2fr) minmax(270px, 0.85fr);
+  gap: 30px;
+}
+
+.movement-form {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 4px 18px;
+}
+
+.description-field,
+.form-actions {
+  grid-column: 1 / -1;
+}
+
+.form-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  padding-top: 4px;
+}
+
+.movement-guide {
+  align-self: stretch;
+  padding: 24px;
+  border: 1px solid #dceaff;
+  border-radius: 16px;
+  background: #f5f9ff;
+}
+
+.guide-icon {
+  display: grid;
+  width: 42px;
+  height: 42px;
+  margin-bottom: 16px;
+  place-items: center;
+  border-radius: 12px;
+  background: #dcecff;
+  color: #1769b5;
+}
+
+.movement-guide h4 {
+  margin: 0 0 8px;
+  font-size: 1.05rem;
+}
+
+.movement-guide > p {
+  margin: 0 0 22px;
+  color: #68758a;
+  line-height: 1.55;
+}
+
+.guide-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 0;
+  border-top: 1px solid #dce6f2;
+  color: #3c546e;
+  font-size: 0.9rem;
+}
+
+.guide-row mat-icon {
+  color: #16865f;
+}
+
+.guide-row.expense mat-icon {
+  color: #cf4b4b;
+}
+
+.pending-total {
+  min-width: 190px;
+  padding: 14px 18px;
+  border-radius: 14px;
+}
+
+.pending-total span,
+.pending-total strong {
+  display: block;
+}
+
+.pending-total span {
+  margin-bottom: 4px;
+  font-size: 0.8rem;
+  font-weight: 600;
+}
+
+.pending-total strong {
+  font-size: 1.35rem;
+}
+
+.receivable-total {
+  background: #eaf8f3;
+  color: #12694c;
+}
+
+.payable-total {
+  background: #fff1f1;
+  color: #a33b3b;
+}
+
+.responsive-table {
+  overflow-x: auto;
+  border: 1px solid #e8edf3;
+  border-radius: 14px;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+th,
+td {
+  padding: 16px;
+  border-bottom: 1px solid #edf0f4;
+  text-align: left;
+  white-space: nowrap;
+}
+
+th {
+  background: #f8fafc;
+  color: #607087;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+tbody tr:last-child td {
+  border-bottom: 0;
+}
+
+tbody tr:hover {
+  background: #fbfdff;
+}
+
+.amount-column,
+.actions-column {
+  text-align: right;
+}
+
+.actions-column button + button {
+  margin-left: 8px;
+}
+
+.status-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 5px 10px;
+  border-radius: 999px;
+  font-size: 0.78rem;
+  font-weight: 600;
+}
+
+.status-warning {
+  background: #fff4d8;
+  color: #8b6510;
+}
+
+.status-danger {
+  background: #ffe8e8;
+  color: #ad3434;
+}
+
+.status-info {
+  background: #e7f2ff;
+  color: #1763a6;
+}
+
+@media (max-width: 1050px) {
+  .account-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .movement-content {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 720px) {
+  .cash-flow-page {
+    padding: 20px 16px 36px;
+  }
+
+  .balance-overview,
+  .section-heading {
+    flex-direction: column;
+  }
+
+  .balance-overview {
+    padding: 24px;
+  }
+
+  .total-balance,
+  .pending-total {
+    width: 100%;
+    min-width: 0;
+  }
+
+  .account-grid,
+  .movement-form {
+    grid-template-columns: 1fr;
+  }
+
+  .description-field,
+  .form-actions {
+    grid-column: auto;
+  }
+
+  .cash-flow-tabs ::ng-deep .mat-mdc-tab-header {
+    padding: 0 8px;
+  }
+
+  .cash-flow-tabs ::ng-deep .mdc-tab {
+    min-width: 165px;
+  }
+
+  .tab-content {
+    padding: 22px 16px;
+  }
+
+  .form-actions {
+    flex-direction: column-reverse;
+  }
+
+  .form-actions button {
+    width: 100%;
+  }
 }
