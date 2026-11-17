@@ -1,0 +1,19 @@
+<main class="module-main">
+  <div class="w-full grid grid-cols-3 items-center">
+    <div class="justify-self-start mx-8">
+      <button (click)="goCategories()" mat-fab aria-label="Regresar" class="cursor-pointer">
+        <mat-icon>keyboard_backspace</mat-icon>
+      </button>
+    </div>
+
+    <h2 class="text-lg sm:text-2xl font-black text-center">Editar categoría</h2>
+  </div>
+
+  @if (category(); as categoryData) {
+    <app-category-form
+      [formMode]="formMode"
+      [category]="categoryData"
+      (formSubmit)="editCategory($event)"
+    ></app-category-form>
+  }
+</main>

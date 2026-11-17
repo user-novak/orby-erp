@@ -1,0 +1,51 @@
+<form
+  [formGroup]="categoryForm"
+  (ngSubmit)="onSubmitForm()"
+  class="mt-6 mx-auto max-w-6xl px-4 lg:px-8 grid grid-cols-1 lg:grid-cols-2 gap-x-6 gap-y-6"
+>
+  <div class="lg:col-span-2">
+    <mat-form-field class="w-full">
+      <mat-label>Nombre de la categoría</mat-label>
+      <input matInput formControlName="name" />
+      @if (categoryForm.controls.name.hasError('required')) {
+        <mat-error>El nombre es obligatorio</mat-error>
+      }
+    </mat-form-field>
+  </div>
+
+  <div>
+    <mat-form-field class="w-full">
+      <mat-label>Tipo</mat-label>
+      <mat-select formControlName="type">
+        @for (option of categoryTypeOptions; track option.value) {
+          <mat-option [value]="option.value">{{ option.label }}</mat-option>
+        }
+      </mat-select>
+    </mat-form-field>
+  </div>
+
+  @if (formMode() === 'edit') {
+    <div>
+      <mat-form-field class="w-full">
+        <mat-label>Estado</mat-label>
+        <mat-select formControlName="status">
+          @for (option of categoryStatusOptions; track option.value) {
+            <mat-option [value]="option.value">{{ option.label }}</mat-option>
+          }
+        </mat-select>
+      </mat-form-field>
+    </div>
+  }
+
+  <button type="button" matButton="tonal" (click)="onClearForm()">
+    Limpiar
+    <mat-icon>autorenew</mat-icon>
+  </button>
+
+  <button matButton="filled">
+    {{ formMode() === 'edit' ? 'Editar categoría' : 'Crear categoría' }}
+    <mat-icon>
+      {{ formMode() === 'edit' ? 'edit' : 'add' }}
+    </mat-icon>
+  </button>
+</form>

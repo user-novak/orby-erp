@@ -73,6 +73,17 @@
         <p class="text-gray-600 text-sm">Entradas y salidas de efectivo</p>
         <button (click)="navigateTo('cash_flow')" class="btn-text-detail">Ver más →</button>
       </div>
+
+      <div class="bg-white rounded-lg shadow hover:shadow-lg transition-shadow p-6">
+        <div class="flex items-center justify-between mb-4">
+          <h2 class="text-xl font-semibold text-gray-800">Categorías</h2>
+          <button (click)="navigateTo('categories')" class="btn-card">
+            <mat-icon>category</mat-icon>
+          </button>
+        </div>
+        <p class="text-gray-600 text-sm">Gestiona las categorías financieras</p>
+        <button (click)="navigateTo('categories')" class="btn-text-detail">Ver más →</button>
+      </div>
     </div>
   </main>
 </div>
