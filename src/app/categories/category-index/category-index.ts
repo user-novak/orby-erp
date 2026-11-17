@@ -16,10 +16,18 @@ import {
 } from '../constants/category';
 import { Category, CategoryListResponse } from '../models/category';
 import { CategoryService } from '../services/category';
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 @Component({
   selector: 'app-category-index',
-  imports: [MatButtonModule, MatIconModule, MatPaginatorModule, MatTableModule, NoData],
+  imports: [
+    MatButtonModule,
+    MatIconModule,
+    MatPaginatorModule,
+    MatTooltipModule,
+    MatTableModule,
+    NoData,
+  ],
   templateUrl: './category-index.html',
   styleUrl: './category-index.css',
 })

@@ -30,18 +30,14 @@
             @if (isProtected(element.id)) {
               <button
                 mat-icon-button
-                disabled
                 aria-label="Categoría protegida"
+                matTooltip="Categoría por defecto"
                 title="Esta categoría predeterminada no se puede editar"
               >
                 <mat-icon>lock</mat-icon>
               </button>
             } @else {
-              <button
-                (click)="goToEdit(element.id)"
-                mat-icon-button
-                aria-label="Editar categoría"
-              >
+              <button (click)="goToEdit(element.id)" mat-icon-button aria-label="Editar categoría">
                 <mat-icon>edit</mat-icon>
               </button>
             }
@@ -66,7 +62,9 @@
   } @else {
     <app-no-data
       [message]="'No hay categorías registradas'"
-      [description]="'Todavía no tienes categorías en el sistema. Cuando registres una, aparecerá aquí'"
+      [description]="
+        'Todavía no tienes categorías en el sistema. Cuando registres una, aparecerá aquí'
+      "
       [icon]="'category'"
     ></app-no-data>
   }
