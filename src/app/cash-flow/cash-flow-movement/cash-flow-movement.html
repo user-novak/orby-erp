@@ -1,62 +1,91 @@
-<form class="mx-auto max-w-6xl px-4 py-6 lg:px-8 grid grid-cols-1 lg:grid-cols-3 gap-x-6 gap-y-6">
+<form
+  [formGroup]="movementForm"
+  (ngSubmit)="createMovement()"
+  class="mx-auto max-w-6xl px-4 py-6 lg:px-8 grid grid-cols-1 lg:grid-cols-3 gap-x-6 gap-y-6"
+>
   <mat-form-field class="w-full">
     <mat-label>Tipo de movimiento</mat-label>
-    <mat-select>
-      <mat-option value="income">Ingreso</mat-option>
-      <mat-option value="expense">Egreso</mat-option>
-    </mat-select>
-  </mat-form-field>
-
-  <mat-form-field class="w-full">
-    <mat-label>Cuenta bancaria</mat-label>
-    <mat-select>
-      @for (accountName of accountNames; track accountName) {
-        <mat-option [value]="accountName">{{ accountName }}</mat-option>
+    <mat-select formControlName="type">
+      @for (option of movementTypeOptions; track option.value) {
+        <mat-option [value]="option.value">{{ option.label }}</mat-option>
       }
     </mat-select>
+    @if (movementForm.controls.type.hasError('required')) {
+      <mat-error>El tipo es obligatorio</mat-error>
+    }
   </mat-form-field>
+
+  @if (accountIsRequired) {
+    <mat-form-field class="w-full">
+      <mat-label>Cuenta bancaria</mat-label>
+      <mat-select formControlName="account_id">
+        @for (account of accounts; track account.id) {
+          <mat-option [value]="account.id">{{ account.name }}</mat-option>
+        }
+      </mat-select>
+      @if (movementForm.controls.account_id.hasError('required')) {
+        <mat-error>La cuenta bancaria es obligatoria</mat-error>
+      }
+    </mat-form-field>
+  }
 
   <mat-form-field class="w-full" floatLabel="always">
     <mat-label>Monto</mat-label>
-    <input matInput type="number" min="0" placeholder="0" />
+    <input matInput type="number" min="0.01" placeholder="0" formControlName="amount" />
     <span matTextPrefix>{{ SOL_PREFIX }}</span>
+    @if (movementForm.controls.amount.hasError('required')) {
+      <mat-error>El monto es obligatorio</mat-error>
+    } @else if (movementForm.controls.amount.hasError('min')) {
+      <mat-error>El monto debe ser mayor a cero</mat-error>
+    }
   </mat-form-field>
 
   <mat-form-field class="w-full">
     <mat-label>Fecha</mat-label>
-    <input matInput [matDatepicker]="movementDate" />
+    <input matInput [matDatepicker]="movementDate" formControlName="movement_date" />
     <mat-datepicker-toggle matIconSuffix [for]="movementDate"></mat-datepicker-toggle>
     <mat-datepicker #movementDate></mat-datepicker>
+    @if (movementForm.controls.movement_date.hasError('required')) {
+      <mat-error>La fecha es obligatoria</mat-error>
+    }
   </mat-form-field>
 
   <mat-form-field class="w-full">
     <mat-label>Categoría</mat-label>
-    <mat-select>
-      <mat-option value="income">Pago de deuda</mat-option>
-      <mat-option value="expense">Emergencia</mat-option>
+    <mat-select formControlName="category_id">
+      @for (category of filteredCategories; track category.id) {
+        <mat-option [value]="category.id">{{ category.name }}</mat-option>
+      }
     </mat-select>
+    @if (movementForm.controls.category_id.hasError('required')) {
+      <mat-error>La categoría es obligatoria</mat-error>
+    }
   </mat-form-field>
 
   <mat-form-field class="w-full">
     <mat-label>Estado</mat-label>
-    <mat-select>
-      <mat-option value="income">Cuenta por pagar</mat-option>
-      <mat-option value="expense">Cuenta por cobrar</mat-option>
+    <mat-select formControlName="status">
+      @for (option of statusOptions; track option.value) {
+        <mat-option [value]="option.value">{{ option.label }}</mat-option>
+      }
     </mat-select>
+    @if (movementForm.controls.status.hasError('required')) {
+      <mat-error>El estado es obligatorio</mat-error>
+    }
   </mat-form-field>
 
   <mat-form-field class="w-full lg:col-span-3">
     <mat-label>Descripción</mat-label>
-    <textarea matInput rows="3"></textarea>
+    <textarea matInput rows="3" formControlName="description"></textarea>
   </mat-form-field>
 
   <div class="lg:col-span-2 flex flex-col-reverse sm:flex-row justify-end gap-3 pt-4">
-    <button type="button" matButton="tonal">
+    <button type="button" matButton="tonal" (click)="resetForm()">
       Limpiar
       <mat-icon>autorenew</mat-icon>
     </button>
 
-    <button type="button" matButton="filled">
+    <button type="submit" matButton="filled">
       Registrar movimiento
       <mat-icon>add</mat-icon>
     </button>
