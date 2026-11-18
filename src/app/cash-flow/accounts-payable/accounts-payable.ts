@@ -1,4 +1,4 @@
-import { Component, DestroyRef, inject, OnInit } from '@angular/core';
+import { Component, DestroyRef, EventEmitter, inject, OnInit, Output } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { MatButtonModule } from '@angular/material/button';
 import { MatDialog } from '@angular/material/dialog';
@@ -37,6 +37,8 @@ import {
   templateUrl: './accounts-payable.html',
 })
 export class AccountsPayable implements OnInit {
+  @Output() balanceChanged = new EventEmitter<void>();
+
   readonly columnHeaders: string[] = [
     'movement_date',
     'category',
@@ -73,6 +75,10 @@ export class AccountsPayable implements OnInit {
   onPageChange(event: PageEvent): void {
     this.pageIndex = event.pageIndex;
     this.pageSize = event.pageSize;
+    this.loadData();
+  }
+
+  refresh(): void {
     this.loadData();
   }
 
@@ -148,6 +154,7 @@ export class AccountsPayable implements OnInit {
       .subscribe({
         next: () => {
           this.loaderService.hide();
+          this.balanceChanged.emit();
           this.showNotification(
             this.generateNotification('Pago registrado exitosamente', 'check_circle', '#4caf50'),
             3000,

@@ -1,4 +1,4 @@
-import { Component, DestroyRef, inject } from '@angular/core';
+import { Component, DestroyRef, EventEmitter, inject, Output } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { provideNativeDateAdapter } from '@angular/material/core';
 import { MatButtonModule } from '@angular/material/button';
@@ -53,6 +53,8 @@ interface CashFlowMovementFormControls {
   templateUrl: './cash-flow-movement.html',
 })
 export class CashFlowMovement {
+  @Output() movementCreated = new EventEmitter<void>();
+
   readonly SOL_PREFIX = SOL_PREFIX;
   readonly movementTypeOptions = ACCOUNT_MOVEMENT_TYPE_OPTIONS;
   readonly movementForm = new FormGroup<CashFlowMovementFormControls>({
@@ -123,6 +125,7 @@ export class CashFlowMovement {
       .subscribe({
         next: () => {
           this.loaderService.hide();
+          this.movementCreated.emit();
           this.showNotification(
             this.generateNotification('Movimiento registrado exitosamente', 'check_circle', '#4caf50'),
             3000,

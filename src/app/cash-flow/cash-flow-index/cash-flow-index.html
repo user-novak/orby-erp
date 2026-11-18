@@ -1,6 +1,6 @@
 <main class="module-main">
   <section class="mb-6 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-    @for (account of accounts; track account.name) {
+    @for (account of accounts; track account.id) {
       <div class="bg-white border border-gray-200 rounded-lg shadow p-5">
         <span class="block text-sm text-gray-500">{{ account.name }}</span>
         <strong class="block mt-2 text-xl text-gray-900">
@@ -20,15 +20,21 @@
   <section>
     <mat-tab-group>
       <mat-tab label="Ingresos y egresos">
-        <app-cash-flow-movement></app-cash-flow-movement>
+        <app-cash-flow-movement
+          (movementCreated)="handleMovementCreated()"
+        ></app-cash-flow-movement>
       </mat-tab>
 
       <mat-tab label="Cuentas por cobrar">
-        <app-accounts-receivable></app-accounts-receivable>
+        <app-accounts-receivable
+          (balanceChanged)="handleBalanceChanged()"
+        ></app-accounts-receivable>
       </mat-tab>
 
       <mat-tab label="Cuentas por pagar">
-        <app-accounts-payable></app-accounts-payable>
+        <app-accounts-payable
+          (balanceChanged)="handleBalanceChanged()"
+        ></app-accounts-payable>
       </mat-tab>
     </mat-tab-group>
   </section>
