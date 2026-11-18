@@ -5,6 +5,7 @@ import { API_BASE_URL } from '../../core/constants/global';
 import { PaginatedResponse } from '../../core/models/global';
 import {
   AccountMovement,
+  AccountCollectionRequest,
   AccountMovementFilters,
   AccountPaymentRequest,
   AccountMovementRequest,
@@ -50,6 +51,16 @@ export class AccountMovementService {
     return this.http.post<AccountMovementResourceResponse>(
       `${this.apiUrl}/${accountMovementId}/payments`,
       payment,
+    );
+  }
+
+  registerCollection(
+    accountMovementId: number,
+    collection: AccountCollectionRequest,
+  ): Observable<AccountMovementResourceResponse> {
+    return this.http.post<AccountMovementResourceResponse>(
+      `${this.apiUrl}/${accountMovementId}/collections`,
+      collection,
     );
   }
 }

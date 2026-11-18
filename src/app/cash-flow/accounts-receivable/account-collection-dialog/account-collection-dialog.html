@@ -1,0 +1,51 @@
+<h2 mat-dialog-title>
+  {{ data.fullCollection ? 'Cobrar deuda' : 'Amortizar deuda' }}
+</h2>
+
+<mat-dialog-content>
+  <form [formGroup]="collectionForm" class="pt-2 grid grid-cols-1 gap-4">
+    <mat-form-field class="w-full">
+      <mat-label>Cuenta bancaria</mat-label>
+      <mat-select formControlName="account_id">
+        @for (account of data.accounts; track account.id) {
+          <mat-option [value]="account.id">{{ account.name }}</mat-option>
+        }
+      </mat-select>
+      @if (collectionForm.controls.account_id.hasError('required')) {
+        <mat-error>La cuenta bancaria es obligatoria</mat-error>
+      }
+    </mat-form-field>
+
+    <mat-form-field class="w-full" floatLabel="always">
+      <mat-label>Monto</mat-label>
+      <input
+        matInput
+        type="number"
+        min="0.01"
+        [max]="data.pendingAmount"
+        [readonly]="data.fullCollection"
+        formControlName="amount"
+      />
+      <span matTextPrefix>{{ SOL_PREFIX }}</span>
+      @if (collectionForm.controls.amount.hasError('required')) {
+        <mat-error>El monto es obligatorio</mat-error>
+      } @else if (collectionForm.controls.amount.hasError('min')) {
+        <mat-error>El monto debe ser mayor a cero</mat-error>
+      } @else if (collectionForm.controls.amount.hasError('max')) {
+        <mat-error>El monto no puede superar la deuda pendiente</mat-error>
+      }
+    </mat-form-field>
+
+    <mat-form-field class="w-full">
+      <mat-label>Descripción</mat-label>
+      <textarea matInput rows="3" formControlName="description"></textarea>
+    </mat-form-field>
+  </form>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+  <button type="button" matButton (click)="cancel()">Cancelar</button>
+  <button type="button" matButton="filled" (click)="submit()">
+    {{ data.fullCollection ? 'Cobrar' : 'Amortizar' }}
+  </button>
+</mat-dialog-actions>

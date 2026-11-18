@@ -43,3 +43,5 @@ export interface AccountPaymentRequest {
   amount: number;
   description?: string;
 }
+
+export type AccountCollectionRequest = AccountPaymentRequest;
